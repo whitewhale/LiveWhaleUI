@@ -1,0 +1,10 @@
+{
+  "name": "LiveWhaleUI",
+  "version": "0.1.0",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-jasmine": "~0.5.1"
+  }
+}

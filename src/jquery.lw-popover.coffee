@@ -1,6 +1,4 @@
-#@ $
-
-$.widget('lw.lwPopover',
+$.widget 'lw.lwPopover',
   options:
     position:   'top'   # possible options are left, right, top, bottom
     width:      'auto'
@@ -157,4 +155,3 @@ $.widget('lw.lwPopover',
     # clean up
     @$popover.remove()
     $('body').unbind('click', this.close_handler)
-)

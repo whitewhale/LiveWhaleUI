@@ -1,7 +1,10 @@
 $ = livewhale?.jQuery || window.jQuery
 
 input_el = document.createElement('input')
-placeholder_supported = ('placeholder' in input_el)
+#placeholder_supported = ('placeholder' in input_el)
+placeholder_supported = document.createElement('input').placeholder?
+
+console.log placeholder_supported
 
 # only define functional placeholder widget if browser doesn't support placeholder attribute
 if (not placeholder_supported)
@@ -10,6 +13,8 @@ if (not placeholder_supported)
       placeholder_class: 'placeholder'
     _create: ->
       $el = @element
+
+      #console.log 'using it'
 
       @visible = false
       $el.focus $.proxy(@hide, this)

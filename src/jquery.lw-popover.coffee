@@ -1,3 +1,5 @@
+$ = livewhale.jQuery || window.jQuery
+
 $.widget 'lw.lwPopover',
   options:
     position:   'top'   # possible options are left, right, top, bottom

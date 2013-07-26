@@ -1,55 +1,66 @@
 $ = livewhale?.jQuery || window.jQuery
 
-input_el = document.createElement('input')
-#placeholder_supported = ('placeholder' in input_el)
-placeholder_supported = document.createElement('input').placeholder?
-
-console.log placeholder_supported
+placeholder_support = 'placeholder' in document.createElement('input')
 
 # only define functional placeholder widget if browser doesn't support placeholder attribute
-if (not placeholder_supported)
+if (!placeholder_support)
   widget =
-    options:
-      placeholder_class: 'placeholder'
     _create: ->
       $el = @element
+      pclass = 'placeholder' 
 
-      #console.log 'using it'
-
+      # set visible status to false
       @visible = false
-      $el.focus $.proxy(@hide, this)
-      $el.blur $.proxy(@show, this)
 
-      if ($el.val() is '' )
-        $el
-          .val($el.attr('placeholder'))
-          .addClass(@options.placeholder_class)
-          @visible = true
+      # and focus and blur handlers
+      $el.focus $.proxy(@clear, this)
+      $el.blur $.proxy(@set, this)
 
-      $el.addClass('lw-placeholder')
-    hide: ->
+      @set
+    clear: ->
       $el = @element
-      if ($el.val() is $el.attr('placeholder'))
+      if ($el.origVal() is $el.attr('placeholder'))
         $el
           .val('')
-          .removeClass(@options.placeholder_class)
+          .removeClass('placeholder')
 
         @visible = false
-    show: ->
+    set: ->
       $el = @element
 
-      if ($el.val() is '')
+      if ($el.origVal() is '')
         $el
           .val($el.attr('placeholder'))
-          .addClass(@options.placeholder_class)
+          .addClass('placeholder')
 
         @visible = true
 
-    # make sure placeholder values aren't submitted
-    preventPlaceholderSubmit: ->
+  # replace jQuery.fn.val so it returns an empty string if the val and placeholder match
+  # another option is to add a submit handler that does the same thing. However, this 
+  # breaks when defining additional submit handlers that do things like submit via ajax 
+  # because we can't control which handler gets called first
+  $.fn.origVal = $.fn.val
+  $.fn.val = ->
+    $this = $(this)
+
+    # when setter
+    # call original val method if setting value
+    if(arguments.length > 0) then return $.fn.origVal.apply(this, arguments)
+
+    # when getter 
+    # return empty string if val === placeholder, return val otherwise
+    val = $.fn.origVal.call(this)
+    placeholder = $this.attr('placeholder')
+    return if (val is placeholder) then '' else val
+  
+  # clear placeholder values on page reload 
+  $(window).on 'unload', ->
+    $('input[placeholder]').each ->
+      this.value = ''
+      #$(this).val('')
+    return true
 else
   widget =
     _create: ->
-      alert 'wtf'
 
 $.widget 'lw.lwPlaceholder', widget

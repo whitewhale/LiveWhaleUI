@@ -8,7 +8,7 @@
 <body>
 	<h1>Placeholder</h1>
 	
-	<form name="placeholder_form" action="get">
+	<form name="placeholder_form" id="placeholder_form" action="get">
 		<input type="text" name="test" id="test" placeholder="Placeholder Text">
 		<button type="submit">Go</button>
 	</form>
@@ -17,7 +17,12 @@
 	<script type="text/javascript" src="/src/jquery.lw-placeholder.js"></script>
 
 	<script type="text/javascript">
-		$('#test').lwPlaceholder();
+		$('input[placeholder]').lwPlaceholder();
+
+		$('#placeholder_form').submit(function(e) {
+			e.preventDefault();
+			alert($(this).serialize());
+		});
 	</script>
 </body>
 </html>

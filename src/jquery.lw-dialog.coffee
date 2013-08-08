@@ -1,4 +1,4 @@
-$ = livewhale.jQuery || window.jQuery
+$ = livewhale?.jQuery || window.jQuery
 
 $.widget 'lw.lwDialog',
   options:

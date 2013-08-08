@@ -1,2 +1,6 @@
 Gruntfile.js
 node_modules
+src/*.js
+public/*.html
+public/src
+public/vendor

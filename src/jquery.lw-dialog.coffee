@@ -1,6 +1,6 @@
 $ = livewhale?.jQuery || window.jQuery
 
-$.widget 'lw.lwDialog',
+$.widget 'lw.lw-dialog',
   options:
     'id':          false
     customClass:   null # one or more space-separated classes to be added to dialog wrapper
@@ -33,11 +33,9 @@ $.widget 'lw.lwDialog',
     @$blackout = $ '<div/>',
       'class': 'lw_overlay_blackout'
 
-    @$container = $ '<div>',
-      'class': 'lw_element lw_overlay_container'
+    @$container = $('<div>', 'class': 'lw_element lw_overlay_container')
       .append(@$blackout)
-      .append(@$dialog
-      .append(@$contents.append(el)))
+      .append(@$dialog.append(@$contents.append(el)))
       .appendTo($('body'))
 
     # set close handler for classes in opts.closeClasses 

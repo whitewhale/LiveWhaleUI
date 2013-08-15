@@ -20,8 +20,15 @@ module.exports = (grunt) ->
           layout: 'default.hbs'
         src: ['site/*.hbs']
         dest: 'public/'
+    watch:
+      assemble:
+        files: ['site/**/*.hbs']
+        tasks: ['assemble']
+        options:
+          livereload: true
 
   grunt.loadNpmTasks('grunt-contrib-jasmine')
   grunt.loadNpmTasks('assemble')
+  grunt.loadNpmTasks('grunt-contrib-watch')
 
   grunt.registerTask('default', ['jasmine'])

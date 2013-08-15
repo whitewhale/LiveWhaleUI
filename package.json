@@ -6,6 +6,7 @@
     "grunt": "~0.4.1",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-jasmine": "~0.5.1",
-    "assemble": "~0.4.4"
+    "assemble": "~0.4.4",
+    "grunt-contrib-watch": "~0.5.1"
   }
 }

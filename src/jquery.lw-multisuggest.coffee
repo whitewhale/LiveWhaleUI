@@ -15,8 +15,11 @@ $.widget 'lw.lw-multisuggest',
     $el  = @element
     that = this
 
-    toSpace  = /[,\-_\s&\/\\]+/g   # regexp for elements that should become spaces
-    toRemove = /[^a-zA-Z 0-9]+/g  # regexp for elements that should be removed
+    # regexp for elements that should become spaces
+    toSpace  = /[,\-_\s&\/\\]+/g
+
+    # regexp for elements that should be removed
+    toRemove = /[^a-zA-Z 0-9]+/g
 
     # add title to keywords 
     $.each opts.data, ->
@@ -157,9 +160,10 @@ $.widget 'lw.lw-multisuggest',
 
         # we do the following inside the timer in case clicking on a suggestion has already selected a result
         if (input.val())
-          e = $.Event('keydown') # create a fake keydown event
-          e.which = 13 # in which the 'return' key is pressed
-          input.trigger(e) # and trigger it
+          # trigger a fake return key keydown event
+          e = $.Event('keydown')
+          e.which = 13
+          input.trigger(e)
       , 200)
     )
     # on each keypress, filter the results
@@ -193,10 +197,18 @@ $.widget 'lw.lw-multisuggest',
           return (' ' + item.keywords).indexOf(' ' + search) >= 0
         )
       )
-      query_exp = new RegExp('(\\b' + query.replace(/\s/g, '|\\b') + ')', 'ig') # for highlighting the query terms
+
       if (results.length)
-        $.each(results, (index, item) -> # list the match, with highlighting
-          $suggestions.append('<li ' + (query is item.keywords ? 'class="lw_selected"' : '') + '><input type="hidden" value="' + item.id + '"/>' + (' ' + item.title).replace(query_exp, '<span class="lw_multisuggest_highlight">$1</span>') + '</li>')
+        # regex for highlighting the query terms
+        query_exp = new RegExp('(\\b' + query.replace(/\s/g, '|\\b') + ')', 'ig')
+
+        # list the match, with highlighting
+        $.each(results, (index, item) ->
+          $li = $('<li/>')
+          if query is item.keywords then $li.addClass('lw_selected')
+          title = (' ' + item.title).replace(query_exp, '<span class="lw_multisuggest_highlight">$1</span>')
+
+          $suggestions.append($li.html('<input type="hidden" value="' + item.id + '"/>' + title))
         )
         position = input.position()
         $suggestions.css(
@@ -405,19 +417,26 @@ $.widget 'lw.lw-multisuggest',
         input.css('visibility', 'hidden').blur()
 
   add: (value) ->
-    $item = $('<div class="lw_multisuggest_item/>')
-    $input = $('<input type="hidden"/>').val(value.id )
+    #####
+    # !!!
+    # Need to compate to original
+    ####
+    $item  = $('<div class="lw_multisuggest_item/>')
+      .html('<span class="lw_item_name">' + value.title + '</span><span class="lw_multisuggest_remove">×</span>')
+
+    $input = $('<input type="hidden"/>').val(value.id)
     
-    + (!value.is_locked ? ' name="' + opts.name + '[]"' : '') + ' value="' + value.id + '">
+    if (value.is_locked)
+      $item.addClass('lw_locked')
+    else
+      $input.attr(name, opts.name + '[]')
 
-    if (value.is_locked) then $item.addClass('lw_locked')
-
-    input.before('<div class="lw_multisuggest_item' + (value.is_locked ? ' lw_locked' : '') + '"><span class="lw_item_name">' + value.title + '</span><span class="lw_multisuggest_remove">×</span></div>')
-
-
+    input.before($item);
 
     that.trigger('change.multisuggest') # trigger the change event on the suggestor
   new: (value) ->
-    item = $('<div class="lw_multisuggest_item lw_multisuggest_new"><span class="lw_multisuggest_item_name">' + value + '</span><span class="lw_multisuggest_remove">×</span></div>').insertBefore(input)
-    $('<input type="hidden" name="' + opts.name + '_added[]"/>').val($.trim(value)).prependTo(item)
+    $item = $('<div class="lw_multisuggest_item lw_multisuggest_new"><span class="lw_multisuggest_item_name">' + value + '</span><span class="lw_multisuggest_remove">×</span></div>').insertBefore(input)
+
+    $('<input type="hidden" name="' + opts.name + '_added[]"/>').val($.trim(value)).prependTo($item)
+
     that.trigger('change.multisuggest') # trigger the change event on the suggestor

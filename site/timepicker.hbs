@@ -1,0 +1,15 @@
+
+
+
+<script type="text/javascript" src="/vendor/jquery.js"></script>
+<script type="text/javascript" src="/vendor/jquery-ui.widget.min.js"></script>
+<script type="text/javascript" src="/src/jquery.lw-placeholder.js"></script>
+
+<script type="text/javascript">
+	$('input[placeholder]').lwPlaceholder();
+
+	$('#placeholder_form').submit(function(e) {
+		e.preventDefault();
+		alert($(this).serialize());
+	});
+</script>

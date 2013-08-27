@@ -1,0 +1,39 @@
+/**
+ * Responsive Layout 
+ */
+
+@media screen and (max-width: 770px) {
+    header h1 {
+        font-size: 2em;
+    }
+    .content {
+        nav {
+            .column(20);
+        }
+        article {
+            .column(20);
+            margin-top: 12px;
+        }
+        aside {
+            .column(20);
+            margin-top: 12px;
+        }
+    }
+    .sidebar_hidden .content article {
+        .column(20);
+    }
+    .footer {
+    }
+
+}
+
+@media screen and (max-width: 480px) { 
+	.standard_calendar {
+		#lw_cal {
+			width: auto;
+		}	
+		.lw_cal_month_view #lw_cal_body {
+			margin-top: 0;
+		}
+	}
+}

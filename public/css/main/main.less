@@ -1,0 +1,459 @@
+.intro() {
+    font-size: 1.25em;
+    font-weight: 200;
+    line-height: 1.5em;
+    color: #777;
+}
+
+html {
+    height: 100%;
+	background:#eee;
+}
+
+body { 
+    margin: 0;
+    padding: 0; 
+	background-color: #fff;
+    line-height: 1.375; 
+	font-family: "Helvetica Neue", Helvetica, sans-serif; 
+	background:#eee;
+}
+
+fieldset { 
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* basic type styles
+---------------------------------------------------------------------------- */
+a {
+    text-decoration: none;
+    color: @darkblue;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.large_type {
+	font-size: 1.4em;
+}
+
+h1, h2, h3, h4, h5 { 
+    font-family: Georgia, serif; 
+    font-weight: 400;
+    margin-top: 0;
+    margin-bottom:.5em;
+    clear: left;
+}
+
+h1 { font-size: 2em; color:@blue; } 
+h2 { font-size: 1.5em; } 
+h3 { font-size: 1.25em; color:#666; }
+
+.intro p,
+p.intro {
+    .intro();
+    font-size:1.3em;
+    margin-top:0;
+}
+
+hr {
+  height: 1px;
+  background-color: #999;
+  border: none;
+  outline: none;
+}
+
+pre {
+  font-size: 0.8em;
+}
+
+/**
+ * Default layout
+ */
+nav, #main {
+    .box-sizing(border-box);
+    padding: 20px 0;
+}
+
+nav {
+    .column(4);
+}
+#main {
+    .column(16);
+}
+
+/**
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    contenteditable attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that are clearfixed.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+.cf:before,
+.cf:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.cf:after {
+    clear: both;
+}
+
+/**
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.cf {
+    *zoom: 1;
+}
+
+.inline {
+	display:inline;
+	margin-right:1em;
+}
+
+
+/* Tables */
+table { 
+	margin:1em 0; 
+}
+
+th { 
+	color:#fff; 
+	padding:5px 8px; 
+	background-color:#222; 
+	border-top: 4px solid #000; 
+	border-bottom: 1px solid #fff; 
+	text-transform:uppercase; 
+	letter-spacing:0.1em; 
+}
+
+td { 
+	font-size:0.9em; 
+	color:#444; 
+	font-weight:normal; 
+	padding:8px; 
+	background: #eee; 
+	border-top: 1px solid transparent; 
+	border-bottom: 1px solid #fff; 
+}
+
+	tr:hover td { 
+		background:#ddd; 
+		color:#444; 
+	}
+
+input[type=text], textarea {
+    font-size: .875em;
+    padding: 3px;
+}
+
+::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+::selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+#breadcrumbs {
+    font-size: .875em;
+    margin-bottom: 1em;
+    color: #555;
+    font-weight: 400;
+}
+
+.lw_breadcrumb_link {
+    margin-right: 6px;
+}
+.lw_breadcrumb_separator {
+    padding-right: 6px;
+}
+
+header#siteheader {
+    height: 140px;
+    background: #196cb7 url(/images/background.gif) top left repeat;
+    margin-bottom:-20px;
+    
+    h1 {
+	    font-family: "Helvetica Neue", Helvetica, sans-serif; 
+        font-size:4em;
+        font-weight: 200;
+        padding: 30px 0 20px;
+
+        a {
+            color: #fff;
+        } 
+        a:hover {
+            text-decoration: none;
+        }
+    }
+}
+
+footer {
+    position: relative;
+    margin: 20px 0 0 0;
+    padding-bottom: 12px;
+
+    .login {
+        float: left;
+        margin-left: 20px; 
+    }
+    .powered-by {
+        float: right;
+        margin-right: 20px; 
+    } 
+}
+
+.container {
+    margin: 0 auto;
+    max-width: 960px;
+    clear: both;
+}
+
+.content {
+    background-color: #fff;
+    border:5px solid #ccc;
+    box-shadow: 2px 2px 2px rgba(0,0,0,.4);
+}
+#sidebar {
+    border:5px solid #ddd;
+    background-color:#f0f0f0;
+    box-shadow: 2px 2px 2px rgba(0,0,0,.4);
+    float:right;
+    margin:20px -20px;
+    padding:20px;
+    font-size:.8em;
+}
+
+
+/**
+ * Event Detail Page
+ */
+.details {
+    aside {
+        background-color: #fff;
+
+        h1, h2, h3, h4 {
+            color: #333;
+	        font-family: "Helvetica Neue", Helvetica, sans-serif; 
+            margin-bottom: 2px;
+        }
+    }
+}
+
+.image_bordered {
+    margin-top: 1.25em;
+}
+
+.events_summary {
+}
+
+/**
+ * Form Page 
+ */
+ 
+ 
+/**
+ * Galleries
+ */
+.detail_gallery {
+    width: 690px;
+    text-align: center;
+    padding: 10px 18px;
+    background-color: #333;
+    color: #fff;
+	margin-bottom: 30px;
+    .border-radius(8px);
+	.box-sizing(border-box);
+
+    a {
+        color: #eef;
+        font-weight: 200;
+    }
+
+    .lw_gallery_caption, .lw_gallery_credit {
+        font-size: .875em;
+        text-align: left;
+        font-weight: 200;
+        padding-bottom: 4px;
+		color: #ccc;
+    }
+
+	.lw_gallery_image.lw_next_image {
+		background-color: #333;
+	}
+
+   #lw_gallery_image {
+        position: static;
+        width: 510px;
+        margin: 0 auto;
+        float: none;
+    } 
+    
+    ul#lw_gallery_thumbnails {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        max-width: none;
+        clear: both;
+
+        a {
+            display: block;
+            float: left;
+			border-color: #333;
+
+			&.lw_gallery_selected {
+				border-color: #ccc;
+			}
+        }
+
+        img {
+            display: block; 
+            width: 80px;
+            height: 80px;
+        }
+    }
+}
+
+#sidebar .lw_widget_type_images img {
+  width: 154px !important;
+  border: 3px solid #999;
+}
+
+#sidebar .lw_images_caption {
+  padding: 0 0 9px 0;
+  font-size: 0.9em;
+}
+
+nav .lw_widget_galleries {
+    li {
+        margin-left: 10px;
+    }
+    .lw_galleries_description {
+        display: none;
+    } 
+}
+
+.saveandshare {
+    margin-top: 18px;
+}
+
+/* navigation hover state */
+nav .lw_widget_type_navigation ul li.lw_active ul li a:hover, 
+nav .lw_widget_type_navigation ul li.lw_current ul li a:hover {
+	color: #000;
+	text-decoration: underline;
+}
+
+/*
+ * Custom calendar styles 
+ */
+.standard_calendar {
+	#lw_cal {
+		width: 746px;
+		margin-top: 30px;
+	}
+
+	#lw_cal_body {
+		padding: 15px;
+		box-shadow: none;
+	}
+
+	.add_new {
+		display: none;
+	}
+
+	#lw_cal_day_rightcol {
+		padding: 0 15px;
+	}
+
+	.lw_cal_event {
+		margin-bottom: 15px;
+	}
+
+	.lw_cal_today_view {
+		#lw_cal_day_leftcol {
+			width: 100px;
+		}
+	}
+
+	.lw_cal_month_view {
+		#lw_cal_body {
+			padding: 0;
+			margin-top: -16px;
+		}
+		.lw_cal_location_link_wrapper,
+		.lw_events_title {
+			font-size: .75em;
+		}
+	}
+
+	#lw_cal_category_selector li {
+		font-size: 11px;
+	}
+
+	.lw_cal_all_view #lw_cal_events h3, 
+	.lw_cal_week_view #lw_cal_events h3, 
+	.lw_cal_upcoming_events {
+		margin-left: -15px;
+	}
+
+	.lw_cal_event_view {
+		.lw_image {
+			width: 200px;
+			height: auto;
+		}
+		.lw_slider_wrapper {
+			margin-bottom: 15px;
+		}
+		.lw_cal_event_detail_map {
+			width: 200px;
+			height: 200px;
+		}
+		#lw_cal_event_leftcol {
+			width: 200px;
+			padding-right: 15px;
+		}
+	}
+}
+
+// always hide
+#lw_page #lw_cal_view_selector li.add_new {
+	display: none;
+}
+
+/**
+ * Custom
+ */
+
+.icon-image,
+.icon-video {
+  width: 22px;
+  height: 22px;
+  overflow: hidden;
+}
+.icon-image img {
+  margin-left: -3px;
+}
+.icon-video img {
+  margin-left: -25px;
+}
+
+#sidebar .lw_item_images {
+  padding: 0;
+  width: 160px;
+  overflow: hidden;
+  
+  & > li > img {
+    margin-left: -20px;
+  }
+}
+

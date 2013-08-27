@@ -1,19 +1,47 @@
 <!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en"> <![endif]-->
+<!--[if IE 7]>         <html lang="en"> <![endif]-->
+<!--[if IE 8]>         <html lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>{{ title }}</title>
-		<link rel="stylesheet" href="/css/main.css">
-	</head>
-	<body>
-	<!-- nav partial -->
-	{{> nav }}
+<!--<![endif]-->
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 
-	<div class="container">
-		<!-- body partial, used for adding pages to layout -->
-		{{> body }}
-	</div>
+	<title>{{ title }}</title>
 
-	<script src="/js/highlight.js"></script>
-	</body>
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<link rel="stylesheet" href="/css/main.css">
+
+	<!-- viewport meta to reset inital scale -->
+	<meta name="viewport" content="width=device-width"/>
+
+	<!--[if lt IE 9]><script src="/live/resource/js/livewhale/thirdparty/html5shiv.js"></script><![endif]-->
+</head>
+<body>
+	<header id="siteheader">
+		<h1 class="container"><a href="/">LiveWhaleUI</a></h1>
+	</header>
+
+    <div class="content container cf">
+		<nav>
+			<!-- nav partial -->
+			{{> nav }}	
+		</nav>
+		<div id="main">
+			<!-- body partial, used for adding pages to layout -->
+			{{> body }}
+		</div>
+    </div>
+	<footer class="cf">
+		<div class="container">
+			<section class="powered-by">
+				Powered by <a href="http://www.whitewhale.net">White Whale Web Services</a>
+			</section>
+		</div>
+	</footer>
+
+</body>
 </html>

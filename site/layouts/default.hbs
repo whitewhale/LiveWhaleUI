@@ -20,7 +20,7 @@
 
 	<!--[if lt IE 9]><script src="/live/resource/js/livewhale/thirdparty/html5shiv.js"></script><![endif]-->
 </head>
-<body>
+<body{{#if body_id}} id="{{body_id}}"{{/if}}>
 	<header id="siteheader">
 		<h1 class="container"><a href="/">LiveWhaleUI</a></h1>
 	</header>
@@ -31,6 +31,7 @@
 			{{> nav }}	
 		</nav>
 		<div id="main">
+			<h2>{{ title }}:</h2>
 			<!-- body partial, used for adding pages to layout -->
 			{{> body }}
 		</div>
@@ -43,5 +44,9 @@
 		</div>
 	</footer>
 
+	<script type="text/javascript" src="/vendor/jquery.js"></script>
+	<script type="text/javascript" src="/vendor/jquery-ui.widget.min.js"></script>
+	{{#if plugin_filename}}<script type="text/javascript" src="/src/{{plugin_filename}}"></script>{{/if}}
+	<script type="text/javascript" src="/js/main.js"></script>
 </body>
 </html>

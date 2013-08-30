@@ -1,9 +1,9 @@
 $ = livewhale?.jQuery || window.jQuery
 
-$.widget 'lw.lw-timepicker',
+$.widget 'lw.timepicker',
   options:
     step: 30
-    startTime: new Date(0, 0, 0, 0, 0, 0)
+    startTime: new Date(0, 0, 0, 8, 0, 0)
     endTime:   new Date(0, 0, 0, 23, 30, 0)
     separator: ':'
     show24Hours: false
@@ -12,18 +12,19 @@ $.widget 'lw.lw-timepicker',
     opts      = @options
     tpOver    = false
     keyDown   = false
-    startTime = @timeToDate(opts.startTime)
-    endTime   = @timeToDate(opts.endTime)
     that = this
+    
+    @startTime = @stringToDate(opts.startTime)
+    @endTime   = @stringToDate(opts.endTime)
 
     # Disable browser autocomplete
     $el.attr('autocomplete', 'OFF')
 
     times = []
-    time = new Date(startTime) # Create a new date object.
+    time = new Date(@startTime) # Create a new date object.
 
-    while(time <= endTime)
-      times[times.length] = @formatTime(time, opts)
+    while(time <= @endTime)
+      times[times.length] = @getFormattedTime(time)
       time = new Date(time.setMinutes(time.getMinutes() + opts.step))
 
     @$wrapper = $wrapper = $('<div class="time-picker"/>')
@@ -58,13 +59,13 @@ $.widget 'lw.lw-timepicker',
     ).mousedown( ->
        tpOver = true
     ).click( ->
-      setTimeVal(elm, this, $wrapper)
+      @setTime($(this).val())
       tpOver = false
     )
     
     # Attach to click as well as focus so timePicker can be shown again when
     # clicking on the input when it already has focus.
-    $el.focus(@showPicker).click(@showPicker)
+    $el.focus($.proxy(@showPicker, this)).click($.proxy(@showPicker, this))
 
     # Hide timepicker on blur
     $el.blur ->
@@ -105,29 +106,25 @@ $.widget 'lw.lw-timepicker',
           break
         # Down arrow, similar in behaviour to up arrow.
         when 40
-          if (that.showPicker()) {
+          if (that.showPicker())
             return false
-          }
           $selected = $("li.selected", $ul)
           next = $selected.next().addClass("selected")[0]
-          if (next) {
+          if (next)
             $selected.removeClass("selected")
-            if (next.offsetTop + next.offsetHeight > top + $wrapper[0].offsetHeight) {
+            if (next.offsetTop + next.offsetHeight > top + $wrapper[0].offsetHeight)
               $wrapper[0].scrollTop = top + next.offsetHeight
-            }
-          }
-          else {
+          else
             $selected.removeClass("selected")
             next = $("li:first", $ul).addClass("selected")[0]
             $wrapper[0].scrollTop = 0
-          }
           return false
           break
         # Enter
         when 13
           if ($wrapper.is(":visible"))
-            sel = $("li.selected", $ul)[0]
-            setTimeVal(elm, sel, $wrapper, opts)
+            $sel = $("li.selected", $ul)[0]
+            @setTime($sel.val())
           return false
           break
         # Esc
@@ -144,126 +141,113 @@ $.widget 'lw.lw-timepicker',
   # Helper function to get an inputs current time as Date object.
   # Returns a Date object.
   getTime: ->
-    return @timeStringToDate(@element.val())
+    return @stringToDate(@element.val())
 
   showPicker: ->
-    if ($wrapper.is(":visible")) then return false
+    $el  = @element
+    opts = @options
 
-    $("li", $wrapper).removeClass("selected")
+    if (@$wrapper.is(":visible")) then return false
+
+    $("li", @$wrapper).removeClass("selected")
 
     # Position:
     # get offset rather than position because picker appended to body 
     elmOffset = $el.offset()
 
-    $wrapper.css
+    @$wrapper.css
       top:  elmOffset.top + $el.outerHeight()
       left: elmOffset.left
 
     # Show picker. This has to be done before scrollTop is set since that
     # can't be done on hidden elements.
-    $wrapper.show()
+    @$wrapper.show()
 
     # Try to find a time in the list that matches the entered time.
-    if (elm.value.match(/[0-9]+:[0-9]+[apm]+/))
-      time_string = elm.value.replace('am',' AM').replace('pm',' PM')
+    if ($el.val().match(/[0-9]+:[0-9]+[apm]+/))
+      time_string = $el.val().replace('am',' AM').replace('pm',' PM')
     else
-      time_string = elm.value
+      time_string = $el.val()
 
-    time = if (elm.value) then timeStringToDate(time_string, opts) else startTime
+    time = if ($el.val()) then @stringToDate(time_string) else @startTime
 
-    startMin = startTime.getHours() * 60 + startTime.getMinutes()
+    startMin = @startTime.getHours() * 60 + @startTime.getMinutes()
     min = (time.getHours() * 60 + time.getMinutes()) - startMin
     steps = Math.round(min / opts.step)
-    roundTime = normaliseTime(new Date(0, 0, 0, 0, (steps * opts.step + startMin), 0))
-    roundTime = if (startTime < roundTime && roundTime <= endTime) then roundTime else startTime
-    $matchedTime = $("li:contains(" + @formatTime(roundTime, opts) + ")", $wrapper)
+    roundTime = @_normalizeTime(new Date(0, 0, 0, 0, (steps * opts.step + startMin), 0))
+    roundTime = if (@startTime < roundTime && roundTime <= @endTime) then roundTime else @startTime
+    $matchedTime = $("li:contains(" + @getFormattedTime(roundTime, opts) + ")", @$wrapper)
 
     if ($matchedTime.length > 1)
       tmp = false
-      theTime = @formatTime(roundTime, opts).toUpperCase()
+      theTime = @getFormattedTime(roundTime).toUpperCase()
 
       $.each $matchedTime, (key,val) ->
-        if (val.innerHTML==theTime) then tmp = val
+        if (val.innerHTML is theTime) then tmp = val
 
-      if (tmp) $matchedTime = then $(tmp)
+      if (tmp) then $matchedTime = $(tmp)
 
     if ($matchedTime.length)
       $matchedTime.addClass("selected")
       # Scroll to matched time.
-      $wrapper[0].scrollTop = $matchedTime[0].offsetTop
+      @$wrapper[0].scrollTop = $matchedTime[0].offsetTop
 
     return true
   setTime: (val) ->
-    el = @element
+    $el = @element
 
     # if date object
-    if (val instanceof Date) {
-      val = @formatTime(@normaliseTime(val))
-    }
+    if (val instanceof Date)
+      val = @getFormattedTime(@_normalizeTime(val))
 
     # Update input field
-    el.val(val)
+    $el.val(val)
 
     # Trigger element's change events.
-    el.change()
+    $el.change()
 
     # Keep focus for all but IE (which doesn't like it)
-    if (!$.browser.msie) then el.focus()
+    if (!$.browser.msie) then $el.focus()
 
     # Hide picker
     @$wrapper.hide()
-
-  formatTime: (time) ->
-    opts = @options
-    h = time.getHours()
-    hours = if (opts.show24Hours) then h else (((h + 11) % 12) + 1)
-    minutes = time.getMinutes()
-
-    return formatNumber(hours,false) + opts.separator + formatNumber(minutes,true) + (opts.show24Hours ? '' : ((h < 12) ? ' AM' : ' PM'))
-  
+  getFormattedTime: (dt) ->
+    return if (@options.show24Hours) then @get24HourTime(dt) else @get12HourTime(dt)
   get12HourTime: (dt) ->
     hours = dt.getHours()
-    hours = (((h + 11) % 12) + 1)
-    am_pm = if (h < 12) then ' AM' else ' PM'
-
+    hours = ((hours + 11) % 12) + 1
+    am_pm = if (hours < 12) then ' AM' else ' PM'
     return @_pad(hours, 2) + @options.separator + @_pad(dt.getMinutes(), 2)
+  get24HourTime: (dt) ->
+    return @_pad(dt.getHours(), 2) + @options.separator + @_pad(dt.getMinutes(), 2)
+  # str format: hours separator minutes 
+  stringToDate: (str) ->
+    return @_normalizeTime(str) if (str instanceof Date)
+    return null if (!str)
 
-  get24HourTime:
+    opts = @options
 
+    array   = str.split(opts.separator)
+    hours   = parseInt(array[0], 10)
+    minutes = parseInt(array[1], 10)
 
-  
+    # Convert AM/PM hour to 24-hour format.
+    if (!@options.show24Hours)
+      if (hours is 12 and str.indexOf('AM') isnt -1)
+        hours = 0
+      else if (hours isnt 12 and str.indexOf('PM') isnt -1)
+        hours += 12
+
+    dt = new Date(0, 0, 0, hours, minutes, 0)
+    return @_normalizeTime(dt)
+  # pad with zeros until c chars long 
   _pad: (n, c) ->
     n = String(n)
     while (n.length < c)
       n = '0' + n
     return n
-
-  formatNumber: (value, is_padded) ->
-    return ((is_padded && value < 10) ? '0' : '') + value
-
-  timeToDate: (input) ->
-    return (typeof input === 'object') ? normaliseTime(input) : timeStringToDate(input)
-
-  timeStringToDate: (input) ->
-    if (!input) then return null
-
-    array   = input.split(@options.separator)
-    hours   = parseFloat(array[0])
-    minutes = parseFloat(array[1])
-
-    # Convert AM/PM hour to 24-hour format.
-    if (!@options.show24Hours)
-      if (hours === 12 and input.indexOf('AM') !== -1)
-        hours = 0
-      else if (hours !== 12 and input.indexOf('PM') !== -1)
-        hours += 12
-
-    dt = new Date(0, 0, 0, hours, minutes, 0)
-
-    return @normaliseTime(dt)
-
   # Normalise time object to a common date.
-  normaliseTime: (time) ->
+  _normalizeTime: (time) ->
     time.setFullYear(2001)
     time.setMonth(0)
     time.setDate(0)

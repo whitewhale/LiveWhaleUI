@@ -51,6 +51,10 @@ $.widget 'lw.timepicker',
       tpOver = false
     )
 
+    $ul.on 'click', 'li', (e) ->
+      $.proxy(that.setTime($(this).text()), that)
+      tpOver = false
+
     # IX todo - use event delegation
     $("li", $ul).mouseover( ->
       if (!keyDown)
@@ -58,11 +62,8 @@ $.widget 'lw.timepicker',
         $(this).addClass("selected")
     ).mousedown( ->
        tpOver = true
-    ).click( ->
-      @setTime($(this).val())
-      tpOver = false
     )
-    
+         
     # Attach to click as well as focus so timePicker can be shown again when
     # clicking on the input when it already has focus.
     $el.focus($.proxy(@showPicker, this)).click($.proxy(@showPicker, this))
@@ -124,7 +125,7 @@ $.widget 'lw.timepicker',
         when 13
           if ($wrapper.is(":visible"))
             $sel = $("li.selected", $ul)[0]
-            @setTime($sel.val())
+            that.setTime($sel.val())
           return false
           break
         # Esc
@@ -195,7 +196,7 @@ $.widget 'lw.timepicker',
     return true
   setTime: (val) ->
     $el = @element
-
+    
     # if date object
     if (val instanceof Date)
       val = @getFormattedTime(@_normalizeTime(val))

@@ -7,6 +7,7 @@ $.widget 'lw.timepicker',
     endTime:   new Date(0, 0, 0, 23, 30, 0)
     separator: ':'
     show24Hours: false
+    beforeShow: null
   _create: ->
     $el       = @element
     opts      = @options
@@ -20,28 +21,15 @@ $.widget 'lw.timepicker',
     # Disable browser autocomplete
     $el.attr('autocomplete', 'OFF')
 
-    times = []
-    time = new Date(@startTime) # Create a new date object.
+    @$wrapper = $wrapper = $('<div class="lw-timepicker"/>')
+    @$ul = $ul = $('<ul/>')
 
-    while(time <= @endTime)
-      times[times.length] = @getFormattedTime(time)
-      time = new Date(time.setMinutes(time.getMinutes() + opts.step))
+    # Append list to wrapper, and append wrapper to body 
+    $wrapper.append($ul).appendTo('body').hide()
 
-    @$wrapper = $wrapper = $('<div class="time-picker"/>')
-
-    # add time format class
+    # add format class
     wrapper_class = if (opts.show24Hours) then '24hours' else '12hours'
-    $wrapper.addClass('time-picker-' + wrapper_class)
-
-    $ul = $('<ul/>')
-
-    # Build the list.
-    $ul.append("<li>" + time + "</li>") for time in times
-
-    $wrapper.append($ul)
-
-    # Append the timPicker to the body and position it.
-    $wrapper.appendTo('body').hide()
+    $wrapper.addClass('lw-timepicker-' + wrapper_class)
 
     # Store the mouse state, used by the blur event. Use mouseover instead of
     # mousedown since Opera fires blur before mousedown.
@@ -52,21 +40,24 @@ $.widget 'lw.timepicker',
     )
 
     $ul.on 'click', 'li', (e) ->
-      $.proxy(that.setTime($(this).text()), that)
+      that.setTime($(this).text())
       tpOver = false
+      return true
 
     # IX todo - use event delegation
     $("li", $ul).mouseover( ->
       if (!keyDown)
         $("li.selected", $wrapper).removeClass("selected")
         $(this).addClass("selected")
+      return true
     ).mousedown( ->
        tpOver = true
+       return true
     )
-         
+
     # Attach to click as well as focus so timePicker can be shown again when
     # clicking on the input when it already has focus.
-    $el.focus($.proxy(@showPicker, this)).click($.proxy(@showPicker, this))
+    $el.focus($.proxy(@open, this)).click($.proxy(@open, this))
 
     # Hide timepicker on blur
     $el.blur ->
@@ -78,7 +69,7 @@ $.widget 'lw.timepicker',
     # work with up/down/enter/esc.
     event = if ($.browser.opera || $.browser.mozilla) then 'keypress' else 'keydown'
 
-    $el[event] (e) -> 
+    $el[event] (e) ->
       $selected
       keyDown = true
       top = $wrapper[0].scrollTop
@@ -87,7 +78,7 @@ $.widget 'lw.timepicker',
         # Up arrow.
         when 38
           # Just show picker if it's hidden.
-          if (that.showPicker())
+          if (that.open())
             return false
 
           $selected = $("li.selected", $ul)
@@ -107,7 +98,7 @@ $.widget 'lw.timepicker',
           break
         # Down arrow, similar in behaviour to up arrow.
         when 40
-          if (that.showPicker())
+          if (that.open())
             return false
           $selected = $("li.selected", $ul)
           next = $selected.next().addClass("selected")[0]
@@ -139,58 +130,38 @@ $.widget 'lw.timepicker',
     $el.keyup (e) ->
       keyDown = false
 
+
   # Helper function to get an inputs current time as Date object.
   # Returns a Date object.
   getTime: ->
     return @stringToDate(@element.val())
 
-  showPicker: ->
+  open: ->
     $el  = @element
     opts = @options
 
+    # do nothing if timepicker already visible
     if (@$wrapper.is(":visible")) then return false
 
-    $("li", @$wrapper).removeClass("selected")
+    @_buildTimeList()
+    @_position()
 
-    # Position:
-    # get offset rather than position because picker appended to body 
-    elmOffset = $el.offset()
-
-    @$wrapper.css
-      top:  elmOffset.top + $el.outerHeight()
-      left: elmOffset.left
-
-    # Show picker. This has to be done before scrollTop is set since that
-    # can't be done on hidden elements.
+    # we have to show before scrollTop, which requires visiblity
     @$wrapper.show()
 
     # Try to find a time in the list that matches the entered time.
-    if ($el.val().match(/[0-9]+:[0-9]+[apm]+/))
-      time_string = $el.val().replace('am',' AM').replace('pm',' PM')
-    else
-      time_string = $el.val()
+    time = if ($el.val()) then @stringToDate($el.val()) else @startTime
 
-    time = if ($el.val()) then @stringToDate(time_string) else @startTime
+    startMin     = @startTime.getHours() * 60 + @startTime.getMinutes()
+    min          = (time.getHours() * 60 + time.getMinutes()) - startMin
+    steps        = Math.round(min / opts.step)
+    roundTime    = @_normalizeTime(new Date(0, 0, 0, 0, (steps * opts.step + startMin), 0))
+    roundTime    = if (@startTime < roundTime && roundTime <= @endTime) then roundTime else @startTime
+    $matchedTime = $("li:contains(" + @getFormattedTime(roundTime) + ")", @$ul)
 
-    startMin = @startTime.getHours() * 60 + @startTime.getMinutes()
-    min = (time.getHours() * 60 + time.getMinutes()) - startMin
-    steps = Math.round(min / opts.step)
-    roundTime = @_normalizeTime(new Date(0, 0, 0, 0, (steps * opts.step + startMin), 0))
-    roundTime = if (@startTime < roundTime && roundTime <= @endTime) then roundTime else @startTime
-    $matchedTime = $("li:contains(" + @getFormattedTime(roundTime, opts) + ")", @$wrapper)
-
-    if ($matchedTime.length > 1)
-      tmp = false
-      theTime = @getFormattedTime(roundTime).toUpperCase()
-
-      $.each $matchedTime, (key,val) ->
-        if (val.innerHTML is theTime) then tmp = val
-
-      if (tmp) then $matchedTime = $(tmp)
-
+    # add selected class, and scroll to matched time
     if ($matchedTime.length)
       $matchedTime.addClass("selected")
-      # Scroll to matched time.
       @$wrapper[0].scrollTop = $matchedTime[0].offsetTop
 
     return true
@@ -216,31 +187,52 @@ $.widget 'lw.timepicker',
     return if (@options.show24Hours) then @get24HourTime(dt) else @get12HourTime(dt)
   get12HourTime: (dt) ->
     hours = dt.getHours()
-    hours = ((hours + 11) % 12) + 1
     am_pm = if (hours < 12) then ' AM' else ' PM'
-    return @_pad(hours, 2) + @options.separator + @_pad(dt.getMinutes(), 2)
+    hours = ((hours + 11) % 12) + 1
+    return @_pad(hours, 2) + @options.separator + @_pad(dt.getMinutes(), 2) + am_pm
   get24HourTime: (dt) ->
     return @_pad(dt.getHours(), 2) + @options.separator + @_pad(dt.getMinutes(), 2)
   # str format: hours separator minutes 
   stringToDate: (str) ->
+    # return normalized date if str a Date object
     return @_normalizeTime(str) if (str instanceof Date)
-    return null if (!str)
 
-    opts = @options
-
+    opts    = @options
     array   = str.split(opts.separator)
+    
+    if (array.length isnt 2) then return false
+
     hours   = parseInt(array[0], 10)
     minutes = parseInt(array[1], 10)
 
-    # Convert AM/PM hour to 24-hour format.
+    # convert am/pm 24 hour equivalent
     if (!@options.show24Hours)
-      if (hours is 12 and str.indexOf('AM') isnt -1)
+      str = str.toLowerCase()
+      if (hours is 12 and str.indexOf('am') isnt -1)
         hours = 0
-      else if (hours isnt 12 and str.indexOf('PM') isnt -1)
+      else if (hours isnt 12 and str.indexOf('pm') isnt -1)
         hours += 12
 
-    dt = new Date(0, 0, 0, hours, minutes, 0)
-    return @_normalizeTime(dt)
+    return @_normalizeTime( new Date(0, 0, 0, hours, minutes, 0) )
+  _refreshTimeFormat: ->
+  _buildTimeList: ->
+    times = []
+    time = new Date(@startTime) # Create a new date object.
+    step = @options.step
+
+    @$ul.empty()
+
+    while(time <= @endTime)
+      @$ul.append("<li>" + @getFormattedTime(time) + "</li>")
+      time = new Date(time.setMinutes(time.getMinutes() + step))
+  _position: ->
+    $el = @element
+    # get offset rather than position because picker appended to body 
+    el_offset = $el.offset()
+
+    @$wrapper.css
+      top:  el_offset.top + $el.outerHeight() + 1
+      left: el_offset.left
   # pad with zeros until c chars long 
   _pad: (n, c) ->
     n = String(n)

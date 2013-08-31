@@ -1,3 +1,5 @@
+path = require 'path'
+
 module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON('package.json')
@@ -21,22 +23,37 @@ module.exports = (grunt) ->
         src: ['site/*.hbs']
         dest: 'public/'
     less:
-      development:
+      site:
         options:
           paths: ['public/css']
+        src:
+          expand: true
+          cwd: 'public/css'
+          src: '*.less'
+          ext: '.css'
+      plugins:
+        options:
+          paths: ['public/css/plugins']
         files:
-          'public/css/main.css': 'public/css/main.less'
+          'public/css/plugins/lw-timepickers.css': 'public/css/plugins/lw-timepicker.less'
+          'public/css/plugins/lw-test.css': 'public/css/plugins/lw-test.less'
     watch:
       assemble:
         files: ['site/**/*.hbs']
         tasks: ['assemble']
         options:
           livereload: true
-      less:
-        files: ['public/css/**/*.less']
-        tasks: ['less']
+      less_site:
+        files: ['public/css/*.less']
+        tasks: ['less:site']
         options:
           livereload: true
+      less_plugins:
+        options:
+          livereload: true
+          nospawn: true
+        files: ['public/css/plugins/*.less']
+        tasks: ['less:plugins']
 
   grunt.loadNpmTasks('grunt-contrib-jasmine')
   grunt.loadNpmTasks('assemble')
@@ -44,3 +61,13 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-less')
 
   grunt.registerTask('default', ['jasmine'])
+
+  # only compile the plugin files that have changed
+  grunt.event.on 'watch', (action, filepath) ->
+    grunt.config ['less', 'plugins', 'files'], [
+      src: filepath,
+      dest: 'public/css/plugins/' + path.basename(filepath, '.less') + '.css'
+    ]
+    return
+
+  return

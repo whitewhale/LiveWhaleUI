@@ -4,3 +4,4 @@ src/*.js
 public/*.html
 public/src
 public/vendor
+public/css/plugins/*.css

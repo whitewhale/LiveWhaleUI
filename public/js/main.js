@@ -5,7 +5,16 @@
   page = {
     timepicker: {
       init: function() {
-        $('#timepicker').timepicker();
+        var $picker;
+        $picker = $('#picker').timepicker();
+        $('#format_toggle').click(function(e) {
+          var format, show24;
+          e.preventDefault();
+          show24 = $picker.timepicker('option', 'show24Hours') ? false : true;
+          console.log('is 24:' + show24);
+          format = $picker.timepicker('option', 'show24Hours', show24);
+          return true;
+        });
       }
     }
   };

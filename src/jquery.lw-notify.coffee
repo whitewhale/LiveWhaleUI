@@ -1,5 +1,5 @@
 
-$.widget 'lw.lwNotify',
+$.widget 'lw.notify',
   options:
     id:            false        # new notices clobber any notices with same id
     message:       'Sample Notification'

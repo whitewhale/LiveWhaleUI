@@ -1,6 +1,6 @@
 $ = livewhale?.jQuery || window.jQuery
 
-$.widget 'lw.lw-multisuggest',
+$.widget 'lw.multisuggest',
   options:
     name:      'name'
     data:      []

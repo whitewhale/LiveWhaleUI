@@ -1,14 +1,18 @@
 $ = livewhale?.jQuery || window.jQuery
 
-$.widget 'lw.lw-dialog',
+$.widget 'lw.overlay',
   options:
-    'id':          false
+    id:            false
     customClass:   null # one or more space-separated classes to be added to dialog wrapper
-    fadeIn:        100
-    sizeTo:        300
+    closeClass:    [] # elements with these classes will close dialog on click
     closeButton:   true
-    closeClasses:  [] # elements with these classes will close dialog on click
     autoOpen:      true
+    minWidth:      null
+    minHeight:     null
+    maxWidth:      null
+    maxHeight:     null
+    width:         null
+    fadeIn:        100
   _create: ->
     $this = $(this)
     that  = this
@@ -45,6 +49,9 @@ $.widget 'lw.lw-dialog',
       return false # and cancel the click
 
     @position() # and position the overlay
+  _destroy: ->
+    @$blackout.remove()
+    @dialog.remove()
   _init: ->
     if (@options.autoOpen)
       @open()
@@ -84,20 +91,6 @@ $.widget 'lw.lw-dialog',
 
     # and fix its width if not fixed
     @$dialog.width(@$dialog.width())
-  sizeTo: (width, height, callback) ->
-    that = this
-    scrolltop = $(document).scrollTop()
-    offset = Math.max(@$dialog.offset().top - (height - @$dialog.height()) / 2, scrolltop + 10)
-
-    @$dialog.animate(
-      width: width
-      height: height
-      top: offset
-    , @options.sizeTo, ->
-      # call callback
-      if ($.isFunction(callback))
-        callback.apply(that)
-    )
   remove: (callback) ->
     that = this
 
@@ -107,9 +100,4 @@ $.widget 'lw.lw-dialog',
         that.$container.remove() # remove the overlay
         if ($.isFunction(callback))
           callback.apply(null)
-  #sizeTo: @size, # alias to for BC with original overlay plugin
   _setOption: (key, value) ->
-    # In jQuery UI 1.8, you have to manually invoke the _setOption method from the base widget
-    $.Widget.prototype._setOption.apply(this, arguments)
-  _destroy: (callback) ->
-    @remove()

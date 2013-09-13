@@ -4,7 +4,7 @@ $.widget 'lw.overlay',
   options:
     id:            false
     customClass:   null # one or more space-separated classes to be added to dialog wrapper
-    closeClass:    [] # elements with these classes will close dialog on click
+    closeClass:    ''   # elements with these classes will close dialog on click
     closeButton:   true
     autoOpen:      true
     minWidth:      null
@@ -17,67 +17,57 @@ $.widget 'lw.overlay',
     $this = $(this)
     that  = this
     opts  = @options
-    el    = @element
+    $el   = @element
 
-    @$contents = $ '<div>',
-      'class': 'lw_overlay_contents'
+    @$container = $('<div/ class = "lw_element lw_overlay_container"/>')
+    @$blackout  = $('<div class  = "lw_overlay_blackout"/>')
+    @$dialog    = $('<div class  = "lw_overlay"/>')
+    @$contents  = $('<div class  = "lw_overlay_contents"/>')
 
-    @$dialog = $ '<div>',
-      'class': 'lw_overlay'
+    close_classes = if (opts.closeClass) then opts.classClass.split(' ') else []
 
     # add close button if opted for
     if (opts.closeButton)
       @$dialog.html('<a class="lw_overlay_close_button" href="#">&times;</a>')
-      opts.closeClasses.push('.lw_overlay_close_button')
+      close_classes.push('.lw_overlay_close_button')
 
     # add class and id to overlay wrapper
     if (opts.customClass) then @$dialog.addClass(opts.customClass)
     if (opts.id) then @$dialog.attr('id', opts.id)
 
-    @$blackout = $ '<div/>',
-      'class': 'lw_overlay_blackout'
-
-    @$container = $('<div>', 'class': 'lw_element lw_overlay_container')
+    # put it together
+    @$container
       .append(@$blackout)
-      .append(@$dialog.append(@$contents.append(el)))
+      .append(@$dialog.append(@$contents.append($el)))
       .appendTo($('body'))
 
-    # set close handler for classes in opts.closeClasses 
-    @$container.on 'click', opts.closeClasses.join(','), (evt) ->
-      evt.preventDefault()
-      that.destroy() # remove it
-      return false # and cancel the click
+    # close handler for classes in opts.closeClass 
+    if (close_classes.length)
+      @$container.on 'click', close_classes.join(' '), (e) ->
+        e.preventDefault()
+        that.close()
+        return false
 
-    @position() # and position the overlay
+    @open()
+    @position()
+    @_trigger('create')
+    return true
   _destroy: ->
-    @$blackout.remove()
-    @dialog.remove()
+    @$container.remove()
   _init: ->
-    if (@options.autoOpen)
-      @open()
+    if (@options.autoOpen) then @open()
   open: ->
-    # return right away if already open
-    return false if (@_isOpen)
-    @_isOpen = true
-
-    that = this
-    opts = @options
-
-    # fade in the blackout, then the overlay
-    @$blackout.fadeTo opts.fadeIn / 2, 1, ->
-      that.$dialog.fadeTo opts.fadeIn / 2, 1, ->
-        that._trigger('open')
-  close: ->
-    @$blackout.hide()
-    @$dialog.hide()
-
-    @_isOpen = false
+    @$container.show()
+    this._trigger('open')
+  close: () ->
+    @$container.hide()
+    @_trigger('close')
   html: (content) ->
-    @$contents.html(content); # set HTML
-    @position(); # re-position the overlay
+    @$contents.html(content)
+    @position()
   append: (content) ->
-    @$contents.append(content); # set HTML
-    #@position();                # re-position the overlay
+    @$contents.append(content)
+    @position()
   # update the overlay's position
   position: (offset) ->
     # clear the height and width
@@ -91,13 +81,3 @@ $.widget 'lw.overlay',
 
     # and fix its width if not fixed
     @$dialog.width(@$dialog.width())
-  remove: (callback) ->
-    that = this
-
-    # remove the overlay if it exists 
-    if (@$container)
-      @$container.focusout().fadeTo @$dialog.fadeIn / 2, 0, ->
-        that.$container.remove() # remove the overlay
-        if ($.isFunction(callback))
-          callback.apply(null)
-  _setOption: (key, value) ->

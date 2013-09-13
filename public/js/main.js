@@ -16,6 +16,14 @@
           return true;
         });
       }
+    },
+    overlay: {
+      init: function() {
+        $('#overlay_open').click(function() {
+          $('#overlay_content').overlay();
+          return true;
+        });
+      }
     }
   };
 

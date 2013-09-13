@@ -22,6 +22,40 @@ module.exports = (grunt) ->
           layout: 'default.hbs'
         src: ['site/*.hbs']
         dest: 'public/'
+    coffee:
+      release:
+        files:
+          'release/jquery.lw-overlay.js': 'src/jquery.lw-overlay.coffee'
+          'release/jquery.lw-timepicker.js': 'src/jquery.lw-timepicker.coffee'
+      blah:
+        expand: true
+        flatten: true
+        cwd: 'src'
+        src: ['*.coffee']
+        dest: 'release/'
+        ext: '.js'
+    uglify:
+      production:
+        files:
+          'release/frontend.min.js': ['src/jquery.lw-overlay.js']
+          'release/lw-overlay.min.js': ['src/jquery.lw-overlay.js']
+    concat:
+      frontend_css:
+        src: ['public/css/plugins/lw-overlay.css', 'public/css/plugins/lw-timepicker.css']
+        dest: 'release/css/frontend.css'
+    clean:
+      release: ['release', 'release/css']
+    copy:
+      js:
+        src: 'src/*.js'
+        dest: '../LiveWhale/www/livewhale/plugins/lwui/'
+      css:
+        expand: true
+        cwd: 'release/css/'
+        src: '*.css'
+        dest: '../LiveWhale/www/livewhale/theme/core/styles/lwui/'
+        flatten: true
+        filter: 'isFile'
     less:
       site:
         options:
@@ -59,8 +93,14 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('assemble')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-contrib-less')
+  grunt.loadNpmTasks('grunt-contrib-concat')
+  grunt.loadNpmTasks('grunt-contrib-uglify')
+  grunt.loadNpmTasks('grunt-contrib-copy')
+  grunt.loadNpmTasks('grunt-contrib-coffee')
 
   grunt.registerTask('default', ['jasmine'])
+  grunt.registerTask('production', ['uglify:production', 'copy:production'])
+  grunt.registerTask('lw', ['copy:js', 'copy:css'])
 
   # only compile the plugin files that have changed
   grunt.event.on 'watch', (action, filepath) ->

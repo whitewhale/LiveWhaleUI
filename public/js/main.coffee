@@ -5,13 +5,16 @@ page =
       
       $('#format_toggle').click (e) ->
         e.preventDefault()
-
         show24 = if ($picker.timepicker('option', 'show24Hours')) then false else true
-
         console.log 'is 24:' + show24
-
         format = $picker.timepicker 'option', 'show24Hours', show24
+        return true
 
+      return
+  overlay:
+    init: ->
+      $('#overlay_open').click ->
+        $('#overlay_content').overlay()
         return true
 
       return

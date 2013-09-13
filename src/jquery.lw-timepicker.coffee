@@ -13,10 +13,11 @@ $.widget 'lw.timepicker',
     opts      = @options
     tpOver    = false
     keyDown   = false
-    that = this
+    that      = this
     
     @startTime = @stringToDate(opts.startTime)
     @endTime   = @stringToDate(opts.endTime)
+    @time      = $el.val() && @stringToDate($el.val())
 
     # Disable browser autocomplete
     $el.attr('autocomplete', 'OFF')
@@ -131,12 +132,7 @@ $.widget 'lw.timepicker',
       keyDown = false
 
 
-  # Helper function to get an inputs current time as Date object.
-  # Returns a Date object.
-  getTime: ->
-    return @stringToDate(@element.val())
-
-  open: ->
+    open: ->
     $el  = @element
     opts = @options
 
@@ -150,7 +146,7 @@ $.widget 'lw.timepicker',
     @$wrapper.show()
 
     # Try to find a time in the list that matches the entered time.
-    time = if ($el.val()) then @stringToDate($el.val()) else @startTime
+    time = @time or @startTime
 
     startMin     = @startTime.getHours() * 60 + @startTime.getMinutes()
     min          = (time.getHours() * 60 + time.getMinutes()) - startMin
@@ -167,10 +163,15 @@ $.widget 'lw.timepicker',
     return true
   setTime: (val) ->
     $el = @element
+
+    if (!val) then return false
     
     # if date object
     if (val instanceof Date)
+      @time = @_normalizeTime(val)
       val = @getFormattedTime(@_normalizeTime(val))
+    else
+      @time = @stringToDate(val)
 
     # Update input field
     $el.val(val)
@@ -183,6 +184,8 @@ $.widget 'lw.timepicker',
 
     # Hide picker
     @$wrapper.hide()
+
+    return true
   getFormattedTime: (dt) ->
     return if (@options.show24Hours) then @get24HourTime(dt) else @get12HourTime(dt)
   get12HourTime: (dt) ->
@@ -214,7 +217,6 @@ $.widget 'lw.timepicker',
         hours += 12
 
     return @_normalizeTime( new Date(0, 0, 0, hours, minutes, 0) )
-  _refreshTimeFormat: ->
   _buildTimeList: ->
     times = []
     time = new Date(@startTime) # Create a new date object.

@@ -2,17 +2,18 @@ $ = livewhale?.jQuery || window.jQuery
 
 $.widget 'lw.overlay',
   options:
-    id:            false
-    customClass:   null # one or more space-separated classes to be added to dialog wrapper
-    closeClass:    ''   # elements with these classes will close dialog on click
-    closeButton:   true
-    autoOpen:      true
-    minWidth:      null
-    minHeight:     null
-    maxWidth:      null
-    maxHeight:     null
-    width:         null
-    fadeIn:        100
+    destroyOnClose: true
+    id:             false
+    customClass:    null # one or more space-separated classes to be added to dialog wrapper
+    closeClass:     ''   # elements with these classes will close dialog on click
+    closeButton:    true
+    autoOpen:       true
+    minWidth:       null
+    minHeight:      null
+    maxWidth:       null
+    maxHeight:      null
+    width:          null
+    fadeIn:         100
   _create: ->
     $this = $(this)
     that  = this
@@ -54,20 +55,27 @@ $.widget 'lw.overlay',
     return true
   _destroy: ->
     @$container.remove()
+    return @
   _init: ->
     if (@options.autoOpen) then @open()
   open: ->
     @$container.show()
     this._trigger('open')
-  close: () ->
-    @$container.hide()
+  close: ->
+    if (@options.destroyOnClose)
+      this._destory()
+    else
+      @$container.hide()
     @_trigger('close')
+    return @
   html: (content) ->
     @$contents.html(content)
     @position()
+    return @
   append: (content) ->
     @$contents.append(content)
     @position()
+    return @
   # update the overlay's position
   position: (offset) ->
     # clear the height and width
@@ -80,4 +88,4 @@ $.widget 'lw.overlay',
       top: $(document).scrollTop() + offset
 
     # and fix its width if not fixed
-    @$dialog.width(@$dialog.width())
+    @$dialog.width(@options.width || @$dialog.width())

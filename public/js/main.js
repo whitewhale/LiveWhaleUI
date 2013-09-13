@@ -19,8 +19,11 @@
     },
     overlay: {
       init: function() {
-        $('#overlay_open').click(function() {
-          $('#overlay_content').overlay();
+        $('#overlay_open').click(function(e) {
+          e.preventDefault();
+          $('#overlay_content').overlay({
+            width: 500
+          });
           return true;
         });
       }

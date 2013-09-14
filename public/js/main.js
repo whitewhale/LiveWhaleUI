@@ -19,12 +19,17 @@
     },
     overlay: {
       init: function() {
+        var $overlay = $('#overlay_content');
         $('#overlay_open').click(function(e) {
           e.preventDefault();
-          $('#overlay_content').overlay({
-            width: 500
+          $overlay.overlay({
+            closeSelector: '.close'
           });
           return true;
+        });
+
+        $('#change_width').change(function() {
+          $overlay.overlay('option', 'width', $(this).val());
         });
       }
     }

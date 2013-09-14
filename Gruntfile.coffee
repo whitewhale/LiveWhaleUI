@@ -22,39 +22,44 @@ module.exports = (grunt) ->
           layout: 'default.hbs'
         src: ['site/*.hbs']
         dest: 'public/'
+    clean:
+      release: ['release']
     coffee:
       release:
         files:
           'release/jquery.lw-overlay.js': 'src/jquery.lw-overlay.coffee'
           'release/jquery.lw-timepicker.js': 'src/jquery.lw-timepicker.coffee'
-      blah:
-        expand: true
-        flatten: true
-        cwd: 'src'
-        src: ['*.coffee']
-        dest: 'release/'
-        ext: '.js'
-    uglify:
-      production:
-        files:
-          'release/frontend.min.js': ['src/jquery.lw-overlay.js']
-          'release/lw-overlay.min.js': ['src/jquery.lw-overlay.js']
     concat:
+      js:
+        options:
+          separator: ';'
+        files:
+          'release/frontend.js': ['release/jquery.lw-overlay.js']
+          'release/backend.js': ['release/jquery.lw-overlay.js']
       frontend_css:
-        src: ['public/css/plugins/lw-overlay.css', 'public/css/plugins/lw-timepicker.css']
+        src: ['public/css/plugins/lw-overlay.css']
         dest: 'release/css/frontend.css'
-    clean:
-      release: ['release', 'release/css']
+      backend_css:
+        src: ['public/css/plugins/lw-overlay.css', 'public/css/plugins/lw-timepicker.css']
+        dest: 'release/css/backend.css'
+    uglify:
+      release:
+        files:
+          'release/frontend.min.js': ['release/frontend.js']
+          'release/backend.min.js': ['release/backend.js']
+          'release/jquery.lw-overlay.min.js': ['release/jquery.lw-overlay.js']
     copy:
       js:
-        src: 'src/*.js'
+        expand: true
+        flatten: true
+        src: 'release/*.js'
         dest: '../LiveWhale/www/livewhale/plugins/lwui/'
       css:
         expand: true
+        flatten: true
         cwd: 'release/css/'
         src: '*.css'
         dest: '../LiveWhale/www/livewhale/theme/core/styles/lwui/'
-        flatten: true
         filter: 'isFile'
     less:
       site:
@@ -70,7 +75,7 @@ module.exports = (grunt) ->
           paths: ['public/css/plugins']
         files:
           'public/css/plugins/lw-timepickers.css': 'public/css/plugins/lw-timepicker.less'
-          'public/css/plugins/lw-test.css': 'public/css/plugins/lw-test.less'
+          'public/css/plugins/lw-overlay.css': 'public/css/plugins/lw-overlay.less'
     watch:
       assemble:
         files: ['site/**/*.hbs']
@@ -97,9 +102,14 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-contrib-coffee')
+  grunt.loadNpmTasks('grunt-contrib-clean')
 
   grunt.registerTask('default', ['jasmine'])
-  grunt.registerTask('production', ['uglify:production', 'copy:production'])
+
+  grunt.registerTask('release', [
+    'clean', 'coffee:release', 'concat:js', 'uglify:release', 'less:plugins', 'concat:frontend_css', 'concat:backend_css', 'copy'
+  ])
+
   grunt.registerTask('lw', ['copy:js', 'copy:css'])
 
   # only compile the plugin files that have changed

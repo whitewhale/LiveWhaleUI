@@ -20,6 +20,13 @@ $.widget 'lw.overlay',
     opts  = @options
     $el   = @element
 
+    @orig_css =
+      display: $el[0].style.display
+
+    @orig_pos =
+      parent: $el.parent()
+      index: $el.parent().children().index($el)
+
     @$container = $('<div/ class = "lw_element lw_overlay_container"/>')
     @$blackout  = $('<div class  = "lw_overlay_blackout"/>')
     @$dialog    = $('<div class  = "lw_overlay"/>')
@@ -49,7 +56,7 @@ $.widget 'lw.overlay',
     # put it together
     @$container
       .append(@$blackout)
-      .append(@$dialog.append(@$contents.append($el)))
+      .append(@$dialog.append(@$contents.append( $el.show() )))
       .appendTo($('body'))
 
     # close handler for selectors including che 
@@ -66,8 +73,29 @@ $.widget 'lw.overlay',
     return true
   _init: ->
     if (@options.autoOpen) then @open()
-  destroy: ->
+  _destroy: ->
+    $el = @element
+
     $(window).unbind('lw')
+
+    # detach this.element before removing the container
+    $el.detach()
+
+    if (@$container)
+      @$container.remove()
+      @$container = null
+
+    # restore original css 
+    $el.css(@orig_css)
+
+    # restore original position
+    $next = @orig_pos.parent.children().eq( @orig_pos.index )
+    # Don't place the dialog next to itself 
+    if ($next.length && $next[0] isnt $el[0])
+      $next.before($el)
+    else
+      @orig_pos.parent.append($el)
+
     return
   _setOption: (key, value) ->
     if (key is 'width' or key is 'height')
@@ -86,14 +114,12 @@ $.widget 'lw.overlay',
     @position()
     this._trigger('open')
   close: ->
-    @_trigger('close')
-
     if (@options.destroyOnClose)
-      # not sure why, but this implicitly calls @destroy. I tried calling @destroy here, 
-      # and removing the container from _destroy(), but that caused an infinite loop
-      @$container.remove()
+      @destroy()
     else
       @$container.hide()
+    
+    @_trigger('close')
     return @
   html: (content) ->
     @$contents.html(content)

@@ -65,11 +65,8 @@ module.exports = (grunt) ->
       site:
         options:
           paths: ['public/css']
-        src:
-          expand: true
-          cwd: 'public/css'
-          src: '*.less'
-          ext: '.css'
+        files:
+          'public/css/main.css': 'public/css/main.less'
       plugins:
         options:
           paths: ['public/css/plugins']
@@ -104,10 +101,10 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-clean')
 
-  grunt.registerTask('default', ['jasmine'])
+  grunt.registerTask('default', ['assemble', 'less'])
 
   grunt.registerTask('release', [
-    'clean', 'coffee:release', 'concat:js', 'uglify:release', 'less:plugins', 'concat:frontend_css', 'concat:backend_css', 'copy'
+    'clean', 'coffee:release', 'concat:js', 'uglify:release', 'less:plugins', 'concat:frontend_css', 'concat:backend_css'
   ])
 
   grunt.registerTask('lw', ['copy:js', 'copy:css'])

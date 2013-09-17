@@ -17,7 +17,7 @@ $.widget 'lw.timepicker',
     
     @startTime = @stringToDate(opts.startTime)
     @endTime   = @stringToDate(opts.endTime)
-    @time      = $el.val() && @stringToDate($el.val())
+    @time      = @stringToDate($el.val())
 
     # Disable browser autocomplete
     $el.attr('autocomplete', 'OFF')
@@ -184,9 +184,8 @@ $.widget 'lw.timepicker',
 
     # Hide picker
     @$wrapper.hide()
-
-    return true
-  getFormattedTime: (dt) ->
+  getFormattedTime: (dt, show24Hours) ->
+    if (show24Hours is undefined) then show24Hours = @options.show24Hours
     return if (@options.show24Hours) then @get24HourTime(dt) else @get12HourTime(dt)
   get12HourTime: (dt) ->
     hours = dt.getHours()
@@ -217,6 +216,14 @@ $.widget 'lw.timepicker',
         hours += 12
 
     return @_normalizeTime( new Date(0, 0, 0, hours, minutes, 0) )
+  _setOption: (key, value) ->
+    if ('show24Hours' is key)
+      @element.val(@getFormattedTime(@time, value || false))
+      #if (value)
+        #@options.element.val(@getFormattedTime(@time)))
+        #@options.element.val(@getFormattedTime(@time)))
+        #else
+
   _buildTimeList: ->
     times = []
     time = new Date(@startTime) # Create a new date object.

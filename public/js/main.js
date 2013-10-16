@@ -20,11 +20,18 @@
     overlay: {
       init: function() {
         var $overlay = $('#overlay_content');
+
         $('#overlay_open').click(function(e) {
           e.preventDefault();
+          e.stopPropagation();
+
           $overlay.overlay({
-            closeSelector: '.close'
+            closeSelector: '.close',
+            closeOnBodyClick: true
           });
+
+          $overlay.overlay('option', 'width', 300);
+
           return true;
         });
 

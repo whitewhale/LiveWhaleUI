@@ -45,14 +45,13 @@ if (!placeholder_support)
 
     # when setter
     # call original val method if setting value
-    if(arguments.length > 0) then return $.fn.origVal.apply(this, arguments)
+    if (arguments.length > 0) then return $.fn.origVal.apply(this, arguments)
 
     # when getter 
     # return empty string if val === placeholder, return val otherwise
     val = $.fn.origVal.call(this)
     placeholder = $this.attr('placeholder')
     return if (val is placeholder) then '' else val
-  
   # clear placeholder values on page reload 
   $(window).on 'unload', ->
     $('input[placeholder]').each ->

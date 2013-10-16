@@ -2,18 +2,19 @@ $ = livewhale?.jQuery || window.jQuery
 
 $.widget 'lw.overlay',
   options:
-    destroyOnClose: true
-    id:             false
-    customClass:    null # one or more space-separated classes to be added to dialog wrapper
-    closeSelector:  ''   # selector for elements whose click should close dialog
-    closeButton:    true
-    autoOpen:       true
-    maxWidth:       '90%'
-    maxHeight:      null
-    minWidth:       null
-    minHeight:      null
-    width:          null
-    height:         null
+    destroyOnClose:    true
+    id:                false
+    customClass:       null   # one or more space-separated classes to be added to dialog wrapper
+    closeSelector:     ''     # selector for elements whose click should close dialog
+    closeButton:       true
+    closeOnBodyClick:  false,
+    autoOpen:          true
+    maxWidth:          '90%'
+    maxHeight:         null
+    minWidth:          null
+    minHeight:         null
+    width:             null
+    height:            null
   _create: ->
     $this = $(this)
     that  = this
@@ -89,17 +90,19 @@ $.widget 'lw.overlay',
     $el.css(@orig_css)
 
     # restore original position
-    $next = @orig_pos.parent.children().eq( @orig_pos.index )
-    # Don't place the dialog next to itself 
-    if ($next.length && $next[0] isnt $el[0])
-      $next.before($el)
-    else
-      @orig_pos.parent.append($el)
+    if (@orig_pos.parent.length)
+      $next = @orig_pos.parent.children().eq( @orig_pos.index )
+      # Don't place the dialog next to itself 
+      if ($next.length && $next[0] isnt $el[0])
+        $next.before($el)
+      else
+        @orig_pos.parent.append($el)
 
     return
   _setOption: (key, value) ->
     if (key is 'width' or key is 'height')
       @$dialog.css(key, value)
+      @position()
 
     if (key is 'maxWidth')
       @$dialog.css('max-width', value)
@@ -110,9 +113,19 @@ $.widget 'lw.overlay',
     if (key is 'minHeight')
       @$dialog.css('min-height', value)
   open: ->
+    that = this
+
     @$container.show()
     @position()
     this._trigger('open')
+
+    # handler for closing when clicking outsite dialog box
+    if (@options.closeOnBodyClick)
+      @$blackout.one 'click', (e) ->
+        e.preventDefault()
+        that.close()
+        return false
+    return @
   close: ->
     if (@options.destroyOnClose)
       @destroy()
@@ -132,7 +145,6 @@ $.widget 'lw.overlay',
   # update the overlay's position
   position: ->
     $window = $(window)
-
 
     # if there's no offset specified, set the overlay near the top of the window/
     ycoord = Math.max(($window.height() - @$dialog.outerHeight()) / 4, 20)

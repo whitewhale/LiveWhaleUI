@@ -36,12 +36,13 @@ $.widget 'lw.overlay',
     $dialog = @$dialog
 
     if (opts.width) then $dialog.css('width', opts.width)
-    if (opts.height) then $dialog.css('height', opts.height)
+    if (opts.height) then @_setHeight(opts.height)
     if (opts.maxWidth) then $dialog.css('max-width', opts.maxWidth)
-    if (opts.maxHeight) then $dialog.css('max-height', opts.maxHeight)
+    if (opts.maxHeight) then @_setMaxHeight(opts.maxHeight)
     if (opts.minWidth) then $dialog.css('min-width', opts.minWidth)
     if (opts.minHeight) then $dialog.css('min-height', opts.minHeight)
 
+    
     close_selectors = []
     if (opts.closeSelector) then close_selectors.push(opts.closeSelector) else []
 
@@ -74,6 +75,12 @@ $.widget 'lw.overlay',
     return true
   _init: ->
     if (@options.autoOpen) then @open()
+  _setHeight: (height) ->
+    @$dialog.height(height)
+    @$contents.height(height)
+  _setMaxHeight: (height) ->
+    @$dialog.css('max-height', height)
+    @$contents.css('max-height', height)
   _destroy: ->
     $el = @element
 
@@ -100,14 +107,18 @@ $.widget 'lw.overlay',
 
     return
   _setOption: (key, value) ->
-    if (key is 'width' or key is 'height')
+    if (key is 'width')
       @$dialog.css(key, value)
+      @position()
+
+    if (key is 'height')
+      @_setHeight(value)
       @position()
 
     if (key is 'maxWidth')
       @$dialog.css('max-width', value)
     if (key is 'maxHeight')
-      @$dialog.css('max-height', value)
+      @_setMaxHeight(value)
     if (key is 'minWidth')
       @$dialog.css('min-width', value)
     if (key is 'minHeight')
@@ -155,3 +166,27 @@ $.widget 'lw.overlay',
       left: xcoord
 
     return true
+  # animatedResize was called sizeTo in the old overlay plugin
+  animatedResize: (width, height, callback) ->
+    that      = this
+    scrolltop = $(document).scrollTop()
+    offset    = @$dialog.offset()
+    props     = {}
+
+    if (width)
+      xcoord = Math.max(offset.left - (width - @$dialog.width()) / 2, scrolltop + 10)
+      props.width = width
+      props.left  = xcoord
+
+    if (height)
+      ycoord = Math.max(offset.top - (height - @$dialog.height()) / 4, scrolltop + 10)
+      props.height = height
+      props.top = ycoord
+      # we set the height of the contents container so we get a scroll bar
+      @$contents.animate({ height: height }, 'fast')
+
+    # animated resizing of dialog
+    @$dialog.animate props, 'fast', ->
+      if ($.isFunction(callback)) then callback.apply(that)
+
+    return @

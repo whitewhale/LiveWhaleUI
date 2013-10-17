@@ -30,7 +30,9 @@
             closeOnBodyClick: true
           });
 
-          $overlay.overlay('option', 'width', 300);
+          setTimeout(function() {
+            $overlay.overlay('animatedResize', 300);
+          }, 2000);
 
           return true;
         });

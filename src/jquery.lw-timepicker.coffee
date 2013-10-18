@@ -131,8 +131,7 @@ $.widget 'lw.timepicker',
     $el.keyup (e) ->
       keyDown = false
 
-
-    open: ->
+  open: ->
     $el  = @element
     opts = @options
 
@@ -217,13 +216,13 @@ $.widget 'lw.timepicker',
 
     return @_normalizeTime( new Date(0, 0, 0, hours, minutes, 0) )
   _setOption: (key, value) ->
-    if ('show24Hours' is key)
-      @element.val(@getFormattedTime(@time, value || false))
-      #if (value)
-        #@options.element.val(@getFormattedTime(@time)))
-        #@options.element.val(@getFormattedTime(@time)))
-        #else
+    opts = @options
 
+    # update selected if changing format
+    if ('show24Hours' is key and value isnt opts.show24Hours and @time)
+      @element.val(@getFormattedTime(@time, value || false))
+
+    @_super(key, value)
   _buildTimeList: ->
     times = []
     time = new Date(@startTime) # Create a new date object.

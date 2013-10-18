@@ -46,7 +46,11 @@ module.exports = (grunt) ->
         src: ['public/css/plugins/lw-overlay.css']
         dest: 'release/css/frontend.css'
       backend_css:
-        src: ['public/css/plugins/lw-overlay.css', 'public/css/plugins/lw-timepicker.css']
+        src: [
+          'public/css/plugins/lw-overlay.css'
+          'public/css/plugins/lw-timepicker.css'
+          'public/css/plugins/lw-popover.css'
+        ]
         dest: 'release/css/backend.css'
     uglify:
       release:

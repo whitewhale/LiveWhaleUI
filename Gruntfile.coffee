@@ -54,6 +54,11 @@ module.exports = (grunt) ->
           'release/backend.min.js': ['release/backend.js']
           'release/jquery.lw-overlay.min.js': ['release/jquery.lw-overlay.js']
     copy:
+      images:
+        expand: true
+        flatten: true
+        src: 'public/css/plugins/images/*'
+        dest: '../LiveWhale/www/livewhale/theme/core/styles/lwui/images/'
       js:
         expand: true
         flatten: true
@@ -63,9 +68,8 @@ module.exports = (grunt) ->
         expand: true
         flatten: true
         cwd: 'release/css/'
-        src: '*.css'
+        src: '*'
         dest: '../LiveWhale/www/livewhale/theme/core/styles/lwui/'
-        filter: 'isFile'
     less:
       site:
         options:
@@ -112,7 +116,7 @@ module.exports = (grunt) ->
     'clean', 'coffee:release', 'concat:js', 'uglify:release', 'less:plugins', 'concat:frontend_css', 'concat:backend_css'
   ])
 
-  grunt.registerTask('lw', ['copy:js', 'copy:css'])
+  grunt.registerTask('lw', ['copy:js', 'copy:css', 'copy:images'])
 
   # only compile the plugin files that have changed
   grunt.event.on 'watch', (action, filepath) ->

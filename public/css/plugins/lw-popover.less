@@ -1,0 +1,32 @@
+/* jquery.lwPopover.js */
+.lw_popover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    padding: 16px;
+    -webkit-border-radius: 14px;
+    -moz-border-radius: 14px;
+    border-radius: 14px;
+    background-color: #f6f6f0;
+    border: 1px solid #CCC;
+    box-shadow: 0 0 8px #999;
+}
+.lw_popover_pointer {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    /* background: transparent url(/livewhale/images/overlay_pointer.png) top left no-repeat; */
+}
+.lw_popover_pos_left .lw_popover_pointer {
+    background: transparent url(images/popover_pointer_right.png) top left no-repeat;
+}
+.lw_popover_pos_right .lw_popover_pointer {
+    background: transparent url(images/popover_pointer_left.png) top left no-repeat;
+}
+.lw_popover_pos_top .lw_popover_pointer {
+    background: transparent url(images/popover_pointer_down.png) top left no-repeat;
+}
+.lw_popover_pos_bottom .lw_popover_pointer {
+    background: transparent url(images/popover_pointer_up.png) top left no-repeat;
+}

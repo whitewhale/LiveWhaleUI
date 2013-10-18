@@ -36,6 +36,26 @@ page =
         close: ->
           $(this).popover('destroy')
 
+      $('#delegation_links').on 'click', 'a', (e) ->
+        e.preventDefault()
+        $target = $(e.target)
+
+        # return if the plugin is attached to this element i
+        # this allows plugin to close currrently open popover
+        if ($target.hasClass('lwui-widget')) then return true
+        
+        e.stopPropagation()
+
+        $target.popover
+          autoOpen: true
+          beforeOpen: ->
+            # close any open popovers
+            $('body').click()
+            $this = $(this)
+            $this.popover('html', $this.attr('data-text'))
+          close: ->
+            $(this).popover('destroy')
+
 # init page code
 # each page should have a body id that matches a key in page object 
 body_id = $('body').attr('id')

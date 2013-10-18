@@ -16,12 +16,13 @@ $.widget 'lw.popover',
   _create: ->
     @$body = $('body')
 
+    @element.addClass('lwui-widget lwui-popover')
+
     # open if autoOpen, otherwise attach click handler
     if (@options.autoOpen)
       @open()
     else
       @_bindOpenHandler()
-
   position: ->
     el             = @element
     opts           = @options
@@ -95,8 +96,10 @@ $.widget 'lw.popover',
     @$popover.css
       top: ypos,
       left: xpos
-  append: (el) ->
-    @$content.append(el)
+  append: (content) ->
+    @$content.append(content)
+  html: (html) ->
+    @$content.html(html)
   _initUI: ->
     opts = @options
 
@@ -155,6 +158,8 @@ $.widget 'lw.popover',
     opts = @options
 
     if (!@_ui_initialized) then @_initUI()
+    
+    @_trigger('beforeOpen')
 
     # set content
     if (opts.html) then @$content.html(opts.html)
@@ -162,6 +167,8 @@ $.widget 'lw.popover',
     @position()
     @$popover.show()
     @_bindCloseHandler()
+    
+    @_trigger('open')
   close: ->
     @$popover.hide()
 
@@ -171,6 +178,8 @@ $.widget 'lw.popover',
 
     @_trigger('close')
   _destroy: (callback) ->
+    @element.removeClass('lwui-widget lwui-popover')
+
     if (@$popover) then @$popover.remove()
     if (@close_handler) then @$body.unbind('click', @close_handler)
     if (@open_handler) then @element.unbind('click', @open_handler)

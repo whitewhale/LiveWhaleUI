@@ -40,12 +40,33 @@
           position: 'left',
           html: '<p>Hello World!</p>'
         });
-        return $right = $('.open_right').popover({
+        $right = $('.open_right').popover({
           position: 'right',
           html: '<p>Hello World!</p>',
           close: function() {
             return $(this).popover('destroy');
           }
+        });
+        return $('#delegation_links').on('click', 'a', function(e) {
+          var $target;
+          e.preventDefault();
+          $target = $(e.target);
+          if ($target.hasClass('lwui-widget')) {
+            return true;
+          }
+          e.stopPropagation();
+          return $target.popover({
+            autoOpen: true,
+            beforeOpen: function() {
+              var $this;
+              $('body').click();
+              $this = $(this);
+              return $this.popover('html', $this.attr('data-text'));
+            },
+            close: function() {
+              return $(this).popover('destroy');
+            }
+          });
         });
       }
     }

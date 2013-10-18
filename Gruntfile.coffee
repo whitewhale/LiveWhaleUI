@@ -1,6 +1,7 @@
 path = require 'path'
 
 module.exports = (grunt) ->
+  lwdir = grunt.option('lwdir') || '../LiveWhale'
   grunt.initConfig
     pkg: grunt.file.readJSON('package.json')
     jasmine:
@@ -58,18 +59,18 @@ module.exports = (grunt) ->
         expand: true
         flatten: true
         src: 'public/css/plugins/images/*'
-        dest: '../LiveWhale/www/livewhale/theme/core/styles/lwui/images/'
+        dest: lwdir + '/www/livewhale/theme/core/styles/lwui/images/'
       js:
         expand: true
         flatten: true
         src: 'release/*.js'
-        dest: '../LiveWhale/www/livewhale/plugins/lwui/'
+        dest: lwdir + '/www/livewhale/plugins/lwui/'
       css:
         expand: true
         flatten: true
         cwd: 'release/css/'
         src: '*'
-        dest: '../LiveWhale/www/livewhale/theme/core/styles/lwui/'
+        dest: lwdir + '/www/livewhale/theme/core/styles/lwui/'
     less:
       site:
         options:

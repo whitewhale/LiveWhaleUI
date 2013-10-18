@@ -1,11 +1,11 @@
-$ = livewhale.jQuery || window.jQuery
+$ = livewhale?.jQuery || window.jQuery
 
 $.widget 'lw.popover',
   options:
     position:   'top'   # possible options are left, right, top, bottom
     width:      'auto'
     height:     'auto'
-    autoOpen:   true
+    autoOpen:   false
     maxWidth:   null
     maxHeight:  null
     html:       null
@@ -14,64 +14,14 @@ $.widget 'lw.popover',
     xpos:       null    # force popover to oper at xpos
     ypos:       null    # force popover to open at ypos
   _create: ->
-    that  = this
-    el    = @element
-    opts  = @options
-    $body = $('body')
-    coords
+    @$body = $('body')
 
-    @$content = $('<div/>').addClass('lw_popover_content')
-    @$pointer = $('<div/>').addClass('lw_popover_pointer')
+    # open if autoOpen, otherwise attach click handler
+    if (@options.autoOpen)
+      @open()
+    else
+      @_bindOpenHandler()
 
-    @$popover = $('<div/>',
-      class: 'lw_popover lw_hidden lw_popover_pos_' + opts.position
-      width: opts.width
-      height: opts.height
-    )
-    .append(@$pointer)
-    .append(@$content)
-    .appendTo($body)
-
-    if (opts.maxWidth)
-      @$popover.css('max-width', parseInt(opts.maxWidth, 10) + 'px')
-
-    if (opts.maxHeight)
-      @$popover.css('max-height', parseInt(opts.maxHeight, 10) + 'px')
-
-    # set content
-    if (opts.html) then @$content.html(opts.html)
-
-    # position and show
-    if (opts.autoOpen?) then @open()
-
-    # for filtering click that initiated plugin creation
-    @first_click = true
-
-    # handler to destroy instance when popover is closed
-    @close_handler = (e) ->
-      $target = $(e.target)
-
-      # don't close popover if click within popover
-      if ($target.closest('.lw_popover').length)
-        return false
-
-      # also don't close on the first click in which the target element is the same as the 
-      # plugin's element.  we need to do this because the plugin is designed to be used in 
-      # conjunction with event delegation, where the plugin is created on an item the user 
-      # clicks.  If we don't do the following, the click that creates the plugin will bubble 
-      # up to the body element and trigger the body click handler we define below which 
-      # destroys the plugin.
-      if (that.first_click && $target.get(0) is el.get(0))
-        that.first_click = false
-        return false
-
-      e.preventDefault()
-      that.close()
-
-      return true
-
-    # defining handler as an object property allows us to unbind this specific handler
-    $body.bind('click', @close_handler)
   position: ->
     el             = @element
     opts           = @options
@@ -108,7 +58,7 @@ $.widget 'lw.popover',
         ypos = el_offset.top + el.outerHeight() + pointer_height - adjustment
         xpos = if (opts.xpos)
           opts.xpos - @$popover.outerWidth() / 2
-        else 
+        else
           el_offset.left - @$popover.outerWidth() / 2 + el.outerWidth() / 2
 
         pointer_xpos = @$popover.outerWidth() / 2 - pointer_width / 2
@@ -147,13 +97,80 @@ $.widget 'lw.popover',
       left: xpos
   append: (el) ->
     @$content.append(el)
-  open: -> 
+  _initUI: ->
+    opts = @options
+
+    @$content = $('<div/>').addClass('lw_popover_content')
+    @$pointer = $('<div/>').addClass('lw_popover_pointer')
+
+    @$popover = $('<div/>',
+      class: 'lw_popover lw_popover_pos_' + opts.position
+      width: opts.width
+      height: opts.height
+      css: { display: 'none' }
+    )
+    .append(@$pointer)
+    .append(@$content)
+    .appendTo(@$body)
+    
+    if (opts.maxWidth)
+      @$popover.css('max-width', parseInt(opts.maxWidth, 10) + 'px')
+
+    if (opts.maxHeight)
+      @$popover.css('max-height', parseInt(opts.maxHeight, 10) + 'px')
+
+    @_ui_initialized = true
+    return true
+  _bindCloseHandler: ->
+    that = this
+
+    # handler to destroy instance when popover is closed
+    @close_handler = (e) ->
+      e.preventDefault()
+      $target = $(e.target)
+
+      # don't close popover if click within popover
+      if ($target.closest('.lw_popover').length)
+        return false
+
+      that.close()
+
+      return true
+
+    # defining handler as an object property allows us to unbind this specific handler
+    # we can't use one here instead of bind, because of the case where the click is within popover 
+    @$body.bind('click', @close_handler)
+  _bindOpenHandler: ->
+    that = this
+
+    @open_handler = (e) ->
+      e.preventDefault()
+      e.stopPropagation()
+      that.$body.click()   # body click to close any open popovers
+      that.open()
+      return true
+
+    @element.one('click', @open_handler)
+  open: ->
+    opts = @options
+
+    if (!@_ui_initialized) then @_initUI()
+
+    # set content
+    if (opts.html) then @$content.html(opts.html)
+
     @position()
-    @$popover.removeClass('lw_hidden')
-  close: -> 
+    @$popover.show()
+    @_bindCloseHandler()
+  close: ->
+    @$popover.hide()
+
+    # re-bind open handler so it can be opened again if not autoOpen
+    if (!@options.autoOpen) then @_bindOpenHandler()
+    @$body.unbind('click', @close_handler)
+
     @_trigger('close')
-    @destroy()
-  _destroy: (callback) -> 
-    # clean up
-    @$popover.remove()
-    $('body').unbind('click', this.close_handler)
+  _destroy: (callback) ->
+    if (@$popover) then @$popover.remove()
+    if (@close_handler) then @$body.unbind('click', @close_handler)
+    if (@open_handler) then @element.unbind('click', @open_handler)

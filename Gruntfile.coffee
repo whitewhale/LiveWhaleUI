@@ -29,13 +29,18 @@ module.exports = (grunt) ->
         files:
           'release/jquery.lw-overlay.js': 'src/jquery.lw-overlay.coffee'
           'release/jquery.lw-timepicker.js': 'src/jquery.lw-timepicker.coffee'
+          'release/jquery.lw-popover.js': 'src/jquery.lw-popover.coffee'
     concat:
       js:
         options:
           separator: ';'
         files:
           'release/frontend.js': ['release/jquery.lw-overlay.js']
-          'release/backend.js': ['release/jquery.lw-overlay.js']
+          'release/backend.js': [
+            'release/jquery.lw-overlay.js'
+            'release/jquery.lw-timepicker.js'
+            'release/jquery.lw-popover.js'
+          ]
       frontend_css:
         src: ['public/css/plugins/lw-overlay.css']
         dest: 'release/css/frontend.css'

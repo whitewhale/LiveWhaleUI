@@ -19,26 +19,33 @@
     },
     overlay: {
       init: function() {
-        var $overlay = $('#overlay_content');
-
-        $('#overlay_open').click(function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-
-          $overlay.overlay({
-            closeSelector: '.close',
-            closeOnBodyClick: true
-          });
-
-          setTimeout(function() {
-            $overlay.overlay('animatedResize', 300);
-          }, 2000);
-
+        $('#overlay_open').click(function() {
+          $('#overlay_content').overlay();
           return true;
         });
-
-        $('#change_width').change(function() {
-          $overlay.overlay('option', 'width', $(this).val());
+      }
+    },
+    popover: {
+      init: function() {
+        var $right;
+        $('.open_top').popover({
+          position: 'top',
+          html: '<p>Hello World!</p>'
+        });
+        $('.open_bottom').popover({
+          position: 'bottom',
+          html: '<p>Hello World!</p>'
+        });
+        $('.open_left').popover({
+          position: 'left',
+          html: '<p>Hello World!</p>'
+        });
+        return $right = $('.open_right').popover({
+          position: 'right',
+          html: '<p>Hello World!</p>',
+          close: function() {
+            return $(this).popover('destroy');
+          }
         });
       }
     }

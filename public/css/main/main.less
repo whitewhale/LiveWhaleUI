@@ -78,11 +78,36 @@ nav, #main {
     padding: 20px 0;
 }
 
-nav {
-    .column(4);
-}
 #main {
     .column(16);
+}
+
+#main_nav {
+    .column(4);
+
+    ul, li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    li {
+        float: left;
+        width: 100%;
+
+        a {
+            display: block;
+            text-decoration: none;
+            padding: 6px;
+            margin-bottom: 2px;
+            background-color: #eee;
+            .border-radius(3px);
+
+            &:hover,
+            &.active {
+                background-color: #ccc;
+            }
+        }
+    }
 }
 
 /**

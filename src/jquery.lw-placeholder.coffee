@@ -7,7 +7,7 @@ if (!placeholder_support)
   widget =
     _create: ->
       $el = @element
-      pclass = 'placeholder' 
+      pclass = 'placeholder'
 
       # set visible status to false
       @visible = false

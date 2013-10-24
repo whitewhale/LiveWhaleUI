@@ -90,17 +90,44 @@ nav,
   box-sizing: border-box;
   padding: 20px 0;
 }
-nav {
-  display: inline;
-  float: left;
-  width: 17.857142857142858%;
-  margin: 0 1.0714285714285714%;
-}
 #main {
   display: inline;
   float: left;
   width: 77.85714285714286%;
   margin: 0 1.0714285714285714%;
+}
+#main_nav {
+  display: inline;
+  float: left;
+  width: 17.857142857142858%;
+  margin: 0 1.0714285714285714%;
+}
+#main_nav ul,
+#main_nav li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#main_nav li {
+  float: left;
+  width: 100%;
+}
+#main_nav li a {
+  display: block;
+  text-decoration: none;
+  padding: 6px;
+  margin-bottom: 2px;
+  background-color: #eee;
+  -webkit-border-radius: 3px;
+  -webkit-background-clip: padding-box;
+  -moz-border-radius: 3px;
+  -moz-background-clip: padding;
+  border-radius: 3px;
+  background-clip: padding-box;
+}
+#main_nav li a:hover,
+#main_nav li a.active {
+  background-color: #ccc;
 }
 /**
  * For modern browsers

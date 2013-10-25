@@ -42,16 +42,13 @@ module.exports = (grunt) ->
             'release/jquery.lw-timepicker.js'
             'release/jquery.lw-popover.js'
           ]
-      frontend_css:
-        src: ['public/css/plugins/lw-overlay.css']
-        dest: 'release/css/frontend.css'
-      backend_css:
+      css:
         src: [
           'public/css/plugins/lw-overlay.css'
           'public/css/plugins/lw-timepicker.css'
           'public/css/plugins/lw-popover.css'
         ]
-        dest: 'release/css/backend.css'
+        dest: 'release/css/default.css'
     uglify:
       release:
         files:
@@ -118,7 +115,7 @@ module.exports = (grunt) ->
   grunt.registerTask('default', ['assemble', 'less'])
 
   grunt.registerTask('release', [
-    'clean', 'coffee:release', 'concat:js', 'uglify:release', 'less:plugins', 'concat:frontend_css', 'concat:backend_css'
+    'clean', 'coffee:release', 'concat:js', 'uglify:release', 'less:plugins', 'concat:css'
   ])
 
   grunt.registerTask('lw', ['copy:js', 'copy:css', 'copy:images'])

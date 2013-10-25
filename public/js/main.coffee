@@ -6,7 +6,6 @@ page =
       $('#format_toggle').click (e) ->
         e.preventDefault()
         show24 = if ($picker.timepicker('option', 'show24Hours')) then false else true
-        console.log 'is 24:' + show24
         format = $picker.timepicker 'option', 'show24Hours', show24
         return true
       return
@@ -33,8 +32,6 @@ page =
       $right = $('.open_right').popover
         position: 'right'
         html: '<p>Hello World!</p>'
-        close: ->
-          $(this).popover('destroy')
 
       $('#delegation_links').on 'click', 'a', (e) ->
         e.preventDefault()

@@ -11,7 +11,6 @@
           var format, show24;
           e.preventDefault();
           show24 = $picker.timepicker('option', 'show24Hours') ? false : true;
-          console.log('is 24:' + show24);
           format = $picker.timepicker('option', 'show24Hours', show24);
           return true;
         });
@@ -42,10 +41,7 @@
         });
         $right = $('.open_right').popover({
           position: 'right',
-          html: '<p>Hello World!</p>',
-          close: function() {
-            return $(this).popover('destroy');
-          }
+          html: '<p>Hello World!</p>'
         });
         return $('#delegation_links').on('click', 'a', function(e) {
           var $target;

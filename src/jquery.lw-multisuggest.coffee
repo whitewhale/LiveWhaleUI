@@ -15,36 +15,25 @@ $.widget 'lw.multisuggest',
     $el  = @element
     that = this
 
-    # regexp for elements that should become spaces
-    toSpace  = /[,\-_\s&\/\\]+/g
-
-    # regexp for elements that should be removed
-    toRemove = /[^a-zA-Z 0-9]+/g
-
-    # add title to keywords 
+    # add title to keywords and normalize
     $.each opts.data, ->
-      keywords = this.title.toLowerCase().replace('&amp', 'and').replace(toSpace, ' ').replace(toRemove, '')
+      @keywords = if (@keywords) then ' ' + that._normalizeKeywords(@keywords) else ""
+      @keywords = that._normalizeKeywords(@title) + @keywords
 
-      if (this.keywords)
-        keywords += ' ' + this.keywords.toLowerCase().replace('&amp;', 'and').replace(toSpace, ' ').replace(toRemove, '')
-
-      this.keywords = keywords
-
-    $suggest = $('<div class="lw_multisuggest lw_multisuggest_' + opts.type + '"/>')
+    $input = @input = $('<input type="text" class="lw_multisuggest_input"/>')
+    $suggest = $('<div class="lw_multisuggest lw_multisuggest_' + opts.type + ' lw_false_input"/>')
       .html('<ul class="lw_multisuggest_suggestions"/></div>')
-      .appendTo(that)
+      .append($input)
+      .appendTo($el)
 
-    if (!(opts.type is 'places' && livewhale.page is 'events_edit'))
-      $suggest.addClass('lw_false_input')
-    else
-      $suggest.addClass('lw_hidden')
+    # hide and remove lw_false_input class if places widget on event_edit page 
+    if (opts.type is 'places' && livewhale.page is 'events_edit')
+      $suggest.addClass('lw_hidden').removeClass('lw_false_input')
 
     matches = opts.data
     lastquery = ''
     $suggestions = suggest.find('.lw_multisuggest_suggestions')
     hidesuggestions
-
-    input = $('<input type="text" class="lw_multisuggest_input"/>').appendTo($suggest)
 
     if (opts.data.length)
       # check syntax for CS ternary alternative
@@ -67,10 +56,10 @@ $.widget 'lw.multisuggest',
               is_locked: $(this).parent().is('.lw_locked')
 
         items.multiselect
-          type: opts.type
-          data: opts.data
-          selected: selected
-          onlyone: opts.onlyone
+          type:      opts.type
+          data:      opts.data
+          selected:  selected
+          onlyone:   opts.onlyone
 
         all.overlay
           close: '.lw_cancel a'
@@ -85,7 +74,7 @@ $.widget 'lw.multisuggest',
               is_locked: $(this).is('.lw_locked')
 
           if (!opts.onlyone or selected.length < 1)
-            input.css('visibility', 'visible').focus().keyup()
+            $input.css('visibility', 'visible').focus().keyup()
 
           all.overlay('remove')
         return false
@@ -100,12 +89,11 @@ $.widget 'lw.multisuggest',
       if (opts.onlyone && $('.lw_multisuggest_item').length >= 1)
         return false # only one is wanted, don't allow clicking in
 
-      input.css('visibility', 'visible').focus().keyup()
+      $input.css('visibility', 'visible').focus().keyup()
     ).on('click', '.lw_multisuggest_item', ->
       $(this).addClass('lw_selected').siblings().removeClass('lw_selected')
 
-      
-      input
+      $input
         .val('')
         .css('visibility', 'visible') # it must be visible to focus it
         .focus()
@@ -121,7 +109,7 @@ $.widget 'lw.multisuggest',
       # remove item if not locked
       if (!$item.is('.lw_locked'))
         $item.remove()
-        input.css('visibility', 'visible').show(0)
+        $input.css('visibility', 'visible').show(0)
 
       # trigger the change event on the suggestor
       that.trigger('change')
@@ -140,18 +128,18 @@ $.widget 'lw.multisuggest',
           id: id
 
         if (!opts.onlyone)
-          input.val('').focus()
+          $input.val('').focus()
         else
-          input.val('').hide(0)
+          $input.val('').hide(0)
       else
         existing.addClass('lw_selected')
-        input.val('').focus().css('visibility', 'hidden')
+        $input.val('').focus().css('visibility', 'hidden')
 
       return false # cancel bubbling
     )
 
     # .blur() doesn't QUITE work here that's why we have to have an annoying 200ms timeout
-    input.blur(->
+    $input.blur(->
       that.find('.lw_multisuggest_item.lw_selected').removeClass('lw_selected')
       lastquery = ''
       hidesuggestions = setTimeout( ->
@@ -159,11 +147,11 @@ $.widget 'lw.multisuggest',
         $suggestions.hide()
 
         # we do the following inside the timer in case clicking on a suggestion has already selected a result
-        if (input.val())
+        if ($input.val())
           # trigger a fake return key keydown event
           e = $.Event('keydown')
           e.which = 13
-          input.trigger(e)
+          $input.trigger(e)
       , 200)
     )
     # on each keypress, filter the results
@@ -210,7 +198,7 @@ $.widget 'lw.multisuggest',
 
           $suggestions.append($li.html('<input type="hidden" value="' + item.id + '"/>' + title))
         )
-        position = input.position()
+        position = $input.position()
         $suggestions.css(
           left: position.left + 'px'
           top: position.top + 'px'
@@ -233,7 +221,7 @@ $.widget 'lw.multisuggest',
             e.preventDefault()
             item = selected_item.find('.lw_item_name').text()
             selected_item.find('.lw_multisuggest_remove').trigger('click') # remove the item
-            input.val(item).keyup() # and enter the item for editing
+            $input.val(item).keyup() # and enter the item for editing
             break
           when 37
             # left arrow
@@ -267,7 +255,7 @@ $.widget 'lw.multisuggest',
             break
 
         # and show the input
-        input.css('visibility', 'visible')
+        $input.css('visibility', 'visible')
         return
 
       # remove previous suggestions that were not selected this time
@@ -277,7 +265,7 @@ $.widget 'lw.multisuggest',
           $.each opts.data, (index, item) ->
             $suggestions.append('<li><input type="hidden" value="' + item.id + '"/>' + item.title + '</li>')
 
-          position = input.position()
+          position = $input.position()
           $suggestions.css(
             left: position.left + 'px'
             top: position.top + 'px'
@@ -295,7 +283,7 @@ $.widget 'lw.multisuggest',
           if ($suggestions.is(':hidden')) then suggestall()
 
           match = $selected.find("span").text().toLowerCase()
-          input_val = $.trim(input.val().toLowerCase())
+          input_val = $.trim($input.val().toLowerCase())
 
           # if there's only one result and it's a match, don't let users deselect it
           if ($selected.siblings().length is 0 && input_val is match)
@@ -322,7 +310,7 @@ $.widget 'lw.multisuggest',
           if ($suggestions.is(':hidden')) then suggestall() # if there are no matches, show all matches
           
           match = $selected.find("span").text().toLowerCase()
-          input_val = $.trim(input.val().toLowerCase())
+          input_val = $.trim($input.val().toLowerCase())
 
           # if there's only one result and it's a match, don't let users deselect it
           if ($selected.siblings().length is 0 && match is input_val)
@@ -364,7 +352,7 @@ $.widget 'lw.multisuggest',
             if (!opts.create)
               return true
 
-            value = $.trim(input.val())
+            value = $.trim($input.val())
 
             if (value.length)
               lcvalue = value.toLowerCase()
@@ -377,20 +365,20 @@ $.widget 'lw.multisuggest',
                 e.preventDefault()
                 that.multisuggest('new', value)
 
-          input.val('').keyup()
+          $input.val('').keyup()
           $suggestions.hide()
 
           if (existing.length)
             existing.addClass('lw_selected')
-            input.css('visibility', 'hidden')
+            $input.css('visibility', 'hidden')
 
           break
         when 37 or 8
           # left arrow or del/backspace
           # if there's no input, but there are older suggestions
-          if (!$.trim(input.val()).length && input.siblings('.lw_multisuggest_item').length)
+          if (!$.trim($input.val()).length && $input.siblings('.lw_multisuggest_item').length)
             e.preventDefault() # cancel the keypress
-            input
+            $input
               .val('') # remove any spaces just in case
               .css('visibility', 'hidden') # hide the input
               .prev().addClass('lw_selected') # and select the last item
@@ -401,7 +389,7 @@ $.widget 'lw.multisuggest',
     # when scrolling the suggestions
     $suggestions.scroll ->
       clearTimeout(hidesuggestions) # don’t hide the suggestions list
-      input.focus() # and keep the focus in the input
+      $input.focus() # and keep the focus in the input
 
     # if we need to preselect
     if (opts.selected.length)
@@ -414,29 +402,33 @@ $.widget 'lw.multisuggest',
 
       # don't show input if onlyone is on and we have one
       if (opts.onlyone && opts.selected.length > 0)
-        input.css('visibility', 'hidden').blur()
-
+        $input.css('visibility', 'hidden').blur()
+  # value is an object with keys id and title
   add: (value) ->
-    #####
-    # !!!
-    # Need to compate to original
-    ####
-    $item  = $('<div class="lw_multisuggest_item/>')
-      .html('<span class="lw_item_name">' + value.title + '</span><span class="lw_multisuggest_remove">×</span>')
+    html  = '<input type="hidden" name="' + opts.name + '[]" value="" />'
+    html += '<span class="lw_item_name">' + value.title + '</span><span class="lw_multisuggest_remove">×</span>'
 
-    $input = $('<input type="hidden"/>').val(value.id)
-    
-    if (value.is_locked)
-      $item.addClass('lw_locked')
-    else
-      $input.attr(name, opts.name + '[]')
+    $item  = $('<div class="lw_multisuggest_item"/>').html(html)
 
-    input.before($item);
+    # if locked, add class and remove name attribute from input 
+    if (value.is_locked) then $item.addClass('lw_locked').find('input').removeAttr('name')
+
+    # add the hidden iput item before the multi
+    @input.before($item)
 
     that.trigger('change.multisuggest') # trigger the change event on the suggestor
-  new: (value) ->
-    $item = $('<div class="lw_multisuggest_item lw_multisuggest_new"><span class="lw_multisuggest_item_name">' + value + '</span><span class="lw_multisuggest_remove">×</span></div>').insertBefore(input)
+  # value is the new item's title 
+  new: (name) ->
+    html  = '<input type="hidden" name="' + opts.name + '_added[]" value="' + $.trim(name) + '" />'
+    html += '<span class="lw_multisuggest_item_name">' + name + '</span>'
+    html += '<span class="lw_multisuggest_remove">×</span>'
 
-    $('<input type="hidden" name="' + opts.name + '_added[]"/>').val($.trim(value)).prependTo($item)
+    @input.before( $('<div class="lw_multisuggest_item lw_multisuggest_new"/>').html(html) )
 
     that.trigger('change.multisuggest') # trigger the change event on the suggestor
+  _normalizeKeywords: (string) ->
+    return string
+      .toLowerCase()
+      .replace('&amp', 'and')
+      .replace(/[,\-_\s&\/\\]+/g, ' ') # convert to spaces
+      .replace(/[^a-zA-Z 0-9]+/g, '')  # remove non-alphanumeric chars

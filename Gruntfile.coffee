@@ -86,12 +86,12 @@ module.exports = (grunt) ->
           'public/css/plugins/lw-overlay.css': 'public/css/plugins/lw-overlay.less'
     watch:
       assemble:
-        files: ['site/**/*.hbs']
+        files: ['README.md', 'site/**/*.hbs']
         tasks: ['assemble']
         options:
           livereload: true
       less_site:
-        files: ['public/css/*.less']
+        files: ['public/css/**/*.less']
         tasks: ['less:site']
         options:
           livereload: true

@@ -26,6 +26,12 @@ module.exports = (grunt) ->
     clean:
       release: ['release']
     coffee:
+      #release:
+      #  expand: true
+      #  cwd: 'src/'
+      #  src: ['**/*.coffee']
+      #  dest: 'release/'
+      #  ext: '.js'
       release:
         files:
           'release/jquery.lw-overlay.js': 'src/jquery.lw-overlay.coffee'

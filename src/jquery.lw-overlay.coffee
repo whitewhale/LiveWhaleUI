@@ -42,7 +42,6 @@ $.widget 'lw.overlay',
     if (opts.minWidth) then $dialog.css('min-width', opts.minWidth)
     if (opts.minHeight) then $dialog.css('min-height', opts.minHeight)
 
-    
     close_selectors = []
     if (opts.closeSelector) then close_selectors.push(opts.closeSelector) else []
 
@@ -68,10 +67,11 @@ $.widget 'lw.overlay',
         that.close()
         return false
 
+    # reposition dialog on lw resize
     $(window).bind('resize.lw', $.proxy(@position, @))
 
-    @open()
     @_trigger('create')
+
     return true
   _init: ->
     if (@options.autoOpen) then @open()
@@ -172,17 +172,17 @@ $.widget 'lw.overlay',
     scrolltop = $(document).scrollTop()
     offset    = @$dialog.offset()
     props     = {}
+    padding   = @$dialog.outerWidth() - @$dialog.width()
 
     if (width)
-      xcoord = Math.max(offset.left - (width - @$dialog.width()) / 2, scrolltop + 10)
+      props.left = ($(window).width() - width - padding) / 2
       props.width = width
-      props.left  = xcoord
 
     if (height)
-      ycoord = Math.max(offset.top - (height - @$dialog.height()) / 4, scrolltop + 10)
       props.height = height
-      props.top = ycoord
-      # we set the height of the contents container so we get a scroll bar
+      props.top = Math.max(offset.top - (height - @$dialog.height()) / 4, scrolltop + 10)
+
+      # set content container height for fixed height dialog with scrollbar 
       @$contents.animate({ height: height }, 'fast')
 
     # animated resizing of dialog

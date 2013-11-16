@@ -35,6 +35,15 @@ module.exports = (grunt) ->
           rename: (dest, src) ->
             return dest + src.replace(/\.coffee$/, '.js')
         ]
+      dev:
+        files: [
+          expand: true
+          cwd: 'src/'
+          src: ['{,*/}*.coffee']
+          dest: 'src/'
+          rename: (dest, src) ->
+            return dest + src.replace(/\.coffee$/, '.js')
+        ]
     concat:
       js:
         files:
@@ -123,6 +132,8 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-clean')
 
   grunt.registerTask('default', ['assemble', 'less'])
+
+  grunt.registerTask('website', ['assemble', 'less'])
   
   grunt.registerTask('release', [
     'clean', 'coffee', 'concat:js', 'uglify', 'less:plugins', 'concat:css'

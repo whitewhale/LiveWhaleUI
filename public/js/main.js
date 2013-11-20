@@ -18,8 +18,17 @@
     },
     overlay: {
       init: function() {
+        var $overlay;
+        $overlay = $('#overlay_content').overlay({
+          autoOpen: false,
+          destroyOnClose: false
+        });
         $('#overlay_open').click(function() {
-          $('#overlay_content').overlay();
+          $overlay.overlay('open');
+          return true;
+        });
+        $('#change_width').change(function() {
+          $overlay.overlay('option', 'width', $(this).val());
           return true;
         });
       }

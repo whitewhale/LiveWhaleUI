@@ -11,8 +11,16 @@ page =
       return
   overlay:
     init: ->
+      $overlay = $('#overlay_content').overlay
+        autoOpen: false
+        destroyOnClose: false
+
       $('#overlay_open').click ->
-        $('#overlay_content').overlay()
+        $overlay.overlay('open')
+        return true
+
+      $('#change_width').change ->
+        $overlay.overlay('option', 'width', $(this).val())
         return true
       return
   popover:

@@ -105,7 +105,7 @@ module.exports = (grunt) ->
         ]
     watch:
       assemble:
-        files: ['README.md', 'site/**/*.hbs']
+        files: ['README.md', 'public/**/*.hbs']
         tasks: ['assemble']
         options:
           livereload: true

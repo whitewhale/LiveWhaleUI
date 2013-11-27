@@ -1,5 +1,3 @@
-## LiveWhale UI
-
 LiveWhale UI is a collection of jQuery plugins developed for the [LiveWhale Content Management System](http://www.livewhale.net).  This website provides usage examples, and API documentation for each plugin.  
 
 ## Dependencies

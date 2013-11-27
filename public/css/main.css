@@ -125,8 +125,10 @@ nav,
   border-radius: 3px;
   background-clip: padding-box;
 }
-#main_nav li a:hover,
-#main_nav li a.active {
+#main_nav li a:hover {
+  background-color: #ccc;
+}
+#main_nav li.active a {
   background-color: #ccc;
 }
 /**

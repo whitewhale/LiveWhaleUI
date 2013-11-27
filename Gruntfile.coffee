@@ -48,12 +48,24 @@ module.exports = (grunt) ->
       js:
         files:
           'release/frontend.js': [
+            'vendor/jquery-ui-widget-1.10.3.js',
+            'vendor/imagesloaded-3.0.4.js',
             'release/jquery.lw-overlay.js'
+          ]
+          'release/frontend.min.js': [
+            'vendor/jquery-ui-widget-1.10.3.min.js',
+            'vendor/imagesloaded-3.0.4.min.js',
+            'release/jquery.lw-overlay.min.js'
           ]
           'release/backend.js': [
             'release/jquery.lw-overlay.js'
             'release/jquery.lw-timepicker.js'
             'release/jquery.lw-popover.js'
+          ]
+          'release/backend.min.js': [
+            'release/jquery.lw-overlay.min.js'
+            'release/jquery.lw-timepicker.min.js'
+            'release/jquery.lw-popover.min.js'
           ]
       css:
         src: [
@@ -136,7 +148,7 @@ module.exports = (grunt) ->
   grunt.registerTask('website', ['assemble', 'less'])
   
   grunt.registerTask('release', [
-    'clean', 'coffee', 'concat:js', 'uglify', 'less:plugins', 'concat:css'
+    'clean', 'coffee', 'uglify', 'concat:js', 'less:plugins', 'concat:css'
   ])
 
   # copy release to LiveWhale

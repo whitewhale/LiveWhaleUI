@@ -144,36 +144,35 @@ nav, #main {
 	margin-right:1em;
 }
 
+.api-table {
+	margin: 0; 
 
-/* Tables */
-table { 
-	margin:1em 0; 
-}
+	th, td {
+		padding: 8px;
+		border-bottom: 1px solid #fff; 
+	}
+	th {
+		color: #fff; 
+		background-color: #666; 
+		font-weight: 200;
 
-th { 
-	color:#fff; 
-	padding:5px 8px; 
-	background-color:#222; 
-	border-top: 4px solid #000; 
-	border-bottom: 1px solid #fff; 
-	text-transform:uppercase; 
-	letter-spacing:0.1em; 
-}
-
-td { 
-	font-size:0.9em; 
-	color:#444; 
-	font-weight:normal; 
-	padding:8px; 
-	background: #eee; 
-	border-top: 1px solid transparent; 
-	border-bottom: 1px solid #fff; 
-}
-
+		&:nth-child(3n+1) {
+			text-align: left;
+		}
+	}
+	td { 
+		font-size: 0.875em; 
+		font-weight: normal; 
+		background: #eee; 
+		border-top: 1px solid transparent; 
+		border-right: 1px solid #fff; 
+		color: #444; 
+	}
 	tr:hover td { 
 		background:#ddd; 
 		color:#444; 
 	}
+}
 
 input[type=text], textarea {
     font-size: .875em;
@@ -188,6 +187,11 @@ input[type=text], textarea {
 ::selection {
     background: #b3d4fc;
     text-shadow: none;
+}
+
+.ui-widget {
+	font-family: "Helvetica Neue", Helvetica, sans-serif; 
+	font-size: 1em;
 }
 
 #breadcrumbs {

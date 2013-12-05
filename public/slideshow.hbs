@@ -3,35 +3,84 @@ title: Slideshow
 id: slideshow 
 ---
 
-<ul class="slideshow_top">
-	<li>
-		<img src="http://lorempixel.com/400/300/food/1" alt="News Image" class="lw_image lw_image133"/>
-		<div class="lw_news_caption">Caption text</div>
-		<div class="lw_news_credit">John Doe</div>
-	</li>
-	<li>
-		<img src="http://lorempixel.com/400/400/food/2" alt="News Image" class="lw_image lw_image137"/>
-	</li>
-	<li>
-		<img src="http://lorempixel.com/400/200/food/3" alt="News Image" class="lw_image lw_image136"/>
-	</li>
-</ul>
+<p>
+A slideshow plugin that allows the user to scroll through a list. 
+</p>
 
-<ul class="slideshow_bottom">
-	<li>
-		<img src="http://lorempixel.com/400/300/food/4" alt="News Image" class="lw_image lw_image133"/>
-		<div class="lw_news_caption">Another Test</div>
-	</li>
-	<li>
-		<img src="http://lorempixel.com/400/300/food/5" alt="News Image" class="lw_image lw_image137"/>
-	</li>
-	<li>
-		<img src="http://lorempixel.com/400/300/food/6" alt="News Image" class="lw_image lw_image136"/>
-	</li>
-	<li>
-		<img src="http://lorempixel.com/400/300/food/7" alt="News Image" class="lw_image lw_image136"/>
-	</li>
-	<li>
-		<img src="http://lorempixel.com/400/300/food/8" alt="News Image" class="lw_image lw_image136"/>
-	</li>
-</ul>
+<div id="tabs">
+	<ul>
+		<li><a href="#api">API</a></li>
+		<li><a href="#examples">Examples</a></li>
+	</ul>
+
+	<div id="api">
+		<table class="api-table">
+			<thead>
+				<tr>
+					<th>Option</th>
+					<th>Type</th>
+					<th>Default</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>fluidHeight</td>
+					<td>bool</td>
+					<td>true</td>
+					<td>When true, the slideshow height adjusts to the height of the current slide.  Otherwise,
+						The slideshow height is fixed to the height of the first slide. 
+					</td>
+				</tr>
+				<tr>
+					<td>controlPlacement</td>
+					<td>string</td>
+					<td>append</td>
+					<td>The two valid valid values for this option are "append" and "prepend".  The first 
+						places the controls below the slides; the second places them above.
+					</td>
+				</tr>
+				<tr>
+					<td>customClass</td>
+					<td>string</td>
+					<td>null</td>
+					<td>One or more space separated classes to add to the slideshow wrapper.</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div id="examples">
+		<ul class="slideshow_top">
+			<li>
+				<img src="http://lorempixel.com/400/300/food/1" alt="News Image" class="lw_image lw_image133"/>
+				<div class="lw_news_caption">Caption text</div>
+				<div class="lw_news_credit">John Doe</div>
+			</li>
+			<li>
+				<img src="http://lorempixel.com/400/400/food/2" alt="News Image" class="lw_image lw_image137"/>
+			</li>
+			<li>
+				<img src="http://lorempixel.com/400/200/food/3" alt="News Image" class="lw_image lw_image136"/>
+			</li>
+		</ul>
+
+		<ul class="slideshow_bottom">
+			<li>
+				<img src="http://lorempixel.com/400/300/food/4" alt="News Image" class="lw_image lw_image133"/>
+				<div class="lw_news_caption">Another Test</div>
+			</li>
+			<li>
+				<img src="http://lorempixel.com/400/300/food/5" alt="News Image" class="lw_image lw_image137"/>
+			</li>
+			<li>
+				<img src="http://lorempixel.com/400/300/food/6" alt="News Image" class="lw_image lw_image136"/>
+			</li>
+			<li>
+				<img src="http://lorempixel.com/400/300/food/7" alt="News Image" class="lw_image lw_image136"/>
+			</li>
+			<li>
+				<img src="http://lorempixel.com/400/300/food/8" alt="News Image" class="lw_image lw_image136"/>
+			</li>
+		</ul>
+	</div>
+</div>

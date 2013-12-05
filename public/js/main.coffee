@@ -64,6 +64,7 @@ page =
             $(this).popover('destroy')
   slideshow:
     init: ->
+      $('#tabs').tabs()
       $('.slideshow_top').slideshow({ controlPlacement: 'prepend' })
       $('.slideshow_bottom').slideshow()
 

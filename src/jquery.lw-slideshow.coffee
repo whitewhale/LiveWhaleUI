@@ -27,12 +27,11 @@ $.widget 'lw.slideshow',
     else
       @$controls.appendTo(@$wrapper)
 
-    $el.addClass('lw_slider')
-    .children()
-      .addClass('lw_slider_slide')
+    # add slideshow classes
+    $el.addClass('lw_slider').children().addClass('lw_slider_slide')
 
     # add custom class if any
-    if (opts.customClass) then $el.addClass(opts.customClass)
+    if (opts.customClass) then @$wrapper.addClass(opts.customClass)
 
     # handler for scroll links 
     @$controls.on 'click', 'a', (evt) ->
@@ -48,24 +47,33 @@ $.widget 'lw.slideshow',
 
       return true
 
-    # if the first item has an image, wait for image to load before showing slide
+    # if first slide contains an image, wait for it to load before showing slide
+    # it is possible for slides to contain content other than images
     $first_img = $el.children().eq(0).find('img')
     if ($first_img.length)
-      $('<img/>').load((evt) ->
+      $first_img.one('load', ->
         that.showSlide()
         that.$wrapper.width($first_img.width())
-      ).attr('src', $first_img.attr('src'))
+      ).each( ->
+        # IX - the height check is for IE10 which doesn't appear to set the complete property
+        if (this.complete or $(this).height() > 0) then $(this).load()
+      )
     else
       @showSlide()
 
     return true
   _setOption: (key, value) ->
-    # In jQuery UI 1.8, you have to manually invoke the _setOption method from the base widget
-    $.Widget.prototype._setOption.apply(this, arguments)
+    return
+  # remove handlers and return slideshow markup to original state
   _destroy: (callback) ->
-    # destroy removes the slideshow completely, rather than restoring markup to original state
-    # we may want to re-evalute this later, but it simplifies its usage with current code
-    @$wrapper.remove()
+    @$controls.remove()
+    @$element
+      .unwrap()
+      .removeClass('.lw_slider')
+      .children()
+        .removeClass('.lw_slider_slide')
+    if (@options.customClass) then @$wrapper.removeClass(@options.customClass)
+    return true
   next: ->
     @$previous = @$current
     @$current = @$current.next()
@@ -92,20 +100,17 @@ $.widget 'lw.slideshow',
     # update count in controlls
     @$controls.find('.lw_slider_count_current').html($slide.index() + 1)
 
-    $slide
-      .stop() # stop any animation on the slideshow
-      .children('.lw_slider_slide').stop().css('z-index', 0); # and its children straightaway
+    # stop any animation on the slideshow and its children
+    $slide.stop().children('.lw_slider_slide').stop().css('z-index', 0)
 
     $slide.css { zIndex: '100' }
 
     # fade in the slide
     $slide.fadeTo 100, 1, ->
-      if (that.$previous) then that.$previous.css('z-index', 0)
-      # hide siblings 
-      $slide.siblings('.lw_slider_slide').css('opacity', 0)
-      # toggle the previous control state
+      if (that.$previous) then that.$previous.css('z-index', 0) #  
+      $slide.siblings('.lw_slider_slide').css('opacity', 0) # hide siblings 
+      # toggle the prev and next control states
       that.$prev.toggleClass('lw_disabled', !$slide.prev('.lw_slider_slide').length)
-      # toggle the next control state
       that.$next.toggleClass('lw_disabled', !$slide.next('.lw_slider_slide').length)
 
     # adjust wrapper width if different

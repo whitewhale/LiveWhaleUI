@@ -79,6 +79,7 @@
     },
     slideshow: {
       init: function() {
+        $('#tabs').tabs();
         $('.slideshow_top').slideshow({
           controlPlacement: 'prepend'
         });

@@ -48,32 +48,37 @@ module.exports = (grunt) ->
       js:
         files:
           'release/frontend.js': [
-            'vendor/jquery-ui-widget-1.10.3.js',
-            'vendor/imagesloaded-3.0.4.js',
+            'vendor/jquery-ui-widget-1.10.3.js'
+            'vendor/imagesloaded-3.0.4.js'
             'release/jquery.lw-overlay.js'
+            'release/jquery.lw-slideshow.js'
           ]
           'release/frontend.min.js': [
-            'vendor/jquery-ui-widget-1.10.3.min.js',
-            'vendor/imagesloaded-3.0.4.min.js',
+            'vendor/jquery-ui-widget-1.10.3.min.js'
+            'vendor/imagesloaded-3.0.4.min.js'
             'release/jquery.lw-overlay.min.js'
+            'release/jquery.lw-slideshow.min.js'
           ]
           'release/backend.js': [
-            'vendor/imagesloaded-3.0.4.js',
+            'vendor/imagesloaded-3.0.4.js'
             'release/jquery.lw-overlay.js'
             'release/jquery.lw-timepicker.js'
             'release/jquery.lw-popover.js'
+            'release/jquery.lw-slideshow.js'
           ]
           'release/backend.min.js': [
-            'vendor/imagesloaded-3.0.4.min.js',
+            'vendor/imagesloaded-3.0.4.min.js'
             'release/jquery.lw-overlay.min.js'
             'release/jquery.lw-timepicker.min.js'
             'release/jquery.lw-popover.min.js'
+            'release/jquery.lw-slideshow.min.js'
           ]
       css:
         src: [
           'public/css/plugins/lw-overlay.css'
           'public/css/plugins/lw-timepicker.css'
           'public/css/plugins/lw-popover.css'
+          'public/css/plugins/lw-slideshow.css'
         ]
         dest: 'release/css/default.css'
     uglify:
@@ -96,7 +101,7 @@ module.exports = (grunt) ->
         expand: true
         flatten: true
         src: 'release/*.js'
-        dest: lwdir + '/www/livewhale/plugins/lwui/'
+        dest: lwdir + '/www/livewhale/scripts/lwui/'
       css:
         expand: true
         flatten: true

@@ -58,11 +58,13 @@ module.exports = (grunt) ->
             'release/jquery.lw-overlay.min.js'
           ]
           'release/backend.js': [
+            'vendor/imagesloaded-3.0.4.js',
             'release/jquery.lw-overlay.js'
             'release/jquery.lw-timepicker.js'
             'release/jquery.lw-popover.js'
           ]
           'release/backend.min.js': [
+            'vendor/imagesloaded-3.0.4.min.js',
             'release/jquery.lw-overlay.min.js'
             'release/jquery.lw-timepicker.min.js'
             'release/jquery.lw-popover.min.js'

@@ -1,3 +1,5 @@
+$ = livewhale.jQuery
+
 page =
   timepicker:
     init: ->
@@ -60,6 +62,10 @@ page =
             $this.popover('html', $this.attr('data-text'))
           close: ->
             $(this).popover('destroy')
+  slideshow:
+    init: ->
+      $('.slideshow_top').slideshow({ controlPlacement: 'prepend' })
+      $('.slideshow_bottom').slideshow()
 
 # init page code
 # each page should have a body id that matches a key in page object 

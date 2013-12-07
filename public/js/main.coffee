@@ -64,9 +64,19 @@ page =
             $(this).popover('destroy')
   slideshow:
     init: ->
+      initSlideshows = ->
+        $('.slideshow_top').slideshow({ controlPlacement: 'prepend' })
+        $('.slideshow_bottom').slideshow()
+
+
       $('#tabs').tabs()
-      $('.slideshow_top').slideshow({ controlPlacement: 'prepend' })
-      $('.slideshow_bottom').slideshow()
+      #  create: (e, ui) ->
+      #    console.log(ui)
+      #    initSlideshows()
+      #  activate: (e, ui) ->
+      #    console.log(ui)
+      
+      initSlideshows()
 
 # init page code
 # each page should have a body id that matches a key in page object 

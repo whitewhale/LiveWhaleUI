@@ -4,15 +4,15 @@ id: slideshow
 ---
 
 <p>
-A slideshow plugin that allows the user to scroll through a list. 
+A simple slideshow plugin that converts a list of items into a scrollable series of slides.
 </p>
 
 <div id="tabs">
 	<ul>
 		<li><a href="#api">API</a></li>
+		<li><a href="#markup">Markup</a></li>
 		<li><a href="#examples">Examples</a></li>
 	</ul>
-
 	<div id="api">
 		<table class="api-table">
 			<thead>
@@ -24,14 +24,6 @@ A slideshow plugin that allows the user to scroll through a list.
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>fluidHeight</td>
-					<td>bool</td>
-					<td>true</td>
-					<td>When true, the slideshow height adjusts to the height of the current slide.  Otherwise,
-						The slideshow height is fixed to the height of the first slide. 
-					</td>
-				</tr>
 				<tr>
 					<td>controlPlacement</td>
 					<td>string</td>
@@ -49,7 +41,33 @@ A slideshow plugin that allows the user to scroll through a list.
 			</tbody>
 		</table>
 	</div>
+	<div id="markup">
+
+{{#markdown}}
+``` xml 
+<ul>
+	<li>
+		<img src="{image_url}" alt="{alt text}" class="lw_image"/>
+		<div>{caption}</div>
+		<div><credit}</div>
+	</li>   
+	<li>
+		<img src="{image_url}" alt="{alt text}" class="lw_image"/>
+		<div>{caption}</div>
+		<div><credit}</div>
+	</li>   
+	<li>
+		<img src="{image_url}" alt="{alt text}" class="lw_image"/>
+		<div>{caption}</div>
+		<div><credit}</div>
+	</li>   
+</ul>
+```
+{{/markdown}}
+
+	</div>
 	<div id="examples">
+		<h3>Slideshow with controls above slides</h3>
 		<ul class="slideshow_top">
 			<li>
 				<img src="http://lorempixel.com/400/300/food/1" alt="News Image" class="lw_image lw_image133"/>
@@ -64,6 +82,8 @@ A slideshow plugin that allows the user to scroll through a list.
 			</li>
 		</ul>
 
+
+		<h3>Slideshow with controls below slides</h3>
 		<ul class="slideshow_bottom">
 			<li>
 				<img src="http://lorempixel.com/400/300/food/4" alt="News Image" class="lw_image lw_image133"/>

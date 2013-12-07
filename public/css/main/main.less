@@ -99,7 +99,8 @@ nav, #main {
             padding: 6px;
             margin-bottom: 2px;
             background-color: #eee;
-			color: @darkblue;
+			line-height: 1.5em;
+			color: #333;
             .border-radius(3px);
 
             &:hover {
@@ -107,7 +108,8 @@ nav, #main {
             }
         }
 		&.active a {
-			background-color: #ccc;
+			color: #000;
+			background-color: #aaa;
 		}
     }
 }
@@ -488,3 +490,23 @@ nav .lw_widget_type_navigation ul li.lw_current ul li a:hover {
   }
 }
 
+/**
+ * jQuery UI customizations
+ */
+
+.ui-widget-content {
+	border: none;
+}
+.ui-widget-header {
+	background: none;
+	border-left: none;
+	border-right: none;
+	border-top: none;
+	.border-radius(0);
+}
+.ui-tabs .ui-tabs-panel {
+	padding: 1em;
+}
+.ui-tabs .ui-tabs-nav li a {
+	outline: none;
+}

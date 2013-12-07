@@ -117,7 +117,8 @@ nav,
   padding: 6px;
   margin-bottom: 2px;
   background-color: #eee;
-  color: #000066;
+  line-height: 1.5em;
+  color: #333;
   -webkit-border-radius: 3px;
   -webkit-background-clip: padding-box;
   -moz-border-radius: 3px;
@@ -129,7 +130,8 @@ nav,
   background-color: #ccc;
 }
 #main_nav li.active a {
-  background-color: #ccc;
+  color: #000;
+  background-color: #aaa;
 }
 /**
  * For modern browsers
@@ -452,6 +454,30 @@ nav .lw_widget_type_navigation ul li.lw_current ul li a:hover {
 }
 #sidebar .lw_item_images > li > img {
   margin-left: -20px;
+}
+/**
+ * jQuery UI customizations
+ */
+.ui-widget-content {
+  border: none;
+}
+.ui-widget-header {
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  -webkit-border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-border-radius: 0;
+  -moz-background-clip: padding;
+  border-radius: 0;
+  background-clip: padding-box;
+}
+.ui-tabs .ui-tabs-panel {
+  padding: 1em;
+}
+.ui-tabs .ui-tabs-nav li a {
+  outline: none;
 }
 /**
  * Responsive Layout 

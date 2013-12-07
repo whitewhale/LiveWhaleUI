@@ -1,3 +1,5 @@
+$ = livewhale?.jQuery || window.jQuery
+
 $.widget 'lw.slideshow',
   options:
     fluidHeight: true

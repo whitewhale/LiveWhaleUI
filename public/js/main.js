@@ -79,11 +79,15 @@
     },
     slideshow: {
       init: function() {
+        var initSlideshows;
+        initSlideshows = function() {
+          $('.slideshow_top').slideshow({
+            controlPlacement: 'prepend'
+          });
+          return $('.slideshow_bottom').slideshow();
+        };
         $('#tabs').tabs();
-        $('.slideshow_top').slideshow({
-          controlPlacement: 'prepend'
-        });
-        return $('.slideshow_bottom').slideshow();
+        return initSlideshows();
       }
     }
   };

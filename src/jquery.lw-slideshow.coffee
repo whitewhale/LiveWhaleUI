@@ -12,7 +12,7 @@ $.widget 'lw.slideshow',
     that   = this
     height = 0
     width  = 0
-    
+
     # don't do anything if 1 or no slides 
     if (total <= 1) then return false
 
@@ -68,9 +68,10 @@ $.widget 'lw.slideshow',
     return
   # remove handlers and return slideshow markup to original state
   _destroy: (callback) ->
-    @$controls.remove()
-    @$element
-      .unwrap()
+    $el = @element
+    if (@$controls) then @$controls.remove() # controls do not exist if slideshow has only one image
+    if (@$wrapper) then $el.unwrap()
+    $el
       .removeClass('.lw_slider')
       .children()
         .removeClass('.lw_slider_slide')

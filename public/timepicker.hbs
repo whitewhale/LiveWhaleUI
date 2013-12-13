@@ -3,10 +3,62 @@ title: Timepicker
 id: timepicker
 ---
 
-<form>
-	<input type="text" name="picker" id="picker"/>
-</form>
-
-<p>
-	<a href="#" id="format_toggle">Toggle Format</a>
-</p>
+<div id="tabs">
+	<ul>
+		<li><a href="#api">API</a></li>
+		<li><a href="#examples">Examples</a></li>
+	</ul>
+	<div id="api">
+		<h2>Options:</h2>
+		<table class="api-table">
+			<thead>
+				<tr>
+					<th>Option</th>
+					<th>Type</th>
+					<th>Default</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>step</td>
+					<td>int</td>
+					<td>30</td>
+					<td>The number of minutes between each menu option.  The value should divide 60 evenly.</td>
+				</tr>
+				<tr>
+					<td>startTime</td>
+					<td>Date</td>
+					<td>new Date(0, 0, 0, 8, 0, 0)</td>
+					<td>The earliest available time.</td>
+				</tr>
+				<tr>
+					<td>endTime</td>
+					<td>Date</td>
+					<td>new Date(0, 0, 0, 23, 30, 0)</td>
+					<td>The latest available time.</td>
+				</tr>
+				<tr>
+					<td>seaparator</td>
+					<td>string</td>
+					<td>:</td>
+					<td>The character used to separate hours from minutes.</td>
+				</tr>
+				<tr>
+					<td>show24Hours</td>
+					<td>bool</td>
+					<td>false</td>
+					<td>Use 24 hour time format</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div id="examples">
+		<form>
+			<input type="text" name="picker" id="picker"/>
+		</form>
+		<p>
+			<a href="#" id="format_toggle">Toggle Format</a>
+		</p>
+	</div>
+</div>

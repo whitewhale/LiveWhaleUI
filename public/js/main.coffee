@@ -4,12 +4,12 @@ page =
   timepicker:
     init: ->
       $picker = $('#picker').timepicker()
-      
       $('#format_toggle').click (e) ->
         e.preventDefault()
         show24 = if ($picker.timepicker('option', 'show24Hours')) then false else true
         format = $picker.timepicker 'option', 'show24Hours', show24
         return true
+      $('#tabs').tabs()
       return
   overlay:
     init: ->
@@ -68,14 +68,7 @@ page =
         $('.slideshow_top').slideshow({ controlPlacement: 'prepend' })
         $('.slideshow_bottom').slideshow()
 
-
       $('#tabs').tabs()
-      #  create: (e, ui) ->
-      #    console.log(ui)
-      #    initSlideshows()
-      #  activate: (e, ui) ->
-      #    console.log(ui)
-      
       initSlideshows()
 
 # init page code

@@ -16,6 +16,7 @@
           format = $picker.timepicker('option', 'show24Hours', show24);
           return true;
         });
+        $('#tabs').tabs();
       }
     },
     overlay: {

@@ -7,7 +7,6 @@ $.widget 'lw.timepicker',
     endTime:   new Date(0, 0, 0, 23, 30, 0)
     separator: ':'
     show24Hours: false
-    beforeShow: null
   _create: ->
     $el       = @element
     opts      = @options

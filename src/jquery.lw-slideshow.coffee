@@ -14,7 +14,7 @@ $.widget 'lw.slideshow',
     width  = 0
 
     # don't do anything if 1 or no slides 
-    if (total <= 1) then return false
+    if (!total) then return false
 
     @$wrapper  = $el.wrap('<div class="lw_slider_wrapper" />').parent()
     @$controls = $controls = $(@getControls(total))

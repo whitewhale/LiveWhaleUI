@@ -16,12 +16,15 @@ $.widget 'lw.slideshow',
     # don't do anything if 1 or no slides 
     if (!total) then return false
 
-    @$wrapper  = $el.wrap('<div class="lw_slider_wrapper" />').parent()
+    @$wrapper  = $el.wrap('<div class="lw_slideshow_wrapper" />').parent()
     @$controls = $controls = $(@getControls(total))
-    @$prev     = $controls.find('.lw_slider_prev')
-    @$next     = $controls.find('.lw_slider_next')
+    @$prev     = $controls.find('.lw_slideshow_prev')
+    @$next     = $controls.find('.lw_slideshow_next')
     @$current  = $el.children().eq(0)
     @$previous = null
+    
+    # add class to parent so controls can be hidden
+    if (total is 1) then @$wrapper.addClass('lw_slideshow_one_slide')
 
     # attach controls
     if ('prepend' is opts.controlPlacement)
@@ -30,7 +33,7 @@ $.widget 'lw.slideshow',
       @$controls.appendTo(@$wrapper)
 
     # add slideshow classes
-    $el.addClass('lw_slider').children().addClass('lw_slider_slide')
+    $el.addClass('lw_slideshow').children().addClass('lw_slideshow_slide')
 
     # add custom class if any
     if (opts.customClass) then @$wrapper.addClass(opts.customClass)
@@ -44,8 +47,8 @@ $.widget 'lw.slideshow',
       if ($target.is('.lw_disabled')) then return false
 
       # if it's the "next" link, otherwise it's a previous link
-      if ($target.is('.lw_slider_next')) then that.next()
-      if ($target.is('.lw_slider_prev')) then that.prev()
+      if ($target.is('.lw_slideshow_next')) then that.next()
+      if ($target.is('.lw_slideshow_prev')) then that.prev()
 
       return true
 
@@ -72,9 +75,9 @@ $.widget 'lw.slideshow',
     if (@$controls) then @$controls.remove() # controls do not exist if slideshow has only one image
     if (@$wrapper) then $el.unwrap()
     $el
-      .removeClass('.lw_slider')
+      .removeClass('.lw_slideshow')
       .children()
-        .removeClass('.lw_slider_slide')
+        .removeClass('.lw_slideshow_slide')
     if (@options.customClass) then @$wrapper.removeClass(@options.customClass)
     return true
   next: ->
@@ -101,20 +104,20 @@ $.widget 'lw.slideshow',
     @$next.addClass('lw_disabled')
 
     # update count in controlls
-    @$controls.find('.lw_slider_count_current').html($slide.index() + 1)
+    @$controls.find('.lw_slideshow_count_current').html($slide.index() + 1)
 
     # stop any animation on the slideshow and its children
-    $slide.stop().children('.lw_slider_slide').stop().css('z-index', 0)
+    $slide.stop().children('.lw_slideshow_slide').stop().css('z-index', 0)
 
     $slide.css { zIndex: '100' }
 
     # fade in the slide
     $slide.fadeTo 100, 1, ->
       if (that.$previous) then that.$previous.css('z-index', 0) #  
-      $slide.siblings('.lw_slider_slide').css('opacity', 0) # hide siblings 
+      $slide.siblings('.lw_slideshow_slide').css('opacity', 0) # hide siblings 
       # toggle the prev and next control states
-      that.$prev.toggleClass('lw_disabled', !$slide.prev('.lw_slider_slide').length)
-      that.$next.toggleClass('lw_disabled', !$slide.next('.lw_slider_slide').length)
+      that.$prev.toggleClass('lw_disabled', !$slide.prev('.lw_slideshow_slide').length)
+      that.$next.toggleClass('lw_disabled', !$slide.next('.lw_slideshow_slide').length)
 
     # adjust wrapper width if different
     if (@$wrapper.width() isnt $slide.width()) then @$wrapper.width($slide.width())
@@ -134,12 +137,12 @@ $.widget 'lw.slideshow',
         , 300); # do it after 750 ms
     return true
   getControls: (total) ->
-    str = '<div class="lw_slider_controls">'
-    str += '<div class="lw_slider_count">'
-    str += '<span class="lw_slider_count_current">1</span> of '
-    str += '<span class="lw_slider_count_total">' + total + '</span>'
+    str = '<div class="lw_slideshow_controls">'
+    str += '<div class="lw_slideshow_count">'
+    str += '<span class="lw_slideshow_count_current">1</span> of '
+    str += '<span class="lw_slideshow_count_total">' + total + '</span>'
     str += '</div>'
-    str += '<a href="#" class="lw_slider_prev">&laquo; Previous</a>'
-    str += '<a href="#" class="lw_slider_next">Next &raquo;</a>'
+    str += '<a href="#" class="lw_slideshow_prev">&laquo; Previous</a>'
+    str += '<a href="#" class="lw_slideshow_next">Next &raquo;</a>'
     str += '</div>'
     return str

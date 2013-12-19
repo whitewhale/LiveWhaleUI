@@ -22,6 +22,7 @@
     overlay: {
       init: function() {
         var $overlay;
+        $('#tabs').tabs();
         $overlay = $('#overlay_content').overlay({
           autoOpen: false,
           destroyOnClose: false
@@ -39,6 +40,7 @@
     popover: {
       init: function() {
         var $right;
+        $('#tabs').tabs();
         $('.open_top').popover({
           position: 'top',
           html: '<p>Hello World!</p>'

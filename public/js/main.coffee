@@ -13,6 +13,8 @@ page =
       return
   overlay:
     init: ->
+      $('#tabs').tabs()
+
       $overlay = $('#overlay_content').overlay
         autoOpen: false
         destroyOnClose: false
@@ -27,6 +29,8 @@ page =
       return
   popover:
     init: ->
+      $('#tabs').tabs()
+
       $('.open_top').popover
         position: 'top'
         html: '<p>Hello World!</p>'

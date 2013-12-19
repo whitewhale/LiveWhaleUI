@@ -114,27 +114,35 @@ module.exports = (grunt) ->
         src: '*'
         dest: lwdir + '/www/livewhale/theme/core/styles/lwui/'
       vendor:
+        options:
+          flatten: true
         files: [
           {
+            expand: true
+            flatten: true
+            cwd: 'vendor/'
             dest: lwdir + '/www/livewhale/thirdparty/jquery/'
             src: [
-              'vendor/jquery.js'
-              'vendor/jquery.min.js'
-              'vendor/jquery-ui.js'
-              'vendor/jquery-ui.min.js'
-              'vendor/jquery-ui.widget.js'
-              'vendor/jquery-ui.widget.min.js'
-              'vendor/jquery.ba-bbq.js'
-              'vendor/jquery.ba-bbq.min.js'
+              'jquery.js'
+              'jquery.min.js'
+              'jquery-ui.js'
+              'jquery-ui.min.js'
+              'jquery-ui.widget.js'
+              'jquery-ui.widget.min.js'
+              'jquery.ba-bbq.js'
+              'jquery.ba-bbq.min.js'
             ]
           }
           {
+            expand: true
+            flatten: true
+            cwd: 'vendor/'
             dest: lwdir + '/www/livewhale/thirdparty/'
             src: [
-              'vendor/lodash.js'
-              'vendor/lodash.min.js'
-              'vendor/imagesloaded.js'
-              'vendor/imagesloaded.min.js'
+              'lodash.js'
+              'lodash.min.js'
+              'imagesloaded.js'
+              'imagesloaded.min.js'
             ]
           }
         ]

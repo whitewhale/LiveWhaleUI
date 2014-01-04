@@ -1,17 +1,98 @@
-@import 'vendor/grid.less';
 @import 'vendor/lesshat.less';
-
-@column-width: 40;
-@gutter-width: 30;
-@columns: 20;
-
-@total-width: 100%;
 
 @c1: #999;
 @c2: #ccc;
 @blue: rgb(3, 102, 209);
 @darkblue: #006;
 
-@import 'vendor/normalize.css';
-@import 'main/main.less';
-@import 'main/responsive.less';
+.navbar {
+	margin-bottom: 0;
+	border-bottom: #1a6091 1px solid;
+	background-color: #1f6ea6;
+
+	.navbar-brand {
+		color: #fff;
+	}
+	.navbar-brand:hover,
+	.navbar-brand:focus {
+		color: #fff;
+		background-color: transparent;
+	}
+	.navbar-nav > li > a {
+		color: #b1cbde;
+	}
+	.navbar-nav > li > a:hover,
+	.navbar-nav > li > a:focus {
+		color: #fff;
+		background-color: transparent;
+	}
+	.navbar-nav > .active > a, 
+	.navbar-nav > .active > a:hover, 
+	.navbar-nav > .active > a:focus,
+	.navbar-nav > .open > a,
+	.navbar-nav > .open > a:hover,
+	.navbar-nav > .open > a:focus {
+		color: #fff;
+		background-color: #1a6091;
+	}
+}
+
+.sidenav {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-shadow: 0 1px 0 #fff;
+	background-color: #f7f5fa;
+	border-radius: 5px;
+}
+
+.jumbotron {
+	background-color: #1f6ea6;
+	margin-top: 0;
+	padding: 38px 0;
+	border-top: #3376a6 1px solid;
+
+	h1 {
+		color: #fff;
+		font-weight: 400;
+		margin-top: 0;
+		text-shadow: 4px 3px 0 #1f6ea6,9px 8px 0 rgba(0,0,0,0.15);
+	}
+	p {
+		color: #ddd;
+	}
+}
+
+.api-table {
+	margin: 0; 
+
+	th, td {
+		padding: 8px;
+		border-bottom: 1px solid #fff; 
+	}
+	th {
+		color: #fff; 
+		background-color: #666; 
+		font-weight: 200;
+
+		&:nth-child(3n+1) {
+			text-align: left;
+		}
+	}
+	td { 
+		font-size: 0.875em; 
+		font-weight: normal; 
+		background: #eee; 
+		border-top: 1px solid transparent; 
+		border-right: 1px solid #fff; 
+		color: #444; 
+	}
+	tr:hover td { 
+		background:#ddd; 
+		color:#444; 
+	}
+}
+
+input[type=text], textarea {
+    font-size: .875em;
+    padding: 3px;
+}

@@ -1,16 +1,17 @@
+$ = livewhale?.jQuery || window.jQuery
 
 $.widget 'lw.notify',
   options:
-    id:            false        # new notices clobber any notices with same id
-    message:       'Sample Notification'
-    details:       false        # message details
-    custom_class:  null         # one or more comma-separated custom classes
-    type:          false        # the type of notification (success, failure, warning)
-    slideIn:       150          # the time to run the slide animation
-    duration:      false        # hide the notification after duration MS
-    close_button:  true         # show a close button?
-    callback:      $.noop       # callback once the notice is attached, with the notice as the context
-    log:           true         # output a log of the combined notices?
+    id:           false        # new notices clobber any notices with same id
+    message:      'Your Message Here :                                                                 )'
+    details:      false        # message details
+    customClass:  null         # one or more comma-separated custom classes
+    type:         false        # the type of notification (success, failure, warning)
+    slideIn:      150          # the time to run the slide animation
+    duration:     false        # hide the notification after duration MS
+    closeButton:  true         # show a close button?
+    callback:     $.noop       # callback once the notice is attached, with the notice as the context
+    log:          true         # output a log of the combined notices?
   _create: ->
     opts = @options
 
@@ -28,7 +29,7 @@ $.widget 'lw.notify',
       html += '<a href="#" class="lw_notice_showdetails">More...</a>'
 
     $container.html(html)
-
+    
     # when clicking the close button
     close = $notice.on '.click', '.lw_notice_close_button', ->
       # slide up the notice and remove it
@@ -36,12 +37,10 @@ $.widget 'lw.notify',
         notice.remove()
       return false
 
-    # add custom classes if any provided 
-
     # when clicking to show details
     showdetails = notice.on 'click', '.lw_notice_showdetails', ->
       # create a log
-      details = $('<div class="lw_notices_details" id="lw_notices_details_' + opts.id + '"/>') 
+      details = $('<div class="lw_notices_details" id="lw_notices_details_' + opts.id + '"/>')
 
       # remove any existing overlay log
       $('.lw_notices_details').overlay('remove')
@@ -88,14 +87,14 @@ $.widget 'lw.notify',
         last.replaceWith(notice.show()) # replace the existing one with the new one	
         return self # and return now instead of sliding down
 
-    container = self.find('>.lw_notices')
+    $container = self.find('>.lw_notices')
 
-    if (!container.length)
-      container = $('<div class="lw_notices lw_element"/>').appendTo(self) # create the container if it doesn't exist
+    if (!$container.length)
+      $container = $('<div class="lw_notices lw_element"/>').appendTo(self) # create the container if it doesn't exist
 
     # add any custom classes defined in options 
     if (opts.custom_class)
-      container.addClass(opts.custom_class)
+      $container.addClass(opts.custom_class)
 
-    notice.hide().appendTo(container).slideDown(opts.slideIn) # and finally show the notice	
+    notice.hide().appendTo($container).slideDown(opts.slideIn) # and finally show the notice	
     return self

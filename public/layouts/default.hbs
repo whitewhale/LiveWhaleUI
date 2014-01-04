@@ -1,53 +1,49 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html lang="en"> <![endif]-->
-<!--[if IE 7]>         <html lang="en"> <![endif]-->
-<!--[if IE 8]>         <html lang="en"> <![endif]-->
-<!--[if gt IE 8]><!-->
 <html lang="en">
-<!--<![endif]-->
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+	<!--
+    <link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
+	-->
 
-	<title>{{ title }}</title>
+    <title>{{ title }}</title>
 
-	<meta name="description" content="" />
-	<meta name="keywords" content="" />
-	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.min.css">
-	<link rel="stylesheet" href="/css/github.css">
-	<link rel="stylesheet" href="/css/main.css">
-	<link rel="stylesheet" href="/css/plugins/lw-{{ id }}.css">
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.css" rel="stylesheet">
+	<link href="/css/github.css" rel="stylesheet">
+	<link href="/css/main.css" rel="stylesheet">
 
-	<!-- viewport meta to reset inital scale -->
-	<meta name="viewport" content="width=device-width"/>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
 
-	<!--[if lt IE 9]><script src="/live/resource/js/livewhale/thirdparty/html5shiv.js"></script><![endif]-->
-</head>
-<body{{#if id}} id="{{id}}"{{/if}}>
-	<header id="siteheader">
-		<h1 class="container"><a href="/">LiveWhaleUI</a></h1>
-	</header>
+  <body>
 
-    <div class="content container cf">
-        <!-- nav partial -->
-        {{> nav }}	
-		<div id="main">
-			<h1>{{ title }}</h1>
-			<!-- body partial, used for adding pages to layout -->
-			{{> body }}
-		</div>
-    </div>
-	<footer class="cf">
+	{{> nav }}	
+
+	<div class="jumbotron">
 		<div class="container">
-			<section class="powered-by">
-				Powered by <a href="http://www.whitewhale.net">White Whale Web Services</a>
-			</section>
+			<h1>{{ title }}</h1>
+			<p>
+				{{ tagline }}
+			</p>
 		</div>
-	</footer>
+	</div>
+
+	<div class="container">
+		{{> body }}
+	</div> <!-- /container -->
 
 	<script type="text/javascript" src="/vendor/jquery.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/src/jquery.lw-{{ id }}.js"></script>
 	<script type="text/javascript" src="/js/main.js"></script>
-</body>
+  </body>
 </html>

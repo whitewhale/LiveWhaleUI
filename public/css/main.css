@@ -1,169 +1,54 @@
-@import 'vendor/normalize.css';
-body {
-  width: 100%;
-  *zoom: 1;
+.navbar {
+  margin-bottom: 0;
+  border-bottom: #1a6091 1px solid;
+  background-color: #1f6ea6;
 }
-body:before,
-body:after {
-  content: "";
-  display: table;
+.navbar .navbar-brand {
+  color: #fff;
 }
-body:after {
-  clear: both;
+.navbar .navbar-brand:hover,
+.navbar .navbar-brand:focus {
+  color: #fff;
+  background-color: transparent;
 }
-html {
-  height: 100%;
-  background: #eee;
+.navbar .navbar-nav > li > a {
+  color: #b1cbde;
 }
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #fff;
-  line-height: 1.375;
-  font-family: "Helvetica Neue", Helvetica, sans-serif;
-  background: #eee;
+.navbar .navbar-nav > li > a:hover,
+.navbar .navbar-nav > li > a:focus {
+  color: #fff;
+  background-color: transparent;
 }
-fieldset {
-  border: none;
-  margin: 0;
-  padding: 0;
+.navbar .navbar-nav > .active > a,
+.navbar .navbar-nav > .active > a:hover,
+.navbar .navbar-nav > .active > a:focus,
+.navbar .navbar-nav > .open > a,
+.navbar .navbar-nav > .open > a:hover,
+.navbar .navbar-nav > .open > a:focus {
+  color: #fff;
+  background-color: #1a6091;
 }
-/* basic type styles
----------------------------------------------------------------------------- */
-a {
-  text-decoration: none;
+.sidenav {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-shadow: 0 1px 0 #fff;
+  background-color: #f7f5fa;
+  border-radius: 5px;
 }
-a:hover {
-  text-decoration: underline;
+.jumbotron {
+  background-color: #1f6ea6;
+  margin-top: 0;
+  padding: 38px 0;
+  border-top: #3376a6 1px solid;
 }
-.large_type {
-  font-size: 1.4em;
-}
-h1,
-h2,
-h3,
-h4,
-h5 {
-  font-family: Georgia, serif;
+.jumbotron h1 {
+  color: #fff;
   font-weight: 400;
   margin-top: 0;
-  margin-bottom: .5em;
-  clear: left;
+  text-shadow: 4px 3px 0 #1f6ea6, 9px 8px 0 rgba(0, 0, 0, 0.15);
 }
-h1 {
-  font-size: 2em;
-  color: #0366d1;
-}
-h2 {
-  font-size: 1.5em;
-}
-h3 {
-  font-size: 1.25em;
-  color: #666;
-}
-.intro p,
-p.intro {
-  font-size: 1.25em;
-  font-weight: 200;
-  line-height: 1.5em;
-  color: #777;
-  font-size: 1.3em;
-  margin-top: 0;
-}
-hr {
-  height: 1px;
-  background-color: #999;
-  border: none;
-  outline: none;
-}
-pre {
-  font-size: 0.8em;
-}
-/**
- * Default layout
- */
-nav,
-#main {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  padding: 20px 0;
-}
-#main {
-  display: inline;
-  float: left;
-  width: 77.85714285714286%;
-  margin: 0 1.0714285714285714%;
-}
-#main_nav {
-  display: inline;
-  float: left;
-  width: 17.857142857142858%;
-  margin: 0 1.0714285714285714%;
-}
-#main_nav ul,
-#main_nav li {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-#main_nav li {
-  float: left;
-  width: 100%;
-}
-#main_nav li a {
-  display: block;
-  text-decoration: none;
-  padding: 6px;
-  margin-bottom: 2px;
-  background-color: #eee;
-  line-height: 1.5em;
-  color: #333;
-  -webkit-border-radius: 3px;
-  -webkit-background-clip: padding-box;
-  -moz-border-radius: 3px;
-  -moz-background-clip: padding;
-  border-radius: 3px;
-  background-clip: padding-box;
-}
-#main_nav li a:hover {
-  background-color: #ccc;
-}
-#main_nav li.active a {
-  color: #000;
-  background-color: #aaa;
-}
-/**
- * For modern browsers
- * 1. The space content is one way to avoid an Opera bug when the
- *    contenteditable attribute is included anywhere else in the document.
- *    Otherwise it causes space to appear at the top and bottom of elements
- *    that are clearfixed.
- * 2. The use of `table` rather than `block` is only necessary if using
- *    `:before` to contain the top-margins of child elements.
- */
-.cf:before,
-.cf:after {
-  content: " ";
-  /* 1 */
-
-  display: table;
-  /* 2 */
-
-}
-.cf:after {
-  clear: both;
-}
-/**
- * For IE 6/7 only
- * Include this rule to trigger hasLayout and contain floats.
- */
-.cf {
-  *zoom: 1;
-}
-.inline {
-  display: inline;
-  margin-right: 1em;
+.jumbotron p {
+  color: #ddd;
 }
 .api-table {
   margin: 0;
@@ -197,327 +82,4 @@ input[type=text],
 textarea {
   font-size: .875em;
   padding: 3px;
-}
-::-moz-selection {
-  background: #b3d4fc;
-  text-shadow: none;
-}
-::selection {
-  background: #b3d4fc;
-  text-shadow: none;
-}
-.ui-widget {
-  font-family: "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 1em;
-}
-#breadcrumbs {
-  font-size: .875em;
-  margin-bottom: 1em;
-  color: #555;
-  font-weight: 400;
-}
-.lw_breadcrumb_link {
-  margin-right: 6px;
-}
-.lw_breadcrumb_separator {
-  padding-right: 6px;
-}
-header#siteheader {
-  height: 140px;
-  background: #196cb7 url(/images/background.gif) top left repeat;
-  margin-bottom: -20px;
-}
-header#siteheader h1 {
-  font-family: "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 4em;
-  font-weight: 200;
-  padding: 30px 0 20px;
-}
-header#siteheader h1 a {
-  color: #fff;
-}
-header#siteheader h1 a:hover {
-  text-decoration: none;
-}
-footer {
-  position: relative;
-  margin: 20px 0 0 0;
-  padding-bottom: 12px;
-}
-footer .login {
-  float: left;
-  margin-left: 20px;
-}
-footer .powered-by {
-  float: right;
-  margin-right: 20px;
-}
-.container {
-  margin: 0 auto;
-  max-width: 960px;
-  clear: both;
-}
-.content {
-  background-color: #fff;
-  border: 5px solid #ccc;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
-}
-#sidebar {
-  border: 5px solid #ddd;
-  background-color: #f0f0f0;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
-  float: right;
-  margin: 20px -20px;
-  padding: 20px;
-  font-size: .8em;
-}
-/**
- * Event Detail Page
- */
-.details aside {
-  background-color: #fff;
-}
-.details aside h1,
-.details aside h2,
-.details aside h3,
-.details aside h4 {
-  color: #333;
-  font-family: "Helvetica Neue", Helvetica, sans-serif;
-  margin-bottom: 2px;
-}
-.image_bordered {
-  margin-top: 1.25em;
-}
-/**
- * Form Page 
- */
-/**
- * Galleries
- */
-.detail_gallery {
-  width: 690px;
-  text-align: center;
-  padding: 10px 18px;
-  background-color: #333;
-  color: #fff;
-  margin-bottom: 30px;
-  -webkit-border-radius: 8px;
-  -webkit-background-clip: padding-box;
-  -moz-border-radius: 8px;
-  -moz-background-clip: padding;
-  border-radius: 8px;
-  background-clip: padding-box;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-.detail_gallery a {
-  color: #eef;
-  font-weight: 200;
-}
-.detail_gallery .lw_gallery_caption,
-.detail_gallery .lw_gallery_credit {
-  font-size: .875em;
-  text-align: left;
-  font-weight: 200;
-  padding-bottom: 4px;
-  color: #ccc;
-}
-.detail_gallery .lw_gallery_image.lw_next_image {
-  background-color: #333;
-}
-.detail_gallery #lw_gallery_image {
-  position: static;
-  width: 510px;
-  margin: 0 auto;
-  float: none;
-}
-.detail_gallery ul#lw_gallery_thumbnails {
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  max-width: none;
-  clear: both;
-}
-.detail_gallery ul#lw_gallery_thumbnails a {
-  display: block;
-  float: left;
-  border-color: #333;
-}
-.detail_gallery ul#lw_gallery_thumbnails a.lw_gallery_selected {
-  border-color: #ccc;
-}
-.detail_gallery ul#lw_gallery_thumbnails img {
-  display: block;
-  width: 80px;
-  height: 80px;
-}
-#sidebar .lw_widget_type_images img {
-  width: 154px !important;
-  border: 3px solid #999;
-}
-#sidebar .lw_images_caption {
-  padding: 0 0 9px 0;
-  font-size: 0.9em;
-}
-nav .lw_widget_galleries li {
-  margin-left: 10px;
-}
-nav .lw_widget_galleries .lw_galleries_description {
-  display: none;
-}
-.saveandshare {
-  margin-top: 18px;
-}
-/* navigation hover state */
-nav .lw_widget_type_navigation ul li.lw_active ul li a:hover,
-nav .lw_widget_type_navigation ul li.lw_current ul li a:hover {
-  color: #000;
-  text-decoration: underline;
-}
-/*
- * Custom calendar styles 
- */
-.standard_calendar #lw_cal {
-  width: 746px;
-  margin-top: 30px;
-}
-.standard_calendar #lw_cal_body {
-  padding: 15px;
-  box-shadow: none;
-}
-.standard_calendar .add_new {
-  display: none;
-}
-.standard_calendar #lw_cal_day_rightcol {
-  padding: 0 15px;
-}
-.standard_calendar .lw_cal_event {
-  margin-bottom: 15px;
-}
-.standard_calendar .lw_cal_today_view #lw_cal_day_leftcol {
-  width: 100px;
-}
-.standard_calendar .lw_cal_month_view #lw_cal_body {
-  padding: 0;
-  margin-top: -16px;
-}
-.standard_calendar .lw_cal_month_view .lw_cal_location_link_wrapper,
-.standard_calendar .lw_cal_month_view .lw_events_title {
-  font-size: .75em;
-}
-.standard_calendar #lw_cal_category_selector li {
-  font-size: 11px;
-}
-.standard_calendar .lw_cal_all_view #lw_cal_events h3,
-.standard_calendar .lw_cal_week_view #lw_cal_events h3,
-.standard_calendar .lw_cal_upcoming_events {
-  margin-left: -15px;
-}
-.standard_calendar .lw_cal_event_view .lw_image {
-  width: 200px;
-  height: auto;
-}
-.standard_calendar .lw_cal_event_view .lw_slider_wrapper {
-  margin-bottom: 15px;
-}
-.standard_calendar .lw_cal_event_view .lw_cal_event_detail_map {
-  width: 200px;
-  height: 200px;
-}
-.standard_calendar .lw_cal_event_view #lw_cal_event_leftcol {
-  width: 200px;
-  padding-right: 15px;
-}
-#lw_page #lw_cal_view_selector li.add_new {
-  display: none;
-}
-/**
- * Custom
- */
-.icon-image,
-.icon-video {
-  width: 22px;
-  height: 22px;
-  overflow: hidden;
-}
-.icon-image img {
-  margin-left: -3px;
-}
-.icon-video img {
-  margin-left: -25px;
-}
-#sidebar .lw_item_images {
-  padding: 0;
-  width: 160px;
-  overflow: hidden;
-}
-#sidebar .lw_item_images > li > img {
-  margin-left: -20px;
-}
-/**
- * jQuery UI customizations
- */
-.ui-widget-content {
-  border: none;
-}
-.ui-widget-header {
-  background: none;
-  border-left: none;
-  border-right: none;
-  border-top: none;
-  -webkit-border-radius: 0;
-  -webkit-background-clip: padding-box;
-  -moz-border-radius: 0;
-  -moz-background-clip: padding;
-  border-radius: 0;
-  background-clip: padding-box;
-}
-.ui-tabs .ui-tabs-panel {
-  padding: 1em;
-}
-.ui-tabs .ui-tabs-nav li a {
-  outline: none;
-}
-/**
- * Responsive Layout 
- */
-@media screen and (max-width: 770px) {
-  header h1 {
-    font-size: 2em;
-  }
-  .content nav {
-    display: inline;
-    float: left;
-    width: 97.85714285714285%;
-    margin: 0 1.0714285714285714%;
-  }
-  .content article {
-    display: inline;
-    float: left;
-    width: 97.85714285714285%;
-    margin: 0 1.0714285714285714%;
-    margin-top: 12px;
-  }
-  .content aside {
-    display: inline;
-    float: left;
-    width: 97.85714285714285%;
-    margin: 0 1.0714285714285714%;
-    margin-top: 12px;
-  }
-  .sidebar_hidden .content article {
-    display: inline;
-    float: left;
-    width: 97.85714285714285%;
-    margin: 0 1.0714285714285714%;
-  }
-}
-@media screen and (max-width: 480px) {
-  .standard_calendar #lw_cal {
-    width: auto;
-  }
-  .standard_calendar .lw_cal_month_view #lw_cal_body {
-    margin-top: 0;
-  }
 }

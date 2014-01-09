@@ -1,47 +1,51 @@
 ---
 title: Slideshow 
 id: slideshow 
+tagline: Converts a list of items into a scrollable series of slides.
 ---
 
-<p>
-A simple slideshow plugin that converts a list of items into a scrollable series of slides.
-</p>
-
-<div id="tabs">
-	<ul>
-		<li><a href="#api">API</a></li>
-		<li><a href="#markup">Markup</a></li>
-		<li><a href="#examples">Examples</a></li>
-	</ul>
-	<div id="api">
-		<table class="api-table">
-			<thead>
-				<tr>
-					<th>Option</th>
-					<th>Type</th>
-					<th>Default</th>
-					<th>Description</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>controlPlacement</td>
-					<td>string</td>
-					<td>append</td>
-					<td>The two valid valid values for this option are "append" and "prepend".  The first 
-						places the controls below the slides; the second places them above.
-					</td>
-				</tr>
-				<tr>
-					<td>customClass</td>
-					<td>string</td>
-					<td>null</td>
-					<td>One or more space separated classes to add to the slideshow wrapper.</td>
-				</tr>
-			</tbody>
-		</table>
+<div class="row">
+	<div class="col-md-3">
+		{{>side_nav}}
 	</div>
-	<div id="markup">
+
+	<div class="col-md-9" role="main">
+
+	<ul class="nav nav-tabs">
+		<li><a href="#api" data-toggle="tab">API</a></li>
+		<li><a href="#markup" data-toggle="tab">Markup</a></li>
+		<li><a href="#examples" data-toggle="tab">Examples</a></li>
+	</ul>
+	<div class="tab-content">
+		<div id="api" class="tab-pane">
+			<table class="api-table">
+				<thead>
+					<tr>
+						<th>Option</th>
+						<th>Type</th>
+						<th>Default</th>
+						<th>Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>controlPlacement</td>
+						<td>string</td>
+						<td>append</td>
+						<td>The two valid valid values for this option are "append" and "prepend".  The first 
+							places the controls below the slides; the second places them above.
+						</td>
+					</tr>
+					<tr>
+						<td>customClass</td>
+						<td>string</td>
+						<td>null</td>
+						<td>One or more space separated classes to add to the slideshow wrapper.</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="markup" class="tab-pane">
 
 {{#markdown}}
 ``` xml 
@@ -65,44 +69,44 @@ A simple slideshow plugin that converts a list of items into a scrollable series
 ```
 {{/markdown}}
 
-	</div>
-	<div id="examples">
-		<h3>Slideshow with controls above slides</h3>
-		<ul class="slideshow_top">
-			<li>
-				<img src="http://lorempixel.com/400/300/food/1" alt="News Image" class="lw_image lw_image133"/>
-				<div class="lw_news_caption">Caption text</div>
-				<div class="lw_news_credit">John Doe</div>
-			</li>
-            <!--
-			<li>
-				<img src="http://lorempixel.com/400/400/food/2" alt="News Image" class="lw_image lw_image137"/>
-			</li>
-			<li>
-				<img src="http://lorempixel.com/400/200/food/3" alt="News Image" class="lw_image lw_image136"/>
-			</li>
-            -->
-		</ul>
+			</div>
+			<div id="examples" class="tab-pane">
+				<h3>Slideshow with controls above slides</h3>
+				<ul class="slideshow_top">
+					<li>
+						<img src="http://lorempixel.com/400/300/food/1" alt="News Image" class="lw_image lw_image133"/>
+						<div class="lw_news_caption">Caption text</div>
+						<div class="lw_news_credit">John Doe</div>
+					</li>
+					<li>
+						<img src="http://lorempixel.com/400/400/food/2" alt="News Image" class="lw_image lw_image137"/>
+					</li>
+					<li>
+						<img src="http://lorempixel.com/400/200/food/3" alt="News Image" class="lw_image lw_image136"/>
+					</li>
+				</ul>
 
 
-		<h3>Slideshow with controls below slides</h3>
-		<ul class="slideshow_bottom">
-			<li>
-				<img src="http://lorempixel.com/400/300/food/4" alt="News Image" class="lw_image lw_image133"/>
-				<div class="lw_news_caption">Another Test</div>
-			</li>
-			<li>
-				<img src="http://lorempixel.com/400/300/food/5" alt="News Image" class="lw_image lw_image137"/>
-			</li>
-			<li>
-				<img src="http://lorempixel.com/400/300/food/6" alt="News Image" class="lw_image lw_image136"/>
-			</li>
-			<li>
-				<img src="http://lorempixel.com/400/300/food/7" alt="News Image" class="lw_image lw_image136"/>
-			</li>
-			<li>
-				<img src="http://lorempixel.com/400/300/food/8" alt="News Image" class="lw_image lw_image136"/>
-			</li>
-		</ul>
+				<h3>Slideshow with controls below slides</h3>
+				<ul class="slideshow_bottom">
+					<li>
+						<img src="http://lorempixel.com/400/300/food/4" alt="News Image" class="lw_image lw_image133"/>
+						<div class="lw_news_caption">Another Test</div>
+					</li>
+					<li>
+						<img src="http://lorempixel.com/400/300/food/5" alt="News Image" class="lw_image lw_image137"/>
+					</li>
+					<li>
+						<img src="http://lorempixel.com/400/300/food/6" alt="News Image" class="lw_image lw_image136"/>
+					</li>
+					<li>
+						<img src="http://lorempixel.com/400/300/food/7" alt="News Image" class="lw_image lw_image136"/>
+					</li>
+					<li>
+						<img src="http://lorempixel.com/400/300/food/8" alt="News Image" class="lw_image lw_image136"/>
+					</li>
+				</ul>
+			</div>
+		</div>
 	</div>
 </div>

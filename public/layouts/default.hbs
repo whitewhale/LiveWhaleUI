@@ -13,9 +13,10 @@
     <title>{{ title }}</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="/css/bootstrap.css" rel="stylesheet">
 	<link href="/css/github.css" rel="stylesheet">
+	<link href="/css/bootstrap.css" rel="stylesheet">
 	<link href="/css/main.css" rel="stylesheet">
+	<link href="/css/plugins/lw-{{ id }}.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -24,7 +25,7 @@
     <![endif]-->
   </head>
 
-  <body>
+  <body id="{{ id }}">
 
 	{{> nav }}	
 
@@ -41,8 +42,19 @@
 		{{> body }}
 	</div> <!-- /container -->
 
-	<script type="text/javascript" src="/vendor/jquery.js"></script>
+	<footer id="footer" class="footer hidden-print">
+	  <div class="container text-center">
+		<div>
+		  <i class="fa fa-flag"></i> LiveWhael UI 0.1.0
+		  <br class="hide-sm hide-md hide-lg">
+		  Created by <a href="http://www.whitewhale.net">White Whale Web Services</a>
+		</div>
+	  </div>
+	</footer>
+
+	<script type="text/javascript" src="/vendor/jquery.min.js"></script>
     <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/vendor/jquery-ui.widget.min.js"></script>
 	<script type="text/javascript" src="/src/jquery.lw-{{ id }}.js"></script>
 	<script type="text/javascript" src="/js/main.js"></script>
   </body>

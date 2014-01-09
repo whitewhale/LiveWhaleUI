@@ -9,12 +9,9 @@ page =
         show24 = if ($picker.timepicker('option', 'show24Hours')) then false else true
         format = $picker.timepicker 'option', 'show24Hours', show24
         return true
-      $('#tabs').tabs()
       return
   overlay:
     init: ->
-      $('#tabs').tabs()
-
       $overlay = $('#overlay_content').overlay
         autoOpen: false
         destroyOnClose: false
@@ -29,8 +26,6 @@ page =
       return
   popover:
     init: ->
-      $('#tabs').tabs()
-
       $('.open_top').popover
         position: 'top'
         html: '<p>Hello World!</p>'
@@ -72,10 +67,22 @@ page =
         $('.slideshow_top').slideshow({ controlPlacement: 'prepend' })
         $('.slideshow_bottom').slideshow()
 
-      $('#tabs').tabs()
       initSlideshows()
 
 # init page code
 # each page should have a body id that matches a key in page object 
 body_id = $('body').attr('id')
-if (page[body_id]) then page[body_id].init()
+if (page[body_id])
+  $tabs = $('.nav-tabs a')
+  tab_selected = false
+
+  if (location.hash)
+    $tabs.each ->
+      if (location.hash is $(this).attr('href'))
+        $(this).tab('show')
+        tab_selected = true
+        return false
+
+  if (!tab_selected) then $tabs.eq(0).tab('show')
+
+  page[body_id].init()

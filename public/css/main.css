@@ -28,6 +28,9 @@
   color: #fff;
   background-color: #1a6091;
 }
+.tab-content > .tab-pane {
+  padding-top: 30px;
+}
 .sidenav {
   padding-top: 10px;
   padding-bottom: 10px;
@@ -49,6 +52,16 @@
 }
 .jumbotron p {
   color: #ddd;
+}
+#footer {
+  background-color: #1f6ea6;
+  border-top: #3376a6 1px solid;
+  margin-top: 50px;
+  padding: 40px;
+  color: #b1cbde;
+}
+#footer a {
+  color: #fff;
 }
 .api-table {
   margin: 0;

@@ -3,62 +3,71 @@ title: Timepicker
 id: timepicker
 ---
 
-<div id="tabs">
-	<ul>
-		<li><a href="#api">API</a></li>
-		<li><a href="#examples">Examples</a></li>
-	</ul>
-	<div id="api">
-		<h2>Options:</h2>
-		<table class="api-table">
-			<thead>
-				<tr>
-					<th>Option</th>
-					<th>Type</th>
-					<th>Default</th>
-					<th>Description</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>step</td>
-					<td>int</td>
-					<td>30</td>
-					<td>The number of minutes between each menu option.  The value should divide 60 evenly.</td>
-				</tr>
-				<tr>
-					<td>startTime</td>
-					<td>Date</td>
-					<td>new Date(0, 0, 0, 8, 0, 0)</td>
-					<td>The earliest available time.</td>
-				</tr>
-				<tr>
-					<td>endTime</td>
-					<td>Date</td>
-					<td>new Date(0, 0, 0, 23, 30, 0)</td>
-					<td>The latest available time.</td>
-				</tr>
-				<tr>
-					<td>seaparator</td>
-					<td>string</td>
-					<td>:</td>
-					<td>The character used to separate hours from minutes.</td>
-				</tr>
-				<tr>
-					<td>show24Hours</td>
-					<td>bool</td>
-					<td>false</td>
-					<td>Use 24 hour time format</td>
-				</tr>
-			</tbody>
-		</table>
+<div class="row">
+	<div class="col-md-3">
+		{{>side_nav}}
 	</div>
-	<div id="examples">
-		<form>
-			<input type="text" name="picker" id="picker"/>
-		</form>
-		<p>
-			<a href="#" id="format_toggle">Toggle Format</a>
-		</p>
-	</div>
+
+	<div class="col-md-9" role="main">
+		<ul class="nav nav-tabs">
+            <li><a href="#api" data-toggle="tab">API</a></li>
+            <li><a href="#examples" data-toggle="tab">Examples</a></li>
+        </ul>
+	
+		<div class="tab-content">
+            <div id="api" class="tab-pane">
+                <h2>Options:</h2>
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Option</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>step</td>
+                            <td>int</td>
+                            <td>30</td>
+                            <td>The number of minutes between each menu option.  The value should divide 60 evenly.</td>
+                        </tr>
+                        <tr>
+                            <td>startTime</td>
+                            <td>Date</td>
+                            <td>new Date(0, 0, 0, 8, 0, 0)</td>
+                            <td>The earliest available time.</td>
+                        </tr>
+                        <tr>
+                            <td>endTime</td>
+                            <td>Date</td>
+                            <td>new Date(0, 0, 0, 23, 30, 0)</td>
+                            <td>The latest available time.</td>
+                        </tr>
+                        <tr>
+                            <td>seaparator</td>
+                            <td>string</td>
+                            <td>:</td>
+                            <td>The character used to separate hours from minutes.</td>
+                        </tr>
+                        <tr>
+                            <td>show24Hours</td>
+                            <td>bool</td>
+                            <td>false</td>
+                            <td>Use 24 hour time format</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="examples" class="tab-pane">
+                <form>
+                    <input type="text" name="picker" id="picker"/>
+                </form>
+                <p>
+                    <a href="#" id="format_toggle">Toggle Format</a>
+                </p>
+            </div>
+        </div>
+    </div>
 </div>

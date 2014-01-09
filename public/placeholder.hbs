@@ -3,10 +3,20 @@ title: Placeholder
 id: placeholder
 ---
 
-<form name="placeholder_form" id="placeholder_form" action="get">
-	<input type="text" name="test" id="test" placeholder="Placeholder Text">
-	<button type="submit">Go</button>
-</form>
+<div class="row">
+	<div class="col-md-3">
+		{{>side_nav}}
+	</div>
+
+	<div class="col-md-9" role="main">
+
+        <form name="placeholder_form" id="placeholder_form" action="get">
+            <input type="text" name="test" id="test" placeholder="Placeholder Text">
+            <button type="submit">Go</button>
+        </form>
+    </div>
+</div>
+
 <script type="text/javascript" src="/vendor/jquery.js"></script>
 <script type="text/javascript" src="/vendor/jquery-ui.widget.min.js"></script>
 <script type="text/javascript" src="/src/jquery.lw-placeholder.js"></script>

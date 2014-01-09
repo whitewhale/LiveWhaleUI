@@ -3,114 +3,123 @@ title: Overlay
 id: overlay 
 ---
 
-<div id="tabs">
-	<ul>
-		<li><a href="#api">API</a></li>
-		<li><a href="#examples">Examples</a></li>
-	</ul>
-    <div id="api">
-		<table class="api-table">
-			<thead>
-				<tr>
-					<th>Option</th>
-					<th>Type</th>
-					<th>Default</th>
-					<th>Description</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>destoryOnClose</td>
-					<td>bool</td>
-					<td>true</td>
-					<td>Calls the plugins destory method when overlay is closed.  
-                    If the overlay content existed on the page, that content is  
-                    returned to its original position.
-					</td>
-				</tr>
-				<tr>
-					<td>customClass</td>
-					<td>string</td>
-					<td>null</td>
-					<td>one or more space-separated classes to be added to dialog wrapper.</td>
-				</tr>
-				<tr>
-					<td>closeSelector</td>
-					<td>string</td>
-					<td>empty</td>
-					<td>Selector that specifies elements that will close the dialog on click.</td>
-				</tr>
-				<tr>
-					<td>closeButton</td>
-					<td>bool</td>
-					<td>true</td>
-					<td>Shows the dialog's default close button</td>
-				</tr>
-				<tr>
-					<td>closeOnBodyClick</td>
-					<td>bool</td>
-					<td>false</td>
-					<td>Whether a click outside the overlay should close the overlay</td>
-				</tr>
-				<tr>
-					<td>autoOpen</td>
-					<td>bool</td>
-					<td>true</td>
-					<td>When true, the dialog opens automatically when plugin first called.</td>
-				</tr>
-				<tr>
-					<td>maxWidth</td>
-					<td>string</td>
-					<td>90%</td>
-					<td>sets dialog's max-width</td>
-				</tr>
-				<tr>
-					<td>maxHeight</td>
-					<td>string</td>
-					<td>null</td>
-					<td>set's dialog's max-height</td>
-				</tr>
-				<tr>
-					<td>minWidth</td>
-					<td>string</td>
-					<td>null</td>
-					<td>Sets dialog's min-width</td>
-				</tr>
-				<tr>
-					<td>minHeight</td>
-					<td>string</td>
-					<td>null</td>
-					<td>Sets dialog's min-height</td>
-				</tr>
-				<tr>
-					<td>width</td>
-					<td>string</td>
-					<td>null</td>
-					<td>width</td>
-				</tr>
-				<tr>
-					<td>height</td>
-					<td>string</td>
-					<td>null</td>
-					<td>Dialog height</td>
-				</tr>
-			</tbody>
-		</table>
-    </div>
-	<div id="examples">
-		<p>
-			<a href="#" id="overlay_open">Open Overlay</a>
-		</p>
-		<p>
-			<select id="change_width">
-				<option value="">Change Width</option>
-				<option value="200">200</option>
-				<option value="400">400</option>
-				<option value="600">600</option>
-				<option value="800">800</option>
-			</select>
-		</p>
+<div class="row">
+	<div class="col-md-3">
+		{{>side_nav}}
 	</div>
+
+	<div class="col-md-9" role="main">
+		<ul class="nav nav-tabs">
+            <li><a href="#api" data-toggle="tab">API</a></li>
+            <li><a href="#examples" data-toggle="tab">Examples</a></li>
+        </ul>
+
+		<div class="tab-content">
+            <div id="api" class="tab-pane">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Option</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>destoryOnClose</td>
+                            <td>bool</td>
+                            <td>true</td>
+                            <td>Calls the plugins destory method when overlay is closed.  
+                            If the overlay content existed on the page, that content is  
+                            returned to its original position.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>customClass</td>
+                            <td>string</td>
+                            <td>null</td>
+                            <td>one or more space-separated classes to be added to dialog wrapper.</td>
+                        </tr>
+                        <tr>
+                            <td>closeSelector</td>
+                            <td>string</td>
+                            <td>empty</td>
+                            <td>Selector that specifies elements that will close the dialog on click.</td>
+                        </tr>
+                        <tr>
+                            <td>closeButton</td>
+                            <td>bool</td>
+                            <td>true</td>
+                            <td>Shows the dialog's default close button</td>
+                        </tr>
+                        <tr>
+                            <td>closeOnBodyClick</td>
+                            <td>bool</td>
+                            <td>false</td>
+                            <td>Whether a click outside the overlay should close the overlay</td>
+                        </tr>
+                        <tr>
+                            <td>autoOpen</td>
+                            <td>bool</td>
+                            <td>true</td>
+                            <td>When true, the dialog opens automatically when plugin first called.</td>
+                        </tr>
+                        <tr>
+                            <td>maxWidth</td>
+                            <td>string</td>
+                            <td>90%</td>
+                            <td>sets dialog's max-width</td>
+                        </tr>
+                        <tr>
+                            <td>maxHeight</td>
+                            <td>string</td>
+                            <td>null</td>
+                            <td>set's dialog's max-height</td>
+                        </tr>
+                        <tr>
+                            <td>minWidth</td>
+                            <td>string</td>
+                            <td>null</td>
+                            <td>Sets dialog's min-width</td>
+                        </tr>
+                        <tr>
+                            <td>minHeight</td>
+                            <td>string</td>
+                            <td>null</td>
+                            <td>Sets dialog's min-height</td>
+                        </tr>
+                        <tr>
+                            <td>width</td>
+                            <td>string</td>
+                            <td>null</td>
+                            <td>width</td>
+                        </tr>
+                        <tr>
+                            <td>height</td>
+                            <td>string</td>
+                            <td>null</td>
+                            <td>Dialog height</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="examples" class="tab-pane">
+                <p>
+                    <a href="#" id="overlay_open">Open Overlay</a>
+                </p>
+                <p>
+                    <select id="change_width">
+                        <option value="">Change Width</option>
+                        <option value="200">200</option>
+                        <option value="400">400</option>
+                        <option value="600">600</option>
+                        <option value="800">800</option>
+                    </select>
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
 
 

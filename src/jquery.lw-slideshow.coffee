@@ -54,14 +54,13 @@ $.widget 'lw.slideshow',
 
     # if first slide contains an image, wait for it to load before showing slide
     # it is possible for slides to contain content other than images
-    $first_img = $el.children().eq(0).find('img')
-    if ($first_img.length)
-      $first_img.one('load', ->
+    $first = $el.children().eq(0).find('img')
+    if ($first.length)
+      $first.one('load', ->
         that.showSlide()
-        that.$wrapper.width($first_img.width())
+        that.$wrapper.width(this.width)
       ).each( ->
-        # IX - the height check is for IE10 which doesn't appear to set the complete property
-        if (this.complete or $(this).height() > 0) then $(this).load()
+        if (this.complete) then $(this).load()
       )
     else
       @showSlide()
@@ -88,14 +87,14 @@ $.widget 'lw.slideshow',
     @$previous = @$current
     @$current = @$current.prev()
     @showSlide()
-  showSlide: ->
+  showSlide: (width, height) ->
     $el          = @element
     $slide       = @$current
     that         = this
-    height       = $el.height()     # current height
+    height       = $el.height()               # current height
+    width        = $el.width()                # current width
     targetHeight = $slide.height()  # the height of the slide
-    width        = $el.width()      # current width
-    targetWidth  = $slide.width()   # the width of the slide
+    targetWidth  = $slide.width()    # the width of the slide
 
     # return right away if no slide set in data
     if (!$slide || !$slide.length) then return false

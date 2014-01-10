@@ -18,7 +18,7 @@ module.exports = (grunt) ->
         flatten: true
         partials: ['public/includes/**/*.hbs']
         layoutdir: 'public/layouts'
-        data: ['public/data/**/*.{json,yml}']
+        data: 'public/data/**/*.{json,yml}'
       site:
         options:
           layout: 'default.hbs'

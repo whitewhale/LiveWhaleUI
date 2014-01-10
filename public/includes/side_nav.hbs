@@ -1,11 +1,10 @@
 <div class="hidden-print" role="complementary">
 	<ul class="nav sidenav">
 		<li>
-			<a href="#overview">Overview</a>
 			<ul class="nav">
-				{{#each pages}}
-					<li{{#is ../filename this.filename}} class="active"{{/is}}>
-						<a href="{{this.filename}}">{{data.title}}</a>
+				{{#each plugins}}
+					<li{{#is ../filename this.name}} class="active"{{/is}}>
+						<a href="{{this.name}}.html">{{this.name}}</a>
 					</li>
 				{{/each}}
 			</ul>

@@ -1,0 +1,32 @@
+{
+  "plugins": [
+    {
+      "name": "multiselect",
+      "summary": ""
+    },
+    {
+      "name": "multisuggest",
+      "summary": ""
+    },
+    {
+      "name": "overlay",
+      "summary": ""
+    },
+    {
+      "name": "placeholder",
+      "summary": "Placeholder support for browsers with no native placeholder support." 
+    },
+    {
+      "name": "popover",
+      "summary": "An overlay that appears next to the element its assiated element."
+    },
+    {
+      "name": "slideshow",
+      "summary": "Converts a list of items into a scrollable series of slides."
+    },
+    {
+      "name": "timepicker",
+      "summary": "" 
+    }
+  ]
+}

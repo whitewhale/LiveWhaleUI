@@ -12,13 +12,13 @@
 	</div>
 	<div class="navbar-collapse collapse">
 	  <ul class="nav navbar-nav">
-		<li><a href="/index.html">Home</a></li>
 		<li><a href="about.html">About</a></li>
+		<li><a href="livewhale.html">Use in LiveWhale</a></li>
 		<li class="dropdown">
 		  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Plugins<b class="caret"></b></a>
 		  <ul class="dropdown-menu">
-			{{#each pages}}
-				<li><a href="{{this.filename}}">{{data.title}}</a></li>
+			{{#each plugins}}
+				<li><a href="/{{this.name}}.html">{{this.name}}</a></li>
 			{{/each}}
 		  </ul>
 		</li>

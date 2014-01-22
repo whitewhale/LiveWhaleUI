@@ -2,7 +2,7 @@
   "plugins": [
     {
       "name": "multiselect",
-      "summary": ""
+      "summary": "A component for quickly selecting items from a list"
     },
     {
       "name": "multisuggest",
@@ -26,7 +26,7 @@
     },
     {
       "name": "timepicker",
-      "summary": "" 
+      "summary": "Simple timepicker that support 12 and 24 hour formats" 
     }
   ]
 }

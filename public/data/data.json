@@ -1,32 +1,25 @@
 {
-  "plugins": [
-    {
-      "name": "multiselect",
-      "summary": "A component for quickly selecting items from a list"
+  "plugins": { 
+    "multiselect": {
+      "summary": "Select multiple input values from a list of items" 
     },
-    {
-      "name": "multisuggest",
-      "summary": ""
+    "multisuggest": {
+      "summary": "Auto completion for entering multiple input values, designed for tag entry" 
     },
-    {
-      "name": "overlay",
-      "summary": ""
+    "overlay": {
+      "summary": "A fixed modular overlay"
     },
-    {
-      "name": "placeholder",
+    "placeholder": {
       "summary": "Placeholder support for browsers with no native placeholder support." 
     },
-    {
-      "name": "popover",
+    "popover": {
       "summary": "An overlay that appears next to the element its assiated element."
     },
-    {
-      "name": "slideshow",
+    "slideshow": {
       "summary": "Converts a list of items into a scrollable series of slides."
     },
-    {
-      "name": "timepicker",
+    "timepicker": {
       "summary": "Simple timepicker that support 12 and 24 hour formats" 
     }
-  ]
+  }
 }

@@ -3,8 +3,8 @@
 		<li>
 			<ul class="nav">
 				{{#each plugins}}
-					<li{{#is ../filename this.name}} class="active"{{/is}}>
-						<a href="{{this.name}}.html">{{this.name}}</a>
+					<li{{#is ../filename @key}} class="active"{{/is}}>
+						<a href="{{@key}}.html">{{ capitalizeFirst @key}}</a>
 					</li>
 				{{/each}}
 			</ul>

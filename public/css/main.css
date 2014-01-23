@@ -63,6 +63,9 @@
 .card {
   height: 170px;
 }
+.markup {
+  padding-top: 35px;
+}
 .api-table {
   margin: 0;
 }

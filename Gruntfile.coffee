@@ -189,8 +189,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-clean')
 
   grunt.registerTask('default', ['assemble', 'less'])
-
-  grunt.registerTask('website', ['assemble', 'less'])
+  grunt.registerTask('site', ['assemble', 'less:site', 'coffee:site'])
   
   grunt.registerTask('release', [
     'clean', 'coffee', 'uglify', 'concat:js', 'less:plugins', 'concat:css'

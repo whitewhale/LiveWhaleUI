@@ -60,6 +60,9 @@
 #footer a {
   color: #fff;
 }
+.card {
+  height: 170px;
+}
 .api-table {
   margin: 0;
 }

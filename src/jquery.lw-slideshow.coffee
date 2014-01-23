@@ -91,10 +91,10 @@ $.widget 'lw.slideshow',
     $el          = @element
     $slide       = @$current
     that         = this
-    height       = $el.height()               # current height
-    width        = $el.width()                # current width
-    targetHeight = $slide.height()  # the height of the slide
-    targetWidth  = $slide.width()    # the width of the slide
+    height       = $el.height()          # current height
+    width        = $el.width()           # current width
+    targetHeight = $slide.innerHeight()  # the height of the slide
+    targetWidth  = $slide.innerWidth()   # the width of the slide
 
     # return right away if no slide set in data
     if (!$slide || !$slide.length) then return false

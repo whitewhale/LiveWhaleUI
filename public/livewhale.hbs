@@ -1,0 +1,33 @@
+---
+title: Use in LiveWhale
+---
+
+{{#markdown}}
+
+White Whale uses this project to both maintain its own plugins and to package many of the third-party Javascript libraries that LiveWhale depends on.  The project's grunt file defindes tasks for combining these libraries into aggregate files, one for the front-end and another for the back-end.  The following is a list of libraries contained in each of these files. 
+
+### frontend.js
+
+* [jQuery UI Widget Factory](http://api.jqueryui.com/jQuery.widget/)
+* [Imagesloaded](https://github.com/desandro/imagesloaded)
+* [LiveWhale UI Overlay](/overlay.html)
+* [LiveWhale UI Slideshow](/slideshow.html)
+
+### backend.js
+
+* [Lo-Dash](http://lodash.com/)
+* [Imagesloaded](https://github.com/desandro/imagesloaded)
+* [jQuery BBQ](http://benalman.com/projects/jquery-bbq-plugin/)
+* [LiveWhale UI Overlay](/overlay.html)
+* [LiveWhale UI Popover](/popover.html)
+* [LiveWhale UI Timepicker](/timepicker.html)
+* [LiveWhale UI Slideshow](/slideshow.html)
+
+We also use this project to maintain LiveWhale's copies of jQuery and jQuery UI, which we modify slightly to prevent name conflicts.
+
+The following will update LiveWhale with the latest LiveWhale UI changes.
+
+```
+$ grunt release
+$ grunt copy_to_lw --lwdir={path_to_livewhale}
+```

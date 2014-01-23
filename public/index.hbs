@@ -2,3 +2,15 @@
 title: LiveWhale UI
 tagline: A collection of jQuery plugins developed for LiveWhale CMS.
 ---
+			
+<div class="container">
+	<div class="row">
+		{{#each plugins}}
+			<div class="col-md-4 card">
+				<h2>{{this.name}}</h2>
+				<p>{{this.summary}}</p>
+				<p><a class="btn btn-default" href="/{{this.name}}.html" role="button">View details »</a></p>
+			</div>
+		{{/each}}
+	</div>
+</div>

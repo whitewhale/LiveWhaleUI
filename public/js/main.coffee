@@ -64,7 +64,10 @@ page =
   slideshow:
     init: ->
       initSlideshows = ->
-        $('.slideshow_top').slideshow({ controlPlacement: 'prepend' })
+        $('.slideshow_top').slideshow(
+          controlPlacement: 'prepend'
+          continuousScroll: true
+        )
         $('.slideshow_bottom').slideshow()
 
       initSlideshows()

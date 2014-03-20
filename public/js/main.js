@@ -82,7 +82,8 @@
         var initSlideshows;
         initSlideshows = function() {
           $('.slideshow_top').slideshow({
-            controlPlacement: 'prepend'
+            controlPlacement: 'prepend',
+            continuousScroll: true
           });
           return $('.slideshow_bottom').slideshow();
         };

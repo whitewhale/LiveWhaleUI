@@ -50,6 +50,9 @@
 .jumbotron p {
   color: #ddd;
 }
+.body {
+  min-height: 400px;
+}
 #footer {
   background-color: #1f6ea6;
   border-top: #3376a6 1px solid;

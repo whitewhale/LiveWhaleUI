@@ -5,6 +5,8 @@ $.widget 'lw.slideshow',
     fluidHeight: true
     controlPlacement: 'append'
     customClass: null
+    transitionSpeed: 100
+    continuousScroll: false
   _create: ->
     $el    = @element
     opts   = @options
@@ -81,14 +83,17 @@ $.widget 'lw.slideshow',
     return true
   next: ->
     @$previous = @$current
-    @$current = @$current.next()
+    $next = @$current.next()
+    @$current = if ($next.length) then $next else @element.children(':first-child')
     @showSlide()
   prev: ->
     @$previous = @$current
-    @$current = @$current.prev()
+    $prev = @$current.prev()
+    @$current = if ($prev.length) then $prev else @element.children(':last-child')
     @showSlide()
   showSlide: (width, height) ->
     $el          = @element
+    opts         = @options
     $slide       = @$current
     that         = this
     height       = $el.height()          # current height
@@ -106,17 +111,22 @@ $.widget 'lw.slideshow',
     @$controls.find('.lw_slideshow_count_current').html($slide.index() + 1)
 
     # stop any animation on the slideshow and its children
-    $slide.stop().children('.lw_slideshow_slide').stop().css('z-index', 0)
+    $slide.stop().siblings('.lw_slideshow_slide').stop().css('z-index', 0)
 
     $slide.css { zIndex: '100' }
 
     # fade in the slide
-    $slide.fadeTo 100, 1, ->
+    $slide.fadeTo opts.transitionSpeed, 1, ->
       if (that.$previous) then that.$previous.css('z-index', 0) #  
       $slide.siblings('.lw_slideshow_slide').css('opacity', 0) # hide siblings 
+
       # toggle the prev and next control states
-      that.$prev.toggleClass('lw_disabled', !$slide.prev('.lw_slideshow_slide').length)
-      that.$next.toggleClass('lw_disabled', !$slide.next('.lw_slideshow_slide').length)
+      if (!opts.continuousScroll)
+        that.$prev.toggleClass('lw_disabled', !$slide.prev('.lw_slideshow_slide').length)
+        that.$next.toggleClass('lw_disabled', !$slide.next('.lw_slideshow_slide').length)
+      else
+        that.$prev.removeClass('lw_disabled')
+        that.$next.removeClass('lw_disabled')
 
     # adjust wrapper width if different
     if (@$wrapper.width() isnt $slide.width()) then @$wrapper.width($slide.width())

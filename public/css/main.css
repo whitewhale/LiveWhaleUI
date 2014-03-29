@@ -102,3 +102,6 @@ textarea {
   font-size: .875em;
   padding: 3px;
 }
+.lw-multiselect ul {
+  padding: 0;
+}

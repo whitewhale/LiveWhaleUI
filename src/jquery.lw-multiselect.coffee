@@ -3,43 +3,57 @@ $ = livewhale?.jQuery || window.jQuery
 $.widget 'lw.multiselect',
   # default options
   options: {
-    name: 'name',
-    data: [],
-    type: 'items',
-    selected: [],
-    onlyone: false
+    name:      'name',
+    data:      [],
+    type:      'items',
+    selected:  [],
+    onlyone:   false
   },
   _create: ->
+    $el  = @element
     that = this
     opts = this.options
-    $ul
+    items = ''
 
     # add the multiselector parent
-    this.element.append('<div class="lw_multiselect lw_multiselect_' + opts.type + '"/>')
-
-    $ul = $('<ul/>').appendTo(this.element.children().eq(0))
+    $el.addClass("lw-multiselect lw-multiselect-#{ opts.type }")
 
     $.each opts.data, (index, item) ->
-      $ul.append('<li' + (item.size ? ' style="font-size:' + item.size + 'em;"' : '') + '><input type="checkbox" value="' + item.id + '" name="' + opts.name + '[]" id="lw_multiselect_' + opts.name + '_' + item.id + '"/><label class="lw_multiselect_item" for="lw_multiselect_' + opts.name + '_' + item.id + '"><span class="lw_item_name">' + item.title + '</span></label></li>')
+      items += """ 
+        <li class="lw-item">
+          <input type="checkbox" value="#{ item.id }" name="#{ opts.name }[]" />
+          <span class="lw-name">#{ item.title }</span>
+        </li>
+        """
+
+    @$ul = $ul = $('<ul/>').html(items).appendTo($el)
 
     # highlight preselected items 
     this._highlightSelected()
 
     # handle item click 
-    this.element.on 'click', '.lw_multiselect_item', ->
+    $el.on 'click', '.lw-item', (e) ->
+      e.preventDefault()
+
+      $this = $(this)
+
       # return right away if this item is locked
-      if ($(this).is('.lw_locked'))
-        return false
+      return false if ($this.is('.lw-locked'))
 
       # highlight clicked and de-select others if opts.onlyone, otherwise toggle clicked 
       if (opts.onlyone)
-        $('.lw_multiselect_item').removeClass('lw_selected')
-        $(this).addClass('lw_selected')
+        that.deselectAll()
+        $this.addClass('lw-selected')
       else
-        $(this).toggleClass('lw_selected')
+        $this.toggleClass('lw-selected')
+
+      # set check status on hidden checkbox input
+      $this.find('input').prop('checked', $this.hasClass('lw-selected'))
+
+      return true
   _highlightSelected: ->
     that    = this
-    opts    = this.options
+    opts    = @options
     sel_tbl = {}
 
     # return righ away if nothing selected
@@ -48,35 +62,39 @@ $.widget 'lw.multiselect',
 
     # create lookup table from opts.selected array, which is an array of objects with id, title, is_locked 
     $.each opts.selected, (i, val) ->
-      sel_tbl[val.id] = val
+      sel_tbl[val.id] = true
 
-    this.element.find('input[type="checkbox"]').each (index, el) ->
-      $input    = $(el)
-      input_val = $input.attr('value')
-      $label    = $input.siblings('.lw_multiselect_item')
+    @$ul.children().each (index, el) ->
+      $li    = $(el)
+      $input = $li.find('input')
+      id     = parseInt($input.val(), 10)
 
       # mark selected if the input value contains a key in selected lookup table 
-      if (input_val && input_val in sel_tbl)
+      if (id and sel_tbl[id]?)
         $input.prop('checked', true)
-        $label.addClass('lw_selected')
+        $li.addClass('lw-selected')
 
-        if (sel_tbl[input_val].is_locked)
-          $label.addClass('lw_locked')
+        if (sel_tbl[id].is_locked)
+          $li.addClass('lw-locked')
   # remove lock class from all lis 
   unlockAll: ->
-    this.element.find('.lw_multiselect_item').removeClass('lw_locked')
+    @$ul.children().removeClass('lw-locked')
   # add lock class to all lis 
   lockAll: ->
-    this.element.find('.lw_multiselect_item').addClass('lw_locked')
+    @$ul.children().addClass('lw=locked')
   selectAll: ->
-    this.element.find('input').prop('checked', true)
-    this.element.find('.lw_multiselect_item').addClass('lw_selected')
-  selectNone: ->
-    this.element.find('input').prop('checked', false)
-    this.element.find('.lw_multiselect_item').removeClass('lw_selected')
+    @$ul.find('input').prop('checked', true)
+    @$ul.children().addClass('lw-selected')
+  deselectAll: ->
+    @$ul.find('input').prop('checked', false)
+    @$ul.children().removeClass('lw-selected')
   resetSelection: ->
-    this.selectNone()
-    this._highlightSelected()
+    @selectNone()
+    @_highlightSelected()
   _setOption: $.noop,
   _destroy: ->
-    this.element.find('.lw_multiselect').remove()
+    @element
+      .removeClass("lw-multiselect")
+      .removeClass("lw-multiselect-#{ @options.type }")
+      .off 'click', '.lw-item'
+    @$ul.remove()

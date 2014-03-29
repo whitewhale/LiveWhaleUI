@@ -71,6 +71,50 @@ page =
         $('.slideshow_bottom').slideshow()
 
       initSlideshows()
+  multiselect:
+    init: ->
+      $('#multiselect_menu').multiselect(
+        name: 'example'
+        data: [
+          { id: 1, title: 'Item 1' }
+          { id: 2, title: 'Item 2' }
+          { id: 3, title: 'Item 3' }
+          { id: 4, title: 'Item 4' }
+          { id: 5, title: 'Item 5' }
+        ]
+        selected: [
+          { id: 2, title: 'empty' }
+          { id: 4, title: 'empty2' }
+        ]
+      )
+      $('#multiselect_menu_single').multiselect(
+        name: 'example'
+        onlyone: true
+        data: [
+          { id: 1, title: 'Item 1' }
+          { id: 2, title: 'Item 2' }
+          { id: 3, title: 'Item 3' }
+          { id: 4, title: 'Item 4' }
+          { id: 5, title: 'Item 5' }
+        ]
+      )
+
+      $('.select_form').submit (e) ->
+        e.preventDefault()
+        selected = []
+
+        $(this).find('.lw-item input').each ->
+          $this = $(this)
+          if $this.prop('checked') then selected.push $this.val()
+        
+        if (selected.length)
+          msg = 'Item'
+          if (selected.length > 1) then msg += 's'
+          alert(msg + ' ' + selected.join(', ') + ' selected')
+        else
+          alert('No items selected')
+        return true
+      return true
 
 # init page code
 # each page should have a body id that matches a key in page object 

@@ -62,21 +62,25 @@ module.exports = (grunt) ->
           ]
           'release/backend.js': [
             'vendor/lodash.js'
+            'vendor/backbone.js'
             'vendor/jquery.ba-bbq.js'
             'vendor/imagesloaded.js'
             'release/jquery.lw-overlay.js'
             'release/jquery.lw-timepicker.js'
             'release/jquery.lw-popover.js'
             'release/jquery.lw-slideshow.js'
+            'release/jquery.lw-multiselect.js'
           ]
           'release/backend.min.js': [
             'vendor/lodash.min.js'
+            'vendor/backbone.min.js'
             'vendor/jquery.ba-bbq.min.js'
             'vendor/imagesloaded.min.js'
             'release/jquery.lw-overlay.min.js'
             'release/jquery.lw-timepicker.min.js'
             'release/jquery.lw-popover.min.js'
             'release/jquery.lw-slideshow.min.js'
+            'release/jquery.lw-multiselect.min.js'
           ]
       css:
         src: [
@@ -84,6 +88,7 @@ module.exports = (grunt) ->
           'public/css/plugins/lw-timepicker.css'
           'public/css/plugins/lw-popover.css'
           'public/css/plugins/lw-slideshow.css'
+          'public/css/plugins/lw-multiselect.css'
         ]
         dest: 'release/css/default.css'
     uglify:
@@ -141,6 +146,8 @@ module.exports = (grunt) ->
             src: [
               'lodash.js'
               'lodash.min.js'
+              'backbone.js'
+              'backbone.min.js'
               'imagesloaded.js'
               'imagesloaded.min.js'
             ]

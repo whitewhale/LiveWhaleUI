@@ -115,6 +115,21 @@ page =
           alert('No items selected')
         return true
       return true
+  multisuggest:
+    init: ->
+      $('#multisuggest_field').multisuggest(
+        create: true
+        data: [
+          { id: 1, title: 'Item 1' }
+          { id: 2, title: 'Item 2' }
+          { id: 3, title: 'Item 3' }
+          { id: 4, title: 'Item 4' }
+          { id: 5, title: 'Item 5' }
+          { id: 6, title: 'Item 6' }
+        ]
+      )
+      return true
+
 
 # init page code
 # each page should have a body id that matches a key in page object 

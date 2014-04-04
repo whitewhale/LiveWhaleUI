@@ -17,149 +17,96 @@ $.widget 'lw.multisuggest',
 
     # add title to keywords and normalize
     $.each opts.data, ->
-      @keywords = if (@keywords) then ' ' + that._normalizeKeywords(@keywords) else ""
-      @keywords = that._normalizeKeywords(@title) + @keywords
+      keywords = if (@keywords) then ' ' + that._normalizeSearchText(@keywords) else ''
+      @keywords = that._normalizeSearchText(@title) + keywords
 
-    @$suggestions = $('<ul class="lw-multisuggest-suggestions"/>')
-    @$input = $('<input type="text" class="lw-multisuggest-input"/>')
+    $suggestions = @$suggestions = $('<ul class="lw-suggestions"/>')
+    $input = @$input = $('<input type="text" lw-input"/>')
 
     $el
-      .addClass("lw-multisuggest lw-multisuggest-#{ opts.type } lw_false_input")
+      .addClass("lw-multisuggest lw-multisuggest-#{ opts.type } lw-false-input")
       .append(@$suggestions)
       .append(@$input)
 
-    # hide and remove lw_false_input class if places widget on event_edit page 
+    # hide and remove lw-false-input class if places widget on event_edit page 
     if (opts.type is 'places' && livewhale.page is 'events_edit')
-      $el.addClass('lw_hidden').removeClass('lw_false_input')
-  open: ->
-    if !@$overlay
-      @initOverlay()
-    
-    # build selected array 
-    selected = []
-    @element.find('.lw_multisuggest_item:not(.lw_multisuggest_new)').each ->
-      $this = $(this)
-      selected.push
-        id: $this.find('input').val()
-        title: $.trim($this.text())
-        is_locked: $this.is('.lw_locked')
+      $el.addClass('lw-hidden').removeClass('lw-false-input')
 
-    # open the overlay
-    @_overlay.overlay('open')
-  initOverlay: ->
-    $el = @element
-    opts = @options
-    that = this
-    $input = @input
-    $suggestions = @suggestions
+    $el
+      # any click in widget should deselect selected, and place cursor in input unless opts.onlyone
+      .click( ->
+        $el.find('.lw-item.lw-selected').removeClass('lw-selected')
 
-    overlay = '''
-      <div class="lw-multisuggest-overlay">
-        <h3>All #{ opts.type }</h3>
-        <div class="lw-items"></div>
-        <button type="button" class="lw-save"/>Use selected #{ opts.type }</button>
-        <span class="lw-cancel">or <a href="#">cancel and close</a></span>
-      </div>
-      '''
+        # only one is wanted, don't allow clicking in
+        return false if (opts.onlyone and $el.find('.lw-item').length >= 1)
 
-    @$overlay = $overlay = $(overlay)
-      .overlay(
-        closeSelector: '.lw_cancel a'
-        autoOpen: false
+        # otherwise place cursor in input
+        $input.css('visibility', 'visible').focus().keyup()
+        return true
       )
-      # save items selected in overlay
-      .on('click', '.lw-save', ->
-        $el.find('.lw_multisuggest_item:not(.lw_multisuggest_new)').remove()
+      # item click handler - selects item
+      .on('click', '.lw-item', ->
+        # select clicked item
+        $(this).addClass('lw-selected').siblings().removeClass('lw-selected')
 
-        $overaly.find('.lw-selected').each ->
-          $this = $(this)
-          that.add
-            title:      $.trim($this.text())
-            id:         $this.siblings('input').val()
-            is_locked:  $this.is('.lw_locked')
+        # make input visible to focus, then hide 
+        $input
+          .val('')
+          .css('visibility', 'visible') 
+          .focus()
+          .css('visibility', 'hidden')
 
-        if (!opts.onlyone or !selected.length)
-          @$input.css('visibility', 'visible').focus().keyup()
-
-        $overlay.overlay('close')
+        # cancel bubbling
         return false
       )
+      # remove item click handler
+      .on('click', '.lw-remove', (e) ->
+        e.preventDefault()
 
-    $overlay.find('.lw-items').multiselect
-      type:      opts.type
-      data:      opts.data
-      selected:  selected
-      onlyone:   opts.onlyone
+        $item = $(this).closest('.lw-item')
 
+        # do nothing if the item is locked
+        return false if $item.is('.lw-locked')
 
-    # add message to separate with commas if not places
-    #if (opts.type is 'tags')
-    #  $('<p/>').addClass('lw_multisuggest_help').text('Separate ' + opts.type + ' with commas').insertAfter($show_link)
+        # remove item and show input
+        $item.remove()
+        $input.css('visibility', 'visible').show(0)
 
-    $el.click( ->
-      $el.find('.lw-item.lw-selected').removeClass('lw-selected')
+        # trigger the change event on the suggestor
+        that._trigger('change')
 
-      # only one is wanted, don't allow clicking in
-      return false if (opts.onlyone and $el.find('.lw-item').length >= 1)
-      $input.css('visibility', 'visible').focus().keyup()
-    )
-    .on('click', '.lw-item', ->
-      $(this).addClass('lw-selected').siblings().removeClass('lw-selected')
+        # trigger the change event on the suggestor
+        that._trigger('remove_multisuggest')
 
-      $input
-        .val('')
-        .css('visibility', 'visible') # it needs to be visible to focus
-        .focus()
-        .css('visibility', 'hidden')
+        return false
+      )
+      # suggestion click handler
+      .on('click', '.lw-suggestions li', (e) ->
+        $this = $(this)
+        id = $this.find('input').val()
+        existing = $el.find('.lw-item input[value=' + id + ']').parent()
 
-      # cancel bubbling
-      return false
-    )
-    .on('click', '.lw-remove', (e) ->
-      e.preventDefault()
+        # we're clearing the input val regardless of what happens
+        $input.val('')
 
-      $item = $(this).closest('.lw-item')
+        # mark item selected if it exists, otherwise add it as a new item 
+        if (existing.length)
+          existing.addClass('lw-selected')
+          $input.focus().css('visibility', 'hidden')
+        else
+          that.addItem
+            title: $.trim($this.text())
+            id: id
+          if (opts.onlyone) then $input.hide(0) else $input.focus()
 
-      return false if $item.is('.lw-locked')
-
-      # remove item if not locked
-      $item.remove()
-      $input.css('visibility', 'visible').show(0)
-
-      # trigger the change event on the suggestor
-      @_trigger('change')
-
-      # trigger the change event on the suggestor
-      @_trigger('remove_multisuggest')
-
-      return false
-    )
-    .on('click', '.lw-suggestions li', (e) ->
-      $li = $(this)
-      id = $li.find('input').val()
-      existing = $el.find('.lw-item input[value=' + id + ']').parent()
-
-      # we're clearing the input val regardless of what happens
-      $input.val('')
-
-      # mark item selected if it exists, otherwise add it as a new item 
-      if (existing.length)
-        existing.addClass('lw-selected')
-        $input.focus().css('visibility', 'hidden')
-      else
-        that.add
-          title: $.trim($li.text())
-          id: id
-        if (opts.onlyone) then $input.hide(0) else $input.focus()
-
-      # cancel bubbling
-      return false
-    )
+        # cancel bubbling
+        return false
+      )
 
     # .blur() doesn't QUITE work here that's why we have to have an annoying 200ms timeout
     $input.blur( ->
       $el.find('.lw-item.lw-selected').removeClass('lw-selected')
-      lastquery = ''
+      that.lastquery = ''
       hidesuggestions = setTimeout( ->
         # hide the suggestion popup (we can't hide it earlier, in case the user has clicked it)
         $suggestions.hide()
@@ -174,48 +121,29 @@ $.widget 'lw.multisuggest',
     )
     # on each keypress, filter the results
     .keyup((e) ->
-      # grab query, sanitize it // TODO COMPILE THESE REGEXPS
-      query = $.trim($(this).val().toLowerCase().replace(/[,\-\/\s]+/g, ' ').replace(/[^a-zA-Z 0-9\.]+/g, ''))
-      
-      # do nothing if the query is unchanged
-      return false if (query is lastquery)
+      query = $.trim( that._normalizeSearchText( $input.val()) )
 
-      # empty and hide the suggestions list
+      # do nothing if query is same as last
+      return if (query is that.lastquery)
+
+      results = that._search(query)
+
+      # empty and hide the suggestions list if no results returned
       $suggestions.empty().hide()
 
-      # if this query is NOT a subset of the last query, reinitialize the matches and search on all terms
-      if (query.indexOf(lastquery) isnt 0 || !lastquery.length)
-        matches = opts.data
-        subquery = query
-      else
-        # otherwise, since this query IS a subset of the last query, no need to search the last query's terms
-        subquery = query.substring(query.lastIndexOf(' ') + 1, query.length) 
-
-      lastquery = query # store the last query
-
-      # cancel here if the query is zero length
-      return false if (!query.length) 
-
-      # filter the result for each word in the query
-      $.each(subquery.split(' '), -> 
-        search = this
-        results = $.grep(matches, (item) ->
-          return (' ' + item.keywords).indexOf(' ' + search) >= 0
-        )
-      )
-
-      if (results.length)
+      if (results?.length)
         # regex for highlighting the query terms
         query_exp = new RegExp('(\\b' + query.replace(/\s/g, '|\\b') + ')', 'ig')
 
-        # list the match, with highlighting
+        # list matches, with highlighting
         $.each(results, (index, item) ->
           $li = $('<li/>')
-          if query is item.keywords then $li.addClass('lw_selected')
-          title = (' ' + item.title).replace(query_exp, '<span class="lw_multisuggest_highlight">$1</span>')
-
+          if query is item.keywords then $li.addClass('lw-selected')
+          title = (' ' + item.title).replace(query_exp, '<span class="lw-highlight">$1</span>')
           $suggestions.append($li.html('<input type="hidden" value="' + item.id + '"/>' + title))
         )
+
+        # position and show suggestion box
         position = $input.position()
         $suggestions.css(
           left: position.left + 'px'
@@ -224,52 +152,51 @@ $.widget 'lw.multisuggest',
 
         # force select the first item if creation is disabled
         if (!opts.create)
-          $suggestions.children.eq(0).addClass('lw_selected')
+          $suggestions.children(':first-child').addClass('lw-selected')
     )
-
     # capture special keys on keydown
     .keydown( (e) ->
-      selected_item = that.find('.lw_multisuggest_item.lw_selected')
+      selected_item = $el.find('.lw-item.lw-selected')
 
       # First, handle the case of a selected item
       if (selected_item.length)
         switch (e.which)
+          # enter/return or space
           when 13 or 32
-            # enter/return or space
             e.preventDefault()
-            item = selected_item.find('.lw_item_name').text()
-            selected_item.find('.lw_multisuggest_remove').trigger('click') # remove the item
+            item = selected_item.find('.lw-name').text()
+            selected_item.find('.lw-remove').trigger('click') # remove the item
             $input.val(item).keyup() # and enter the item for editing
             break
+          # left arrow
           when 37
-            # left arrow
             e.preventDefault()
-            prev = selected_item.removeClass('lw_selected').prev()
+            prev = selected_item.removeClass('lw-selected').prev()
 
             # select previous item and return if it exists
             if (prev.length)
-              prev.addClass('lw_selected')
+              prev.addClass('lw-selected')
               return
 
             break
+          # right arrow or tab
           when 39 or 9
-            # right arrow or tab
             e.preventDefault()
-            next = selected_item.removeClass('lw_selected').next()
+            next = selected_item.removeClass('lw-selected').next()
 
             # select next item and return if it exists
-            if (next.is('.lw_multisuggest_item'))
-              next.addClass('lw_selected')
+            if (next.is('.lw-item'))
+              next.addClass('lw-selected')
               return
             break
+          # del/backspace
           when 8
-            # del/backspace
             e.preventDefault()
-            selected_item.find('.lw_multisuggest_remove').trigger('click')
+            selected_item.find('.lw-remove').trigger('click')
             break
           else
             # deselect any selected items
-            that.find('.lw_multisuggest_item.lw_selected').removeClass('lw_selected') 
+            that.find('.lw-item.lw-selected').removeClass('lw-selected')
             break
 
         # and show the input
@@ -289,7 +216,7 @@ $.widget 'lw.multisuggest',
             top: position.top + 'px'
           ).show()
 
-      $selected = $suggestions.find('.lw_selected')
+      $selected = $suggestions.find('.lw-selected')
 
       # Otherwise, handle the autocomplete
       switch (e.which)
@@ -307,16 +234,16 @@ $.widget 'lw.multisuggest',
           if ($selected.siblings().length is 0 && input_val is match)
             break
 
-          $selected.removeClass('lw_selected')
+          $selected.removeClass('lw-selected')
 
           if ($selected.prev().length)
-            $selected = $selected.prev().addClass('lw_selected')
+            $selected = $selected.prev().addClass('lw-selected')
             position = $selected.position().top
 
             if (position < 0)
               $suggestions.scrollTop($suggestions.scrollTop() + position)
           else if (!$selected.length)
-            $selected = $suggestions.show().find('li:last-child').addClass('lw_selected')
+            $selected = $suggestions.show().find('li:last-child').addClass('lw-selected')
             position = ($selected.position().top + $selected.outerHeight()) - ($suggestions.height() - $suggestions.scrollTop())
             if (position > 0)
               $suggestions.scrollTop(position)
@@ -334,72 +261,72 @@ $.widget 'lw.multisuggest',
           if ($selected.siblings().length is 0 && match is input_val)
             break
 
-          $selected.removeClass('lw_selected')
+          $selected.removeClass('lw-selected')
 
           if ($selected.next().length)
-            $selected = $selected.next().addClass('lw_selected')
+            $selected = $selected.next().addClass('lw-selected')
             position = ($selected.position().top + $selected.outerHeight()) - ($suggestions.height() - $suggestions.scrollTop())
             if (position > 0)
               $suggestions.scrollTop(position)
           else
             $suggestions.scrollTop(0)
             if (!$selected.length)
-              $selected = $suggestions.children().eq(0).addClass('lw_selected')
+              $selected = $suggestions.children(':first-child').addClass('lw-selected')
           break
+        # enter/return or comma or comma sometimes return by jQuery or tab
         when 13 or 44 or 188 or 9
-          # enter/return or comma or comma sometimes return by jQuery or tab
-          if (e.which is 13) then e.preventDefault() # always prevent enter
+          # always prevent enter
+          if (e.which is 13) then e.preventDefault()
 
           # disable adding item with comma if we're not editing tags
-          if (opts.type isnt 'tags' && (e.which is 44 || e.which is 188))
-            break
+          if (opts.type isnt 'tags' && (e.which is 44 || e.which is 188)) then break
 
           existing = []
+
           if ($selected.length)
             e.preventDefault()
 
             id = $selected.find('input').val() # selected item id
 
-            existing = that.find('.lw_multisuggest_item input[value=' + id + ']').parent()
+            existing = $el.find('.lw-item input[value=' + id + ']').parent()
             if (!existing.length)
-              that.multisuggest 'add',
+              that.addItem
                 title: $.trim($selected.text())
                 id: id
           else
-            # if there are no matches but creation is disabled
-            if (!opts.create)
-              return true
+            # do nothing if no matches and creation is disabled
+            return true if (!opts.create)
 
             value = $.trim($input.val())
 
             if (value.length)
-              lcvalue = value.toLowerCase()
-              existing = that.find('.lw_multisuggest_item .lw_multisuggest_item_name').filter(->
+              lc_value = value.toLowerCase()
+              existing = $el.find('.lw-item .lw-name').filter(->
                 # match if the string matches the value
-                return $.trim($(this).text().toLowerCase()) is lcvalue 
+                return $.trim($(this).text().toLowerCase()) is lc_value
               ).parent()
 
               if (!existing.length)
                 e.preventDefault()
-                that.multisuggest('new', value)
+                that.addNewItem(value)
 
-          $input.val('').keyup()
+          $input.val('').focus().keyup()
           $suggestions.hide()
 
           if (existing.length)
-            existing.addClass('lw_selected')
+            existing.addClass('lw-selected')
             $input.css('visibility', 'hidden')
 
           break
         when 37 or 8
           # left arrow or del/backspace
           # if there's no input, but there are older suggestions
-          if (!$.trim($input.val()).length && $input.siblings('.lw_multisuggest_item').length)
+          if (!$.trim($input.val()).length && $input.siblings('.lw-item').length)
             e.preventDefault() # cancel the keypress
             $input
               .val('') # remove any spaces just in case
               .css('visibility', 'hidden') # hide the input
-              .prev().addClass('lw_selected') # and select the last item
+              .prev().addClass('lw-selected') # and select the last item
             $suggestions.empty().hide() # hide suggestions
           break
     )
@@ -414,41 +341,127 @@ $.widget 'lw.multisuggest',
       # with each preselected tag
       $.each opts.selected, ->
         if (this.id)
-          that.multisuggest('add', this) # select it;
+          that.addItem(this)
         else # otherwise
-          that.multisuggest('new', this.title) # add it as a new tag
+          that.addNewItem(this.title)
 
       # don't show input if onlyone is on and we have one
       if (opts.onlyone && opts.selected.length > 0)
         $input.css('visibility', 'hidden').blur()
 
-  # value is an object with keys id and title
-  add: (value) ->
-    html  = '<input type="hidden" name="' + opts.name + '[]" value="" />'
-    html += '<span class="lw_item_name">' + value.title + '</span><span class="lw_multisuggest_remove">×</span>'
+  open: ->
+    if !@$overlay
+      @initOverlay()
+    
+    # build selected array 
+    selected = []
+    @element.find('.lw-item:not(.lw-new)').each ->
+      $this = $(this)
+      selected.push
+        id: $this.find('input').val()
+        title: $.trim($this.text())
+        is_locked: $this.is('.lw-locked')
 
-    $item  = $('<div class="lw_multisuggest_item"/>').html(html)
+    # open the overlay
+    @_overlay.overlay('open')
+  _itemExists: (name, id) ->
 
-    # if locked, add class and remove name attribute from input 
-    if (value.is_locked) then $item.addClass('lw_locked').find('input').removeAttr('name')
+  initOverlay: ->
+    $el = @element
+    opts = @options
+    that = this
+    $input = @input
+    $suggestions = @suggestions
 
-    # add the hidden iput item before the multi
-    @input.before($item)
-
-    that.trigger('change.multisuggest') # trigger the change event on the suggestor
-  # value is the new item's title 
-  new: (name) ->
-    name = $.trim(name)
-    html = '''
-      <div class="lw-item lw-new">
-        <input type="hidden" name="#{ opts.name }_added[]" value="#{ name }" />
-        <span class="lw-name">#{ name }</span>
-        <span class="lw-remove">×</span>
+    overlay = '''
+      <div class="lw-multisuggest-overlay">
+        <h3>All #{ opts.type }</h3>
+        <div class="lw-items"></div>
+        <button type="button" class="lw-save"/>Use selected #{ opts.type }</button>
+        <span class="lw-cancel">or <a href="#">cancel and close</a></span>
       </div>
       '''
-    @input.before(html)
-    @_trigger('change.multisuggest') # trigger the change event on the suggestor
-  _normalizeKeywords: (string) ->
+
+    @$overlay = $overlay = $(overlay)
+      .overlay(
+        closeSelector: '.lw-cancel a'
+        autoOpen: false
+      )
+      # save items selected in overlay
+      .on('click', '.lw-save', ->
+        $el.find('.lw-item:not(.lw-new)').remove()
+
+        $overaly.find('.lw-selected').each ->
+          $this = $(this)
+          that.add
+            title:      $.trim($this.text())
+            id:         $this.siblings('input').val()
+            is_locked:  $this.is('.lw-locked')
+
+        if (!opts.onlyone or !selected.length)
+          that.$input.css('visibility', 'visible').focus().keyup()
+
+        $overlay.overlay('close')
+        return false
+      )
+
+    # inti multiselect in overlay
+    $overlay.find('.lw-items').multiselect
+      type:      opts.type
+      data:      opts.data
+      selected:  selected
+      onlyone:   opts.onlyone
+  # value is an object with keys id and title
+  addItem: (item, is_new) ->
+    title = $.trim(item.title)
+    id    = item.id
+    input_postfix = new_item_class = ""
+
+    if (is_new)
+      id = title
+      input_postfix = '_added'
+      new_item_class = ' lw-new'
+
+    markup = """
+      <div class="lw-item#{ new_item_class }">
+        <input type="hidden" name="#{ @options.name }#{ input_postfix }[]" value="#{ id }" />
+        <span class="lw-name">#{ title }</span>
+        <span class="lw-remove">×</span>
+      </div>
+      """
+    $item = $(markup)
+
+    # class and remove name attribute from input if locked
+    if (item.is_locked) then $item.addClass('lw-locked').find('input').removeAttr('name')
+
+    # add the hidden input and trigger change event
+    @$input.before($item)
+    @_trigger('change.multisuggest')
+    return true
+  addNewItem: (title) ->
+    return @addItem({ title: title, id: null }, true)
+  add: (item) ->
+    return @addItem(item)
+  new: (title) ->
+    return @addNewItem(title)
+  _search: (query) ->
+    $input = @$input
+    results = []
+    data = @options.data
+
+    # do nothing if the query is unchanged
+    return results if (!query or query is @lastquery)
+
+    @lastquery = query # store the last query
+
+    # filter the result for each word in the query
+    $.each(query.split(' '), ->
+      term = this
+      results = $.grep data, (item) ->
+        return (' ' + item.keywords).indexOf(' ' + term) >= 0
+    )
+    return results
+  _normalizeSearchText: (string) ->
     return string
       .toLowerCase()
       .replace('&amp', 'and')

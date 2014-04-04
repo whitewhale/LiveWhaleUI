@@ -4,7 +4,12 @@
       "summary": "Select multiple input values from a list of items" 
     },
     "multisuggest": {
-      "summary": "Auto completion for entering multiple input values, designed for tag entry" 
+      "summary": "Auto completion for entering multiple input values, designed for tag entry",
+      "scripts": [
+        "/src/jquery.lw-overlay.js",
+        "/src/jquery.lw-multiselect.js",
+        "/src/jquery.lw-multisuggest.js"
+      ]
     },
     "overlay": {
       "summary": "A fixed modular overlay"

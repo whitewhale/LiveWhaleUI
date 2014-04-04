@@ -1,0 +1,152 @@
+.lw-multisuggest {
+	input[type=text] {
+		outline: none;
+		border: 1px solid transparent;
+		width: 10em;
+		background-color: transparent;
+		position: relative;
+		padding: 0;
+		margin: 0.1em 0;
+	}
+
+	&.lw-false-input {
+		border: 1px solid #ccc;
+		padding: 2px 3px;
+		background-color: #fff;
+		width: 100%;
+		box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+	}
+
+	.lw-item {
+		display: inline-block;
+		border: 1px solid #ccc;
+		cursor: pointer;
+		margin: 0.2em 0.4em 0.2em 0;
+		padding: 1px 0.4em;
+		border-radius: 6px;
+		-webkit-border-radius: 6px;
+		-moz-border-radius: 6px;
+		font-weight: normal;
+		color:#555;
+		background-color: #ccc;
+
+		&:hover {
+			border-color: #888;
+		}
+
+		&.lw-selected {
+			background-color: #ccc;
+			border-color: #888;
+			color: #222;
+
+			.lw-remove {
+				color:#222;
+			}
+		}
+		&.lw-locked {
+			opacity: 0.5;
+			cursor: default;
+
+			.lw-remove {
+				display:none;
+			}
+		}
+	}
+	.lw-remove {
+		padding:0 0.2em 0 0.3em;
+		position:relative;
+		top:-1px;
+		color:#666;
+		cursor:pointer;
+
+		&:hover {
+			color:#333;
+		}
+	}
+	.lw-help {
+		float: right;
+		color: #;
+	}
+	.lw-new {
+		border-style:dashed;
+	}
+	.lw-suggestions {
+		position: absolute;
+		margin-top: 1.5em;
+		margin-left: 0.1em;
+		padding: 0;
+		border: 1px solid #666;
+		background-color: #fff;
+		z-index:500;
+		display:none;
+		max-height:200px;
+		overflow:auto;
+
+		li {
+			padding:0.2em 0.5em 0.2em 1em;
+			text-indent:-0.5em;
+			cursor:pointer;
+			list-style: none;
+
+			&.lw-selected {
+				background-color:#D5E7FF;
+			}
+			&:hover {
+				background-color:#eff;
+			}
+		}
+	}
+	.lw-highlight {
+		background-color:#ff8;
+	}
+	.lw-tags {
+		.lw-item {
+			background-color: #def;
+			border-color: #9ac;
+
+			& .lw-selected {
+				background-color:#bcf;
+				border-color:#78c;
+
+				.lw-remove {
+					color:#58b;
+				}
+			}
+		}
+		.lw-remove {
+			padding:0 0.2em 0 0.3em;
+			position:relative;
+			top:-1px;
+			color:#369;
+			cursor:pointer;
+
+			&:hover {
+				color: #69c;
+			}
+		}
+	}
+	.lw-groups {
+		.lw-item {
+			background-color: #edf;
+			border-color: #a9c;
+
+			&.lw-selected {
+				background-color:#cbf;
+				border-color:#87c;
+
+				.lw-remove {
+					color:#85b;
+				}
+			}
+		}
+		.lw-remove {
+			color:#639;
+
+			&:hover {
+				color:#96c;
+			}
+		}
+	}
+}

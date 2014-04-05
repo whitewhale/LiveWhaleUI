@@ -92,7 +92,7 @@
     },
     multiselect: {
       init: function() {
-        $('#multiselect_menu').multiselect({
+        $('#multiselect_menu').multiselect_beta({
           name: 'example',
           data: [
             {
@@ -122,9 +122,15 @@
             }
           ]
         });
-        $('#multiselect_menu_single').multiselect({
+        $('#multiselect_menu_single').multiselect_beta({
           name: 'example',
           onlyone: true,
+          selected: [
+            {
+              id: 2,
+              title: 'Item 2'
+            }
+          ],
           data: [
             {
               id: 1,

@@ -1,6 +1,6 @@
 $ = livewhale?.jQuery || window.jQuery
 
-$.widget 'lw.multiselect',
+$.widget 'lw.multiselect_beta',
   # default options
   options: {
     name:      'name',
@@ -14,22 +14,34 @@ $.widget 'lw.multiselect',
     that = this
     opts = this.options
     items = ''
+    sel_lookup = {}
 
-    # add the multiselector parent
+    # add the widget classes 
     $el.addClass("lw-multiselect lw-multiselect-#{ opts.type }")
 
+    # append ul
+    @$ul = $ul = $('<ul/>').appendTo($el)
+
+    # make lookup table from opts.selected
+    $.each opts.selected, (i, val) ->
+      sel_lookup[val.id] = true
+
+    # add items
     $.each opts.data, (index, item) ->
-      items += """ 
+      li = """ 
         <li class="lw-item">
           <input type="checkbox" value="#{ item.id }" name="#{ opts.name }[]" />
           <span class="lw-name">#{ item.title }</span>
         </li>
         """
+      $li = $(li).data('item', item).appendTo($ul)
 
-    @$ul = $ul = $('<ul/>').html(items).appendTo($el)
+      # add locked class if locked
+      if (item.is_locked) then $li.addClass('lw-locked')
 
-    # highlight preselected items 
-    this._highlightSelected()
+      # highlight if id in selected lookup table 
+      if (sel_lookup[item.id]?)
+        $li.addClass('lw-selected').find('input').prop('checked', true)
 
     # handle item click 
     $el.on 'click', '.lw-item', (e) ->
@@ -43,45 +55,33 @@ $.widget 'lw.multiselect',
       # highlight clicked and de-select others if opts.onlyone, otherwise toggle clicked 
       if (opts.onlyone)
         that.deselectAll()
-        $this.addClass('lw-selected')
+        that.selectItem($this)
       else
-        $this.toggleClass('lw-selected')
-
-      # set check status on hidden checkbox input
-      $this.find('input').prop('checked', $this.hasClass('lw-selected'))
+        if ($this.hasClass('lw-selected'))
+          that.deselectItem($this)
+        else
+          that.selectItem($this)
 
       return true
-  _highlightSelected: ->
-    that    = this
-    opts    = @options
-    sel_tbl = {}
-
-    # return righ away if nothing selected
-    if (!opts.selected.length)
-      return false
-
-    # create lookup table from opts.selected array, which is an array of objects with id, title, is_locked 
-    $.each opts.selected, (i, val) ->
-      sel_tbl[val.id] = true
-
-    @$ul.children().each (index, el) ->
-      $li    = $(el)
-      $input = $li.find('input')
-      id     = parseInt($input.val(), 10)
-
-      # mark selected if the input value contains a key in selected lookup table 
-      if (id and sel_tbl[id]?)
-        $input.prop('checked', true)
-        $li.addClass('lw-selected')
-
-        if (sel_tbl[id].is_locked)
-          $li.addClass('lw-locked')
   # remove lock class from all lis 
   unlockAll: ->
     @$ul.children().removeClass('lw-locked')
   # add lock class to all lis 
   lockAll: ->
     @$ul.children().addClass('lw=locked')
+  selectItem: ($li) ->
+    $li.addClass('lw-selected').find('input').prop('checked', true)
+    @_triggerChange()
+    return this
+  deselectItem: ($li) ->
+    $li.removeClass('lw-selected').find('input').prop('checked', false)
+    @_triggerChange()
+    return this
+  _triggerChange: ->
+    selected = []
+    @$ul.children('.lw-selected').each (index, item) ->
+      selected.push( $(item).data('item') )
+    @_trigger('change', null, { selected: selected })
   selectAll: ->
     @$ul.find('input').prop('checked', true)
     @$ul.children().addClass('lw-selected')

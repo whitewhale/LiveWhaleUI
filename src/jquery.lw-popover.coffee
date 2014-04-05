@@ -109,8 +109,12 @@ $.widget 'lw.popover',
 
     if (opts.zIndex)
       @$popover.css('z-index', opts.zIndex)
+    
+    # set content
+    if (opts.html)
+      @$content.html(opts.html)
 
-    @_ui_initialized = true
+    @_ui_initialize = true
     return true
   _bindCloseHandler: ->
     that = this
@@ -147,16 +151,13 @@ $.widget 'lw.popover',
 
     if (!@_ui_initialized) then @_initUI()
     
-    @_trigger('beforeOpen')
-
-    # set content
-    if (opts.html) then @$content.html(opts.html)
+    @_trigger('beforeOpen', null, this)
 
     @position()
     @$popover.show()
     @_bindCloseHandler()
     
-    @_trigger('open')
+    @_trigger('open', null, this)
   close: ->
     @$popover.hide()
 
@@ -164,7 +165,7 @@ $.widget 'lw.popover',
     if (!@options.autoOpen) then @_bindOpenHandler()
     @$body.unbind('click', @close_handler)
 
-    @_trigger('close')
+    @_trigger('close', null, this)
   _destroy: (callback) ->
     @element.removeClass('lwui-widget lwui-popover')
 

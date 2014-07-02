@@ -104,6 +104,9 @@ $.widget 'lw.slideshow',
     # return right away if no slide set in data
     if (!$slide || !$slide.length) then return false
 
+    $slide.siblings().removeClass('lw_slideshow_active')
+    $slide.addClass('lw_slideshow_active')
+
     @$prev.addClass('lw_disabled')
     @$next.addClass('lw_disabled')
 

@@ -61,6 +61,7 @@ module.exports = (grunt) ->
             'release/jquery.lw-slideshow.min.js'
           ]
           'release/backend.js': [
+            'vendor/onerror.js'
             'vendor/lodash.js'
             'vendor/backbone.js'
             'vendor/jquery.ba-bbq.js'
@@ -72,6 +73,7 @@ module.exports = (grunt) ->
             'release/jquery.lw-multiselect.js'
           ]
           'release/backend.min.js': [
+            'vendor/onerror.min.js'
             'vendor/lodash.min.js'
             'vendor/backbone.min.js'
             'vendor/jquery.ba-bbq.min.js'

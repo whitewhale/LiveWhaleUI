@@ -1,5 +1,5 @@
 // Upgrade Note: 
-// This file contains an unmodified version of jQuery v1.8.3 
+// This file contains an unmodified version of jQuery v1.10.2
 // plus LiveWhale's noconflict code, which is contained within
 // the comment delineated code blocks at the beginning and end 
 // of this file.  Be sure to include these blocks when upgrading 

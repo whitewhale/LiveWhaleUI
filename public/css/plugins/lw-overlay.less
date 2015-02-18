@@ -1,64 +1,94 @@
+@import "../vendor/lesshat.less";
+
+body.lw_overlay_open {
+	overflow: hidden;
+}
+body.lw_overlay_open .lw_overlay_container { 
+	overflow-x: hidden;
+	overflow-y: auto;
+}
 .lw_overlay_container { 
 	display: none;
+	position: fixed; 
+	top: 0; 
+	right: 0;
+	bottom: 0; 
+	left: 0; 
+	z-index: 1040; 
+	overflow: hidden;
+	outline: 0;
+	-webkit-overflow-scrolling: touch;
+}
+.lw_overlay_blackout { 
 	position: absolute; 
-	z-index: 10000; 
 	top: 0; 
 	left: 0; 
-	width: 100%; 
+	right: 0; 
+	background: rgb(0,34,68); 
+	background: rgba(0,34,68,0.6); 
 }
-.lw_element {
-	.lw_overlay_blackout { 
-		width: 100%; 
-		height: 100%; 
-		position: fixed; 
-		top: 0; 
-		left: 0; 
-		background: rgb(0,34,68); 
-		background: rgba(0,34,68,0.6); 
-	}
-	.lw_overlay { 
-		display: inline-block;
-		background-color: #fff; 
-		padding: 20px; 
-		margin: 0 auto;
-		border: 1px solid #ccc;
-		border: 1px solid rgba(0, 0, 0, 0.2);
-		-moz-border-radius: 6px; 
-		border-radius: 6px;
-		-webkit-border-radius: 6px; 
-		-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-		-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-		box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-	}
-	.lw_overlay { 
-		position: relative; 
-		margin: 0 auto; 
-	}
-	.lw_overlay_close_button { 
-		position: absolute; 
-		top: -10px; 
-		right: -10px; 
-		-moz-border-radius: 12px; 
-		-webkit-border-radius: 12px; 
-		border-radius: 12px; 
-		width: 24px; 
-		height: 24px; 
-		font-size: 16px; 
-		line-height: 20px; 
-		text-align: center; 
-		background-color: #222; 
-		font-weight: bold; 
-		color: #fff; 
-		text-decoration: none; 
-		z-index: 10001;
+.lw_overlay { 
+	position: relative;
+	width: auto;
+	margin: 10px; 
+	background-color: #fff; 
+	padding: 15px; 
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	-moz-border-radius: 6px; 
+	border-radius: 6px;
+	-webkit-border-radius: 6px; 
+	.box-shadow(0 3px 9px rgba(0,0,0,.5));
+}
+a.lw_overlay_close_button { 
+	position: absolute; 
+	top: -10px; 
+	right: -10px; 
+	-moz-border-radius: 12px; 
+	-webkit-border-radius: 12px; 
+	border-radius: 12px; 
+	width: 24px; 
+	height: 24px; 
+	font-size: 16px; 
+	line-height: 20px; 
+	text-align: center; 
+	background-color: #222; 
+	font-weight: bold; 
+	color: #fff; 
+	text-decoration: none; 
+	z-index: 10001;
 
-		&:hover {
-			background-color: #b22;
-			border-color: #777;
-		}
+	&:hover {
+		background-color: #b22;
+		color: #fff;
+		border-color: #777;
+		text-decoration: none;
 	}
-	.lw_overlay_contents { 
-		overflow: hidden; 
-		position: relative; 
-	}
+}
+.lw_overlay_contents { 
+	overflow: hidden; 
+	position: relative; 
+}
+.modal-scrollbar-measure {
+  position: absolute;
+  top: -9999px;
+  width: 50px;
+  height: 50px;
+  overflow: scroll;
+}
+
+// Scale up the modal
+@media (min-width: 768px) {
+  // Automatically set modal's width for larger viewports
+  .lw_overlay {
+    width: 600px;
+    margin: 30px auto;
+	.box-shadow(0 5px 15px rgba(0,0,0,.5));
+  }
+
+  // Modal sizes
+  .overlay-sm { width: 300px; }
+}
+
+@media (min-width: 992px) {
+  .overlay-lg { width: 900px; }
 }

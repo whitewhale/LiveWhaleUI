@@ -7,14 +7,12 @@ $.widget 'lw.overlay',
     customClass:       null   # one or more space-separated classes to be added to dialog wrapper
     closeSelector:     ''     # selector for elements whose click should close dialog
     closeButton:       true
-    closeOnBodyClick:  false,
+    closeOnBodyClick:  false
     autoOpen:          true
-    maxWidth:          '90%'
-    maxHeight:         null
-    minWidth:          null
-    minHeight:         null
+    margin:            30
     width:             null
     height:            null
+    size:              'medium' # large, medium, small
   _create: ->
     $this = $(this)
     that  = this
@@ -28,19 +26,20 @@ $.widget 'lw.overlay',
       parent: $el.parent()
       index: $el.parent().children().index($el)
 
-    @$container = $('<div/ class = "lw_element lw_overlay_container"/>')
-    @$blackout  = $('<div class  = "lw_overlay_blackout"/>')
-    @$dialog    = $('<div class  = "lw_overlay"/>')
-    @$contents  = $('<div class  = "lw_overlay_contents"/>')
+    @$container = $('<div/ class="lw_element lw_overlay_container"/>')
+    @$blackout  = $('<div class="lw_overlay_blackout"/>')
+    @$dialog    = $('<div class="lw_overlay"/>')
+    @$contents  = $('<div class="lw_overlay_contents"/>')
+    @$body      = $('body')
+    @$window    = $(window)
 
     $dialog = @$dialog
 
     if (opts.width) then $dialog.css('width', opts.width)
     if (opts.height) then @_setHeight(opts.height)
-    if (opts.maxWidth) then $dialog.css('max-width', opts.maxWidth)
-    if (opts.maxHeight) then @_setMaxHeight(opts.maxHeight)
-    if (opts.minWidth) then $dialog.css('min-width', opts.minWidth)
-    if (opts.minHeight) then $dialog.css('min-height', opts.minHeight)
+
+    if (opts.size is 'large') then @$dialog.addClass('overlay-lg')
+    if (opts.size is 'small') then @$dialog.addClass('overlay-sm')
 
     close_selectors = []
     if (opts.closeSelector) then close_selectors.push(opts.closeSelector) else []
@@ -58,7 +57,7 @@ $.widget 'lw.overlay',
     @$container
       .append(@$blackout)
       .append(@$dialog.append(@$contents.append( $el.show() )))
-      .appendTo($('body'))
+      .appendTo(@$body)
 
     # close handler for selectors including che 
     if (close_selectors.length)
@@ -68,8 +67,7 @@ $.widget 'lw.overlay',
         return false
 
     # reposition dialog on lw resize
-    $(window).bind('resize.lw', $.proxy(@position, @))
-
+    @$window.bind('resize.lw', $.proxy(@position, @))
     @_trigger('create')
 
     return true
@@ -84,7 +82,7 @@ $.widget 'lw.overlay',
   _destroy: ->
     $el = @element
 
-    $(window).unbind('lw')
+    @$window.unbind('lw')
 
     # detach this.element before removing the container
     $el.detach()
@@ -127,6 +125,7 @@ $.widget 'lw.overlay',
     that = this
 
     @$container.show()
+    @$body.addClass('lw_overlay_open')
     @position()
     this._trigger('open')
 
@@ -143,6 +142,7 @@ $.widget 'lw.overlay',
     else
       @$container.hide()
     
+    @$body.removeClass('lw_overlay_open')
     @_trigger('close')
     return @
   html: (content) ->
@@ -155,38 +155,29 @@ $.widget 'lw.overlay',
     return @
   # update the overlay's position
   position: ->
-    $window = $(window)
+    dialog_height = @$dialog.outerHeight() + (@options.margin * 2)
+    win_height    = @$window.height()
 
-    # if there's no offset specified, set the overlay near the top of the window/
-    ycoord = Math.max(($window.height() - @$dialog.outerHeight()) / 4, 20)
-    xcoord = ($window.width() - @$dialog.outerWidth()) / 2
-    
-    @$dialog.css
-      top: $(document).scrollTop() + ycoord
-      left: xcoord
+    height = if (dialog_height > win_height) then dialog_height else win_height
+    @$blackout.height(height)
 
     return true
   # animatedResize was called sizeTo in the old overlay plugin
   animatedResize: (width, height, callback) ->
     that      = this
-    scrolltop = $(document).scrollTop()
-    offset    = @$dialog.offset()
-    props     = {}
-    padding   = @$dialog.outerWidth() - @$dialog.width()
+    #padding   = @$dialog.outerWidth() - @$dialog.width()
 
-    if (width)
-      props.left = ($(window).width() - width - padding) / 2
-      props.width = width
+    #if (width)
+    #  props.width = width
 
-    if (height)
-      props.height = height
-      props.top = Math.max(offset.top - (height - @$dialog.height()) / 4, scrolltop + 10)
+    #if (height)
+    #  props.height = props.height
 
       # set content container height for fixed height dialog with scrollbar 
-      @$contents.animate({ height: height }, 'fast')
+    @$contents.height(height);
 
     # animated resizing of dialog
-    @$dialog.animate props, 'fast', ->
+    @$dialog.animate { width: width, height: height }, 'fast', ->
       if ($.isFunction(callback)) then callback.apply(that)
 
     return @

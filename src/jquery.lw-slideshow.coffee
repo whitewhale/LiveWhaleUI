@@ -116,7 +116,7 @@ $.widget 'lw.slideshow',
     # stop any animation on the slideshow and its children
     $slide.stop().siblings('.lw_slideshow_slide').stop().css('z-index', 0)
 
-    $slide.css { zIndex: '100' }
+    $slide.css { zIndex: '5' }
 
     # fade in the slide
     $slide.fadeTo opts.transitionSpeed, 1, ->

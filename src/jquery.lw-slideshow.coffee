@@ -60,7 +60,7 @@ $.widget 'lw.slideshow',
     if ($first.length)
       $first.one('load', ->
         that.showSlide()
-        that.$wrapper.width(this.width)
+        return true
       ).each( ->
         if (this.complete) then $(this).load()
       )
@@ -134,19 +134,14 @@ $.widget 'lw.slideshow',
     # adjust wrapper width if different
     if (@$wrapper.width() isnt $slide.width()) then @$wrapper.width($slide.width())
 
+    # animate size change if fluidHeight
     if (@options.fluidHeight)
       # shrink the slideshow
-      if (height > targetHeight or width > targetWidth)
+      if (height isnt targetHeight or width isnt targetWidth)
         $el.animate(
           'height': targetHeight
           'width': targetWidth
         , 300)
-      # grow the slideshow
-      if (height < targetHeight or width < targetWidth)
-        $el.animate(
-          'height': targetHeight
-          'width': targetWidth
-        , 300); # do it after 750 ms
     return true
   getControls: (total) ->
     str = '<div class="lw_slideshow_controls">'

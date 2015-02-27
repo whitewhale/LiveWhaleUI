@@ -18,6 +18,7 @@ $.widget 'lw.slideshow',
     # don't do anything if 1 or no slides 
     if (!total) then return false
 
+    @max_width = $el.parent().width()
     @$wrapper  = $el.wrap('<div class="lw_slideshow_wrapper" />').parent()
     @$controls = $controls = $(@getControls(total))
     @$prev     = $controls.find('.lw_slideshow_prev')
@@ -98,8 +99,13 @@ $.widget 'lw.slideshow',
     that         = this
     height       = $el.height()          # current height
     width        = $el.width()           # current width
-    targetHeight = $slide.innerHeight()  # the height of the slide
-    targetWidth  = $slide.innerWidth()   # the width of the slide
+    targetHeight = $slide.outerHeight()  # the height of the slide
+    targetWidth  = $slide.outerWidth()   # the width of the slide
+
+    if (targetWidth > @max_width)
+      targetHeight = parseInt((targetHeight * @max_width) / targetWidth, 10)
+      targetWidth = @max_width
+      $slide.width(targetWidth)
 
     # return right away if no slide set in data
     if (!$slide || !$slide.length) then return false
@@ -132,15 +138,13 @@ $.widget 'lw.slideshow',
         that.$next.removeClass('lw_disabled')
 
     # adjust wrapper width if different
-    if (@$wrapper.width() isnt $slide.width()) then @$wrapper.width($slide.width())
+    if (@$wrapper.width() isnt targetWidth) then @$wrapper.width(targetWidth)
 
-    # animate size change if fluidHeight 
-    if (@options.fluidHeight)
-      if (height isnt targetHeight or width isnt targetWidth)
-        $el.animate(
-          'height': targetHeight
-          'width': targetWidth
-        , 300)
+    if (@options.fluidHeight and (height isnt targetHeight or width isnt targetWidth))
+      $el.animate(
+        'height': targetHeight
+        'width': targetWidth
+      , 300)
     return true
   getControls: (total) ->
     str = '<div class="lw_slideshow_controls">'

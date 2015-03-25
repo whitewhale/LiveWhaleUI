@@ -49,14 +49,23 @@ module.exports = (grunt) ->
       js:
         files:
           'release/frontend.js': [
+            'vendor/jquery-ui.widget.js'
+            'vendor/imagesloaded.js'
             'release/jquery.lw-overlay.js'
             'release/jquery.lw-slideshow.js'
           ]
           'release/frontend.min.js': [
+            'vendor/jquery-ui.widget.min.js'
+            'vendor/imagesloaded.min.js'
             'release/jquery.lw-overlay.min.js'
             'release/jquery.lw-slideshow.min.js'
           ]
           'release/backend.js': [
+            'vendor/onerror.js'
+            'vendor/lodash.js'
+            'vendor/backbone.js'
+            'vendor/jquery.ba-bbq.js'
+            'vendor/imagesloaded.js'
             'release/jquery.lw-overlay.js'
             'release/jquery.lw-timepicker.js'
             'release/jquery.lw-popover.js'
@@ -64,6 +73,11 @@ module.exports = (grunt) ->
             'release/jquery.lw-multiselect.js'
           ]
           'release/backend.min.js': [
+            'vendor/onerror.min.js'
+            'vendor/lodash.min.js'
+            'vendor/backbone.min.js'
+            'vendor/jquery.ba-bbq.min.js'
+            'vendor/imagesloaded.min.js'
             'release/jquery.lw-overlay.min.js'
             'release/jquery.lw-timepicker.min.js'
             'release/jquery.lw-popover.min.js'
@@ -106,6 +120,41 @@ module.exports = (grunt) ->
         cwd: 'release/css/'
         src: '*'
         dest: lwdir + '/www/livewhale/theme/core/styles/lwui/'
+      vendor:
+        options:
+          flatten: true
+        files: [
+          {
+            expand: true
+            flatten: true
+            cwd: 'vendor/'
+            dest: lwdir + '/www/livewhale/thirdparty/jquery/'
+            src: [
+              'jquery.js'
+              'jquery.min.js'
+              'jquery-ui.js'
+              'jquery-ui.min.js'
+              'jquery-ui.widget.js'
+              'jquery-ui.widget.min.js'
+              'jquery.ba-bbq.js'
+              'jquery.ba-bbq.min.js'
+            ]
+          }
+          {
+            expand: true
+            flatten: true
+            cwd: 'vendor/'
+            dest: lwdir + '/www/livewhale/thirdparty/'
+            src: [
+              'lodash.js'
+              'lodash.min.js'
+              'backbone.js'
+              'backbone.min.js'
+              'imagesloaded.js'
+              'imagesloaded.min.js'
+            ]
+          }
+        ]
     less:
       site:
         options:
@@ -156,7 +205,7 @@ module.exports = (grunt) ->
   ])
 
   # copy release to LiveWhale
-  grunt.registerTask('copy_to_lw', ['copy:js', 'copy:css', 'copy:images'])
+  grunt.registerTask('copy_to_lw', ['copy:js', 'copy:css', 'copy:images', 'copy:vendor'])
 
   # only compile the plugin less files that have changed
   grunt.event.on 'watch', (action, filepath) ->

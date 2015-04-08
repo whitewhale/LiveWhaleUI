@@ -1,30 +1,24 @@
 $ = livewhale?.jQuery || window.jQuery
 
-$.widget 'lw.multiselect_beta',
+$.widget 'lw.multiselect',
   # default options
-  options: {
-    name:      'name',
-    data:      [],
-    type:      'items',
-    selected:  [],
+  options:
+    name:      'name'
+    data:      []
+    type:      'items'
+    selected:  []
     onlyone:   false
-  },
   _create: ->
     $el  = @element
     that = this
     opts = this.options
     items = ''
-    sel_lookup = {}
 
     # add the widget classes 
     $el.addClass("lw-multiselect lw-multiselect-#{ opts.type }")
 
     # append ul
     @$ul = $ul = $('<ul/>').appendTo($el)
-
-    # make lookup table from opts.selected
-    $.each opts.selected, (i, val) ->
-      sel_lookup[val.id] = true
 
     # add items
     $.each opts.data, (index, item) ->
@@ -39,9 +33,7 @@ $.widget 'lw.multiselect_beta',
       # add locked class if locked
       if (item.is_locked) then $li.addClass('lw-locked')
 
-      # highlight if id in selected lookup table 
-      if (sel_lookup[item.id]?)
-        $li.addClass('lw-selected').find('input').prop('checked', true)
+    @setSelected()
 
     # handle item click 
     $el.on 'click', '.lw-item', (e) ->
@@ -63,6 +55,28 @@ $.widget 'lw.multiselect_beta',
           that.selectItem($this)
 
       return true
+  setSelected: ->
+    opts = this.options
+    sel_lookup = {}
+
+    # make lookup table from opts.selected
+    $.each this.options.selected, (i, val) ->
+      sel_lookup[val.id] = true
+    
+    @$ul.children().each ->
+      $li  = $(this)
+      item = $li.data('item')
+
+      # highlight if id in selected lookup table 
+      if (sel_lookup[item.id]?)
+        $li.addClass('lw-selected').find('input').prop('checked', true)
+      else
+        $li.removeClass('lw-selected').find('input').prop('checked', false)
+  getSelected: ->
+    selected = []
+    @$ul.children('.lw-selected').each (index, item) ->
+      selected.push( $(item).data('item') )
+    return selected
   # remove lock class from all lis 
   unlockAll: ->
     @$ul.children().removeClass('lw-locked')
@@ -78,10 +92,7 @@ $.widget 'lw.multiselect_beta',
     @_triggerChange()
     return this
   _triggerChange: ->
-    selected = []
-    @$ul.children('.lw-selected').each (index, item) ->
-      selected.push( $(item).data('item') )
-    @_trigger('change', null, { selected: selected })
+    @_trigger('change', null, { selected: @getSelected() })
   selectAll: ->
     @$ul.find('input').prop('checked', true)
     @$ul.children().addClass('lw-selected')
@@ -91,7 +102,11 @@ $.widget 'lw.multiselect_beta',
   resetSelection: ->
     @selectNone()
     @_highlightSelected()
-  _setOption: $.noop,
+  _setOption: (key, value) ->
+    this._super( key, value )
+
+    if (key is 'selected')
+      @setSelected()
   _destroy: ->
     @element
       .removeClass("lw-multiselect")

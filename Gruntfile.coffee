@@ -45,6 +45,11 @@ module.exports = (grunt) ->
           rename: (dest, src) ->
             return dest + src.replace(/\.coffee$/, '.js')
         ]
+      site:
+        options:
+          paths: ['public/js']
+        files:
+          'public/js/main.js': 'public/js/main.coffee'
     concat:
       js:
         files:
@@ -62,6 +67,7 @@ module.exports = (grunt) ->
             'release/jquery.lw-popover.js'
             'release/jquery.lw-slideshow.js'
             'release/jquery.lw-multiselect.js'
+            'release/jquery.lw-multisuggest.js'
           ]
           'release/backend.min.js': [
             'release/jquery.lw-overlay.min.js'
@@ -69,6 +75,7 @@ module.exports = (grunt) ->
             'release/jquery.lw-popover.min.js'
             'release/jquery.lw-slideshow.min.js'
             'release/jquery.lw-multiselect.min.js'
+            'release/jquery.lw-multisuggest.js'
           ]
       css:
         src: [
@@ -77,6 +84,7 @@ module.exports = (grunt) ->
           'public/css/plugins/lw-popover.css'
           'public/css/plugins/lw-slideshow.css'
           'public/css/plugins/lw-multiselect.css'
+          'public/css/plugins/lw-multisuggest.css'
         ]
         dest: 'release/css/default.css'
     uglify:

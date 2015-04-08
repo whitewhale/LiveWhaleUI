@@ -82,6 +82,7 @@ $.widget 'lw.overlay',
   _destroy: ->
     $el = @element
 
+    @$body.removeClass('lw_overlay_open')
     @$window.unbind('lw')
 
     # detach this.element before removing the container
@@ -141,8 +142,8 @@ $.widget 'lw.overlay',
       @destroy()
     else
       @$container.hide()
-    
-    @$body.removeClass('lw_overlay_open')
+      @$body.removeClass('lw_overlay_open')
+
     @_trigger('close')
     return @
   html: (content) ->

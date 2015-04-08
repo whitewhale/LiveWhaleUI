@@ -8,6 +8,7 @@ $.widget 'lw.multisuggest',
     create:    false
     selected:  []
     onlyone:   false
+    showlink:  true
     options:
       keywords: null
   _create: ->
@@ -21,12 +22,25 @@ $.widget 'lw.multisuggest',
       @keywords = that._normalizeSearchText(@title) + keywords
 
     $suggestions = @$suggestions = $('<ul class="lw-suggestions"/>')
-    $input = @$input = $('<input type="text" lw-input"/>')
+    $input = @$input = $('<input type="text" class="lw-input"/>')
+
 
     $el
       .addClass("lw-multisuggest lw-multisuggest-#{ opts.type } lw-false-input")
-      .append(@$suggestions)
-      .append(@$input)
+      .append($suggestions)
+      .append($input)
+
+    if (opts.showlink and opts.data.length)
+      showlink_text = 'Show all ' + opts.type;
+      if (opts.type is 'places') then showlink_text = 'or ' + showlink_text
+
+      $('<a class="lw-showall" href="#"/>')
+        .text(showlink_text)
+        .insertAfter($el)
+        .click( ->
+          that.open();
+        )
+
 
     # hide and remove lw-false-input class if places widget on event_edit page 
     if (opts.type is 'places' && livewhale.page is 'events_edit')
@@ -348,22 +362,28 @@ $.widget 'lw.multisuggest',
       # don't show input if onlyone is on and we have one
       if (opts.onlyone && opts.selected.length > 0)
         $input.css('visibility', 'hidden').blur()
+  setSelected: (selected) ->
+    that = this
+    @element.find('.lw-item:not(.lw-new)').remove()
+    $.each(selected, (i, item) ->
+      that.add(item)
+    )
+  getSelected: ->
+    # build selected array 
+    selected = []
 
+    @element.find('.lw-item:not(.lw-new)').each ->
+      selected.push( $(this).data('item') )
+    return selected
   open: ->
     if !@$overlay
       @initOverlay()
-    
-    # build selected array 
-    selected = []
-    @element.find('.lw-item:not(.lw-new)').each ->
-      $this = $(this)
-      selected.push
-        id: $this.find('input').val()
-        title: $.trim($this.text())
-        is_locked: $this.is('.lw-locked')
+
+    # set selected
+    @$overlay.find('.lw-items').multiselect('option', 'selected', @getSelected())
 
     # open the overlay
-    @_overlay.overlay('open')
+    @$overlay.overlay('open')
   _itemExists: (name, id) ->
 
   initOverlay: ->
@@ -373,30 +393,24 @@ $.widget 'lw.multisuggest',
     $input = @input
     $suggestions = @suggestions
 
-    overlay = '''
+    overlay = """ 
       <div class="lw-multisuggest-overlay">
         <h3>All #{ opts.type }</h3>
         <div class="lw-items"></div>
-        <button type="button" class="lw-save"/>Use selected #{ opts.type }</button>
+        <button type="button" class="lw-save">Use selected #{ opts.type }</button>
         <span class="lw-cancel">or <a href="#">cancel and close</a></span>
       </div>
-      '''
+      """ 
 
     @$overlay = $overlay = $(overlay)
       .overlay(
         closeSelector: '.lw-cancel a'
+        destroyOnClose: false
         autoOpen: false
       )
       # save items selected in overlay
       .on('click', '.lw-save', ->
-        $el.find('.lw-item:not(.lw-new)').remove()
-
-        $overaly.find('.lw-selected').each ->
-          $this = $(this)
-          that.add
-            title:      $.trim($this.text())
-            id:         $this.siblings('input').val()
-            is_locked:  $this.is('.lw-locked')
+        that.setSelected(that.$items.multiselect('getSelected'))
 
         if (!opts.onlyone or !selected.length)
           that.$input.css('visibility', 'visible').focus().keyup()
@@ -406,30 +420,28 @@ $.widget 'lw.multisuggest',
       )
 
     # inti multiselect in overlay
-    $overlay.find('.lw-items').multiselect
+    @$items = $overlay.find('.lw-items').multiselect
       type:      opts.type
       data:      opts.data
-      selected:  selected
       onlyone:   opts.onlyone
+
   # value is an object with keys id and title
   addItem: (item, is_new) ->
-    title = $.trim(item.title)
-    id    = item.id
     input_postfix = new_item_class = ""
 
     if (is_new)
-      id = title
+      item.id = item.title
       input_postfix = '_added'
       new_item_class = ' lw-new'
 
     markup = """
       <div class="lw-item#{ new_item_class }">
-        <input type="hidden" name="#{ @options.name }#{ input_postfix }[]" value="#{ id }" />
-        <span class="lw-name">#{ title }</span>
+        <input type="hidden" name="#{ @options.name }#{ input_postfix }[]" value="#{ item.id }" />
+        <span class="lw-name">#{ item.title }</span>
         <span class="lw-remove">×</span>
       </div>
       """
-    $item = $(markup)
+    $item = $(markup).data('item', item)
 
     # class and remove name attribute from input if locked
     if (item.is_locked) then $item.addClass('lw-locked').find('input').removeAttr('name')

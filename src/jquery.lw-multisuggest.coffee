@@ -24,23 +24,22 @@ $.widget 'lw.multisuggest',
     $suggestions = @$suggestions = $('<ul class="lw-suggestions"/>')
     $input = @$input = $('<input type="text" class="lw-input"/>')
 
-
     $el
       .addClass("lw-multisuggest lw-multisuggest-#{ opts.type } lw-false-input")
       .append($suggestions)
       .append($input)
 
-    if (opts.showlink and opts.data.length)
-      showlink_text = 'Show all ' + opts.type;
-      if (opts.type is 'places') then showlink_text = 'or ' + showlink_text
+    #if (opts.showlink and opts.data.length)
+    showlink_text = 'Show all ' + opts.type
+    if (opts.type is 'places') then showlink_text = 'or ' + showlink_text
 
-      $('<a class="lw-showall" href="#"/>')
-        .text(showlink_text)
-        .insertAfter($el)
-        .click( ->
-          that.open();
-        )
-
+    console.log('wtf')
+    $('<a class="lw-showall" href="#"/>')
+      .text(showlink_text)
+      .insertAfter($el)
+      .click( ->
+        that.open()
+      )
 
     # hide and remove lw-false-input class if places widget on event_edit page 
     if (opts.type is 'places' && livewhale.page is 'events_edit')

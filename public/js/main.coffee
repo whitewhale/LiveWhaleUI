@@ -21,7 +21,7 @@ page =
         return true
 
       $('#change_width').change ->
-        $overlay.overlay('option', 'width', $(this).val())
+        $overlay.overlay('option', 'size', $(this).val())
         return true
       return
   popover:

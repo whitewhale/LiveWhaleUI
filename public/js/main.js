@@ -29,7 +29,7 @@
           return true;
         });
         $('#change_width').change(function() {
-          $overlay.overlay('option', 'width', $(this).val());
+          $overlay.overlay('option', 'size', $(this).val());
           return true;
         });
       }

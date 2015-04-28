@@ -18,14 +18,14 @@ $.widget 'lw.notify',
     $notice = $('<div class="lw_notice"/>')
     $container = $('<div class="lw_container"/>').appendTo($notice)
 
-    if (optopts.type) then $notice.addClass('lw_msg_' + optopts.type)
-    if (optopts.id) then $notice.attr('id', optopts.id)
+    if (opts.type) then $notice.addClass('lw_msg_' + opts.type)
+    if (opts.id) then $notice.attr('id', opts.id)
 
-    html  = optopts.message
+    html  = opts.message
     html += '<a class="lw_notice_close_button" href="#">&times;</a>'
 
-    if (optopts.details)
-      html += '<div class="lw_notice_details">' + optopts.details + '</div>'
+    if (opts.details)
+      html += '<div class="lw_notice_details">' + opts.details + '</div>'
       html += '<a href="#" class="lw_notice_showdetails">More...</a>'
 
     $container.html(html)

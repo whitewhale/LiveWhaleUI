@@ -3,29 +3,43 @@
 body.lw_overlay_open {
 	overflow: hidden;
 }
-body.lw_overlay_open .lw_overlay_container { 
+body.lw_overlay_open .lw_overlay_wrapper { 
 	overflow-x: hidden;
 	overflow-y: auto;
 }
-.lw_overlay_container { 
+.lw_overlay_wrapper { 
 	display: none;
 	position: fixed; 
 	top: 0; 
 	right: 0;
 	bottom: 0; 
 	left: 0; 
-	z-index: 1040; 
+	z-index: 1050; 
 	overflow: hidden;
 	outline: 0;
 	-webkit-overflow-scrolling: touch;
+
+    .fade {
+        opacity: 0;
+        -webkit-transition: opacity .15s linear;
+        -o-transition: opacity .15s linear;
+        transition: opacity .15s linear;
+
+        &.in {
+            opacity: 1;
+        }
+    }
 }
-.lw_overlay_blackout { 
-	position: absolute; 
-	top: 0; 
-	left: 0; 
-	right: 0; 
-	background: rgb(0,34,68); 
-	background: rgba(0,34,68,0.6); 
+.lw_overlay_backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1040;
+    background-color: #000;
+    filter: alpha(opacity=50);
+    opacity: .5;
 }
 .lw_overlay { 
 	position: relative;

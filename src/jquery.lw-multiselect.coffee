@@ -1,6 +1,6 @@
 $ = livewhale?.jQuery || window.jQuery
 
-$.widget 'lw.multiselect',
+$.widget 'lw.multiselect_beta',
   # default options
   options:
     name:      'name'

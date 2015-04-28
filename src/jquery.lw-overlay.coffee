@@ -8,6 +8,7 @@ $.widget 'lw.overlay',
     closeSelector:     ''     # selector for elements whose click should close dialog
     closeButton:       true
     closeOnBodyClick:  false
+    backdrop:          true
     autoOpen:          true
     margin:            30
     width:             null
@@ -26,20 +27,20 @@ $.widget 'lw.overlay',
       parent: $el.parent()
       index: $el.parent().children().index($el)
 
-    @$container = $('<div/ class="lw_element lw_overlay_container"/>')
-    @$blackout  = $('<div class="lw_overlay_blackout"/>')
+    @$wrapper   = $('<div/ class="lw_element lw_overlay_wrapper"/>')
     @$dialog    = $('<div class="lw_overlay"/>')
     @$contents  = $('<div class="lw_overlay_contents"/>')
     @$body      = $('body')
-    @$window    = $(window)
 
     $dialog = @$dialog
+
+    if (opts.backdrop)
+      @$backdrop  = $('<div class="lw_overlay_backdrop"/>')
 
     if (opts.width) then $dialog.css('width', opts.width)
     if (opts.height) then @_setHeight(opts.height)
 
-    if (opts.size is 'large') then @$dialog.addClass('overlay-lg')
-    if (opts.size is 'small') then @$dialog.addClass('overlay-sm')
+    this._setSize(opts.size)
 
     close_selectors = []
     if (opts.closeSelector) then close_selectors.push(opts.closeSelector) else []
@@ -52,22 +53,32 @@ $.widget 'lw.overlay',
     # add class and id to overlay wrapper
     if (opts.customClass) then @$dialog.addClass(opts.customClass)
     if (opts.id) then @$dialog.attr('id', opts.id)
-
-    # put it together
-    @$container
-      .append(@$blackout)
-      .append(@$dialog.append(@$contents.append( $el.show() )))
-      .appendTo(@$body)
+    
+    # don't let clicks within dialog propagate beyond dialog
+    @$dialog.click (e) ->
+      e.stopPropagation()
+      return true
 
     # close handler for selectors including che 
     if (close_selectors.length)
-      @$container.on 'click.lw', close_selectors.join(', '), (e) ->
+      @$dialog.on 'click.lw', close_selectors.join(', '), (e) ->
         e.preventDefault()
         that.close()
         return false
 
+    # close when click registered outside of dialog if closeOnBodyClick
+    if (this.options.closeOnBodyClick)
+      @$wrapper.click ->
+        that.close()
+        return true
+
+    # put it together
+    @$wrapper
+      .append(@$dialog.append(@$contents.append( $el.show() )))
+      .appendTo(@$body)
+
+
     # reposition dialog on lw resize
-    @$window.bind('resize.lw', $.proxy(@position, @))
     @_trigger('create')
 
     return true
@@ -79,18 +90,32 @@ $.widget 'lw.overlay',
   _setMaxHeight: (height) ->
     @$dialog.css('max-height', height)
     @$contents.css('max-height', height)
+  _setSize: (size) ->
+    sizes =
+      large: 'overlay-lg'
+      medium: 'overlay-md'
+      small: 'overlay-sm'
+
+    # do nothing if size not valid
+    if (not size or not sizes[size]) then return
+
+    # remove any existing size classes
+    @$dialog.removeClass(sizes.large + ' ' + sizes.medium + ' ' + sizes.small)
+    @$dialog.addClass(sizes[size])
   _destroy: ->
     $el = @element
 
     @$body.removeClass('lw_overlay_open')
-    @$window.unbind('lw')
 
-    # detach this.element before removing the container
+    # detach this.element before removing the wrapper
     $el.detach()
 
-    if (@$container)
-      @$container.remove()
-      @$container = null
+    if (@$wrapper)
+      @$wrapper.remove()
+      @$wrapper = null
+
+    if (@$backdrop)
+      @$backdrop.remove()
 
     # restore original css 
     $el.css(@orig_css)
@@ -108,61 +133,42 @@ $.widget 'lw.overlay',
   _setOption: (key, value) ->
     if (key is 'width')
       @$dialog.css(key, value)
-      @position()
 
     if (key is 'height')
       @_setHeight(value)
-      @position()
 
-    if (key is 'maxWidth')
-      @$dialog.css('max-width', value)
-    if (key is 'maxHeight')
-      @_setMaxHeight(value)
-    if (key is 'minWidth')
-      @$dialog.css('min-width', value)
-    if (key is 'minHeight')
-      @$dialog.css('min-height', value)
+    if (key is 'size')
+      @_setSize(value)
+
+    @_super(key, value)
   open: ->
     that = this
 
-    @$container.show()
+    @$wrapper.show()
+
+    if (this.options.backdrop)
+      @$backdrop.appendTo(@$body)
+
     @$body.addClass('lw_overlay_open')
-    @position()
     this._trigger('open')
 
-    # handler for closing when clicking outsite dialog box
-    if (@options.closeOnBodyClick)
-      @$blackout.one 'click', (e) ->
-        e.preventDefault()
-        that.close()
-        return false
     return @
   close: ->
     if (@options.destroyOnClose)
       @destroy()
     else
-      @$container.hide()
+      @$wrapper.hide()
+      if (this.options.backdrop) then @$backdrop.detach()
       @$body.removeClass('lw_overlay_open')
 
     @_trigger('close')
     return @
   html: (content) ->
     @$contents.html(content)
-    @position()
     return @
   append: (content) ->
     @$contents.append(content)
-    @position()
     return @
-  # update the overlay's position
-  position: ->
-    dialog_height = @$dialog.outerHeight() + (@options.margin * 2)
-    win_height    = @$window.height()
-
-    height = if (dialog_height > win_height) then dialog_height else win_height
-    @$blackout.height(height)
-
-    return true
   # animatedResize was called sizeTo in the old overlay plugin
   animatedResize: (width, height, callback) ->
     that      = this
@@ -174,8 +180,8 @@ $.widget 'lw.overlay',
     #if (height)
     #  props.height = props.height
 
-      # set content container height for fixed height dialog with scrollbar 
-    @$contents.height(height);
+      # set content wrapper height for fixed height dialog with scrollbar 
+    @$contents.height(height)
 
     # animated resizing of dialog
     @$dialog.animate { width: width, height: height }, 'fast', ->

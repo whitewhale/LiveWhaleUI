@@ -46,7 +46,6 @@ body.lw_overlay_open .lw_overlay_wrapper {
 	width: auto;
 	margin: 10px; 
 	background-color: #fff; 
-	padding: 15px; 
 	border: 1px solid rgba(0, 0, 0, 0.2);
 	-moz-border-radius: 6px; 
 	border-radius: 6px;
@@ -78,9 +77,46 @@ a.lw_overlay_close_button {
 		text-decoration: none;
 	}
 }
+// new style close button
+.lw_overlay_close {
+    float: right;
+    padding: 0;
+    margin-top: -2px;
+    -webkit-appearance: none;
+    cursor: pointer;
+    background: 0 0;
+    border: 0;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+    opacity: .2;
+}
 .lw_overlay_contents { 
 	overflow: hidden; 
 	position: relative; 
+}
+.lw_overlay_header,
+.lw_overlay_body,
+.lw_overlay_footer {
+    padding: 15px;
+}
+.lw_overlay_header {
+    border-bottom: 1px solid #e5e5e5;
+    h3 {
+        margin: 0;
+    }
+}
+.lw_overlay_body {
+    line-height: 1.5;
+}
+.lw_overlay_footer {
+    border-top: 1px solid #e5e5e5;
+    .btn {
+        margin-left: 5px;
+    }
 }
 .modal-scrollbar-measure {
   position: absolute;

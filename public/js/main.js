@@ -22,7 +22,10 @@
         var $overlay;
         $overlay = $('#overlay_content').overlay({
           autoOpen: false,
-          destroyOnClose: false
+          destroyOnClose: false,
+          closeOnBodyClick: true,
+          header: 'Overlay Example',
+          footer: 'Overlay Footer'
         });
         $('#overlay_open').click(function() {
           $overlay.overlay('open');

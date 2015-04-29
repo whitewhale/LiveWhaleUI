@@ -15,6 +15,9 @@ page =
       $overlay = $('#overlay_content').overlay
         autoOpen: false
         destroyOnClose: false
+        closeOnBodyClick: true
+        header: 'Overlay Example'
+        footer: 'Overlay Footer'
 
       $('#overlay_open').click ->
         $overlay.overlay('open')

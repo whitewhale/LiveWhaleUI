@@ -13,6 +13,8 @@ $.widget 'lw.overlay',
     margin:            30
     width:             null
     height:            null
+    title:             null,
+    footer:            null,
     size:              'medium' # large, medium, small
   _create: ->
     $this = $(this)
@@ -27,10 +29,11 @@ $.widget 'lw.overlay',
       parent: $el.parent()
       index: $el.parent().children().index($el)
 
-    @$wrapper   = $('<div/ class="lw_element lw_overlay_wrapper"/>')
-    @$dialog    = $('<div class="lw_overlay"/>')
-    @$contents  = $('<div class="lw_overlay_contents"/>')
-    @$body      = $('body')
+    @$wrapper      = $('<div/ class="lw_element lw_overlay_wrapper"/>')
+    @$dialog       = $('<div class="lw_overlay"/>')
+    @$contents     = $('<div class="lw_overlay_contents"/>')
+    @$content_body = $('<div class="lw_overlay_body"/>').html($el.show()).appendTo(@$contents)
+    @$body         = $('body')
 
     $dialog = @$dialog
 
@@ -42,7 +45,7 @@ $.widget 'lw.overlay',
 
     this._setSize(opts.size)
 
-    close_selectors = []
+    close_selectors = ['.lw_overlay_close']
     if (opts.closeSelector) then close_selectors.push(opts.closeSelector) else []
 
     # add close button if opted for
@@ -74,9 +77,11 @@ $.widget 'lw.overlay',
 
     # put it together
     @$wrapper
-      .append(@$dialog.append(@$contents.append( $el.show() )))
+      .append( @$dialog.append(@$contents) )
       .appendTo(@$body)
 
+    if (opts.title) then @_renderHeader(opts.title)
+    if (opts.footer) then @_renderFooter(opts.footer)
 
     # reposition dialog on lw resize
     @_trigger('create')
@@ -140,6 +145,12 @@ $.widget 'lw.overlay',
     if (key is 'size')
       @_setSize(value)
 
+    if (key is 'title')
+      @_renderHeader(value)
+
+    if (key is 'footer')
+      @_renderFooter(value)
+
     @_super(key, value)
   open: ->
     that = this
@@ -164,10 +175,35 @@ $.widget 'lw.overlay',
     @_trigger('close')
     return @
   html: (content) ->
-    @$contents.html(content)
+    @$content_body.html(content)
     return @
   append: (content) ->
-    @$contents.append(content)
+    @$content_body.append(content)
+    return @
+  _renderHeader: (title) ->
+    if (not @$header)
+      html  = '''
+        <div class="lw_overlay_header">
+        <button type="button" class="lw_overlay_close" aria-label="Close">×</button>
+        <h3></h3>
+        </div>
+        '''
+      # prepend header
+      @$header = $(html).prependTo(@$contents)
+
+      # remove the old style close button if it exists
+      if (this.options.closeButton) then @$dialog.find('.lw_overlay_close_button').remove()
+    @$header.find('> h3').text(title)
+    return @
+  _renderFooter: (footer) ->
+    if (not @$footer)
+      html  = '''
+        <div class="lw_overlay_footer">
+        </div>
+        '''
+      # prepend header
+      @$footer = $(html).appendTo(@$contents)
+    @$footer.html(footer)
     return @
   # animatedResize was called sizeTo in the old overlay plugin
   animatedResize: (width, height, callback) ->
@@ -180,7 +216,7 @@ $.widget 'lw.overlay',
     #if (height)
     #  props.height = props.height
 
-      # set content wrapper height for fixed height dialog with scrollbar 
+    # set content wrapper height for fixed height dialog with scrollbar 
     @$contents.height(height)
 
     # animated resizing of dialog

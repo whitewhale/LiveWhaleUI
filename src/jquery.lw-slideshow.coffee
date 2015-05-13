@@ -18,6 +18,7 @@ $.widget 'lw.slideshow',
     # don't do anything if 1 or no slides 
     if (!total) then return false
 
+    @max_width = $el.parent().width()
     @$wrapper  = $el.wrap('<div class="lw_slideshow_wrapper" />').parent()
     @$controls = $controls = $(@getControls(total))
     @$prev     = $controls.find('.lw_slideshow_prev')
@@ -58,9 +59,12 @@ $.widget 'lw.slideshow',
     # it is possible for slides to contain content other than images
     $first = $el.children().eq(0).find('img')
     if ($first.length)
-      $first.imagesLoaded ->
+      $first.one('load', ->
         that.showSlide()
         return true
+      ).each( ->
+        if (this.complete) then $(this).load()
+      )
     else
       @showSlide()
 
@@ -89,14 +93,23 @@ $.widget 'lw.slideshow',
     @$current = if ($prev.length) then $prev else @element.children(':last-child')
     @showSlide()
   showSlide: (width, height) ->
+    that         = this
     $el          = @element
     opts         = @options
     $slide       = @$current
-    that         = this
+    $img         = $slide.find('img')
     height       = $el.height()          # current height
     width        = $el.width()           # current width
-    targetHeight = $slide.height()       # the height of the slide
-    targetWidth  = $slide.width()        # the width of the slide
+    targetHeight = $slide.outerHeight(true)       # the height of the slide
+    targetWidth  = $slide.outerWidth(true)        # the width of the slide
+
+    if (targetWidth > @max_width)
+      targetHeight = parseInt((targetHeight * @max_width) / targetWidth, 10)
+      targetWidth = @max_width
+
+    # shrink image to fit with border and margin - fixes FF bug
+    img_border = $img.outerWidth(true) - $img.width()
+    if (img_border) then $img.width(targetWidth - img_border)
 
     # return right away if no slide set in data
     if (!$slide || !$slide.length) then return false
@@ -129,7 +142,7 @@ $.widget 'lw.slideshow',
         that.$next.removeClass('lw_disabled')
 
     # adjust wrapper width if different
-    if (@$wrapper.width() isnt $slide.width()) then @$wrapper.width($slide.width())
+    if (@$wrapper.width() isnt $slide.width()) then @$wrapper.width(targetWidth)
 
     # animate size change if fluidHeight
     if (@options.fluidHeight)

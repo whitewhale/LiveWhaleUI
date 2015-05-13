@@ -58,12 +58,9 @@ $.widget 'lw.slideshow',
     # it is possible for slides to contain content other than images
     $first = $el.children().eq(0).find('img')
     if ($first.length)
-      $first.one('load', ->
+      $first.imagesLoaded ->
         that.showSlide()
         return true
-      ).each( ->
-        if (this.complete) then $(this).load()
-      )
     else
       @showSlide()
 
@@ -98,8 +95,8 @@ $.widget 'lw.slideshow',
     that         = this
     height       = $el.height()          # current height
     width        = $el.width()           # current width
-    targetHeight = $slide.innerHeight()  # the height of the slide
-    targetWidth  = $slide.innerWidth()   # the width of the slide
+    targetHeight = $slide.height()       # the height of the slide
+    targetWidth  = $slide.width()        # the width of the slide
 
     # return right away if no slide set in data
     if (!$slide || !$slide.length) then return false

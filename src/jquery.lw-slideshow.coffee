@@ -93,10 +93,11 @@ $.widget 'lw.slideshow',
     @$current = if ($prev.length) then $prev else @element.children(':last-child')
     @showSlide()
   showSlide: (width, height) ->
+    that         = this
     $el          = @element
     opts         = @options
     $slide       = @$current
-    that         = this
+    $img         = $slide.find('img')
     height       = $el.height()          # current height
     width        = $el.width()           # current width
     targetHeight = $slide.outerHeight(true)  # the height of the slide
@@ -105,7 +106,10 @@ $.widget 'lw.slideshow',
     if (targetWidth > @max_width)
       targetHeight = parseInt((targetHeight * @max_width) / targetWidth, 10)
       targetWidth = @max_width
-      $slide.width(targetWidth)
+
+    # shrink image to fit with border and margin - fixes FF bug
+    img_border = $img.outerWidth(true) - $img.width()
+    if (img_border) then $img.width(targetWidth - img_border)
 
     # return right away if no slide set in data
     if (!$slide || !$slide.length) then return false

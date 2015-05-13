@@ -99,8 +99,8 @@ $.widget 'lw.slideshow',
     that         = this
     height       = $el.height()          # current height
     width        = $el.width()           # current width
-    targetHeight = $slide.outerHeight()  # the height of the slide
-    targetWidth  = $slide.outerWidth()   # the width of the slide
+    targetHeight = $slide.outerHeight(true)  # the height of the slide
+    targetWidth  = $slide.outerWidth(true)   # the width of the slide
 
     if (targetWidth > @max_width)
       targetHeight = parseInt((targetHeight * @max_width) / targetWidth, 10)

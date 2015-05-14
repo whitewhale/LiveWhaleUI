@@ -103,9 +103,12 @@ $.widget 'lw.slideshow',
     targetHeight = $slide.outerHeight(true)  # the height of the slide
     targetWidth  = $slide.outerWidth(true)   # the width of the slide
 
+    # adjust to parent if it is narrower that the image
     if (targetWidth > @max_width)
-      targetHeight = parseInt((targetHeight * @max_width) / targetWidth, 10)
       targetWidth = @max_width
+      $slide.width(targetWidth)
+      # update height now that we've adjusted the image width
+      targetHeight = $slide.outerHeight(true)
 
     # shrink image to fit with border and margin - fixes FF bug
     img_border = $img.outerWidth(true) - $img.width()

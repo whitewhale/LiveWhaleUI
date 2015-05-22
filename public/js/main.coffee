@@ -16,7 +16,7 @@ page =
         autoOpen: false
         destroyOnClose: false
         closeOnBodyClick: true
-        header: 'Overlay Example'
+        title: 'Overlay Example'
         footer: 'Overlay Footer'
 
       $('#overlay_open').click ->
@@ -27,21 +27,21 @@ page =
         $overlay.overlay('option', 'size', $(this).val())
         return true
       return
-  popover:
+  hoverbox:
     init: ->
-      $('.open_top').popover
+      $('.open_top').hoverbox
         position: 'top'
         html: '<p>Hello World!</p>'
 
-      $('.open_bottom').popover
+      $('.open_bottom').hoverbox
         position: 'bottom'
         html: '<p>Hello World!</p>'
       
-      $('.open_left').popover
+      $('.open_left').hoverbox
         position: 'left'
         html: '<p>Hello World!</p>'
       
-      $right = $('.open_right').popover
+      $right = $('.open_right').hoverbox
         position: 'right'
         html: '<p>Hello World!</p>'
 
@@ -50,20 +50,20 @@ page =
         $target = $(e.target)
 
         # return if the plugin is attached to this element i
-        # this allows plugin to close currrently open popover
+        # this allows plugin to close currrently open hoverbox
         if ($target.hasClass('lwui-widget')) then return true
         
         e.stopPropagation()
 
-        $target.popover
+        $target.hoverbox
           autoOpen: true
           beforeOpen: ->
-            # close any open popovers
+            # close any open hoverbox
             $('body').click()
             $this = $(this)
-            $this.popover('html', $this.attr('data-text'))
+            $this.hoverbox('html', $this.attr('data-text'))
           close: ->
-            $(this).popover('destroy')
+            $(this).hoverbox('destroy')
   slideshow:
     init: ->
       initSlideshows = ->

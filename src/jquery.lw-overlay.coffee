@@ -15,7 +15,8 @@ $.widget 'lw.overlay',
     height:            null
     title:             null,
     footer:            null,
-    size:              'medium' # large, medium, small
+    size:              'medium', # large, medium, small
+    zIndex:            null
   _create: ->
     $this = $(this)
     that  = this
@@ -37,8 +38,11 @@ $.widget 'lw.overlay',
 
     $dialog = @$dialog
 
-    if (opts.backdrop)
-      @$backdrop  = $('<div class="lw_overlay_backdrop"/>')
+    if (opts.backdrop) then @$backdrop = $('<div class="lw_overlay_backdrop"/>')
+    
+    if (opts.zIndex)
+      @$wrapper.css('z-index', parseInt(opts.zIndex, 10) + 10)
+      if (opts.backdrop) then @$backdrop.css('z-index', opts.zIndex)
 
     if (opts.width) then $dialog.css('width', opts.width)
     if (opts.height) then @_setHeight(opts.height)

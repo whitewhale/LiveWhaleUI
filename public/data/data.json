@@ -17,7 +17,7 @@
     "placeholder": {
       "summary": "Placeholder support for browsers with no native placeholder support." 
     },
-    "popover": {
+    "hoverbox": {
       "summary": "An overlay that appears next to the element its assiated element."
     },
     "slideshow": {

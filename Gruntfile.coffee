@@ -64,7 +64,7 @@ module.exports = (grunt) ->
           'release/backend.js': [
             'release/jquery.lw-overlay.js'
             'release/jquery.lw-timepicker.js'
-            'release/jquery.lw-popover.js'
+            'release/jquery.lw-hoverbox.js'
             'release/jquery.lw-slideshow.js'
             'release/jquery.lw-multiselect.js'
             #'release/jquery.lw-multisuggest.js'
@@ -72,7 +72,7 @@ module.exports = (grunt) ->
           'release/backend.min.js': [
             'release/jquery.lw-overlay.min.js'
             'release/jquery.lw-timepicker.min.js'
-            'release/jquery.lw-popover.min.js'
+            'release/jquery.lw-hoverbox.min.js'
             'release/jquery.lw-slideshow.min.js'
             'release/jquery.lw-multiselect.min.js'
             #'release/jquery.lw-multisuggest.js'
@@ -81,7 +81,7 @@ module.exports = (grunt) ->
         src: [
           'public/css/plugins/lw-overlay.css'
           'public/css/plugins/lw-timepicker.css'
-          'public/css/plugins/lw-popover.css'
+          'public/css/plugins/lw-hoverbox.css'
           'public/css/plugins/lw-slideshow.css'
           'public/css/plugins/lw-multiselect.css'
           #'public/css/plugins/lw-multisuggest.css'

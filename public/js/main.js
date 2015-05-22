@@ -24,7 +24,7 @@
           autoOpen: false,
           destroyOnClose: false,
           closeOnBodyClick: true,
-          header: 'Overlay Example',
+          title: 'Overlay Example',
           footer: 'Overlay Footer'
         });
         $('#overlay_open').click(function() {
@@ -37,22 +37,22 @@
         });
       }
     },
-    popover: {
+    hoverbox: {
       init: function() {
         var $right;
-        $('.open_top').popover({
+        $('.open_top').hoverbox({
           position: 'top',
           html: '<p>Hello World!</p>'
         });
-        $('.open_bottom').popover({
+        $('.open_bottom').hoverbox({
           position: 'bottom',
           html: '<p>Hello World!</p>'
         });
-        $('.open_left').popover({
+        $('.open_left').hoverbox({
           position: 'left',
           html: '<p>Hello World!</p>'
         });
-        $right = $('.open_right').popover({
+        $right = $('.open_right').hoverbox({
           position: 'right',
           html: '<p>Hello World!</p>'
         });
@@ -64,16 +64,16 @@
             return true;
           }
           e.stopPropagation();
-          return $target.popover({
+          return $target.hoverbox({
             autoOpen: true,
             beforeOpen: function() {
               var $this;
               $('body').click();
               $this = $(this);
-              return $this.popover('html', $this.attr('data-text'));
+              return $this.hoverbox('html', $this.attr('data-text'));
             },
             close: function() {
-              return $(this).popover('destroy');
+              return $(this).hoverbox('destroy');
             }
           });
         });

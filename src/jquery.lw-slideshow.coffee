@@ -57,14 +57,12 @@ $.widget 'lw.slideshow',
 
     # if first slide contains an image, wait for it to load before showing slide
     # it is possible for slides to contain content other than images
-    $first = $el.children().eq(0).find('img')
+    $first = $el.children().eq(0);
     if ($first.length)
-      $first.one('load', ->
-        that.showSlide()
-        return true
-      ).each( ->
-        if (this.complete) then $(this).load()
-      )
+      $first.imagesLoaded ->
+          setTimeout(->
+            that.showSlide()
+          , 100)
     else
       @showSlide()
 
@@ -98,21 +96,38 @@ $.widget 'lw.slideshow',
     opts         = @options
     $slide       = @$current
     $img         = $slide.find('img')
+    img          = $img.get(0)
     height       = $el.height()          # current height
     width        = $el.width()           # current width
-    targetHeight = $slide.outerHeight(true)  # the height of the slide
     targetWidth  = $slide.outerWidth(true)   # the width of the slide
+    targetHeight = $slide.outerHeight(true)  # the height of the slide
 
     # adjust to parent if it is narrower that the image
     if (targetWidth > @max_width)
       targetWidth = @max_width
-      $slide.width(targetWidth)
+
+      img_width = targetWidth
+
+      # scale image
+      img_border = $img.outerWidth(true) - $img.width()
+      if (img_border)
+        img_width = targetWidth - img_border
+
+      # we need to set the image dimensions explicitly before getting the slide's height
+      # because FF doesn't properly calc the height of an image with height: auto
+      $img.width(img_width)
+      $img.height(img_width * (img.height / img.width))
+
       # update height now that we've adjusted the image width
       targetHeight = $slide.outerHeight(true)
 
-    # shrink image to fit with border and margin - fixes FF bug
-    img_border = $img.outerWidth(true) - $img.width()
-    if (img_border) then $img.width(targetWidth - img_border)
+      # restore height and width auto so that it continues to be responsive
+      $img.removeAttr('width')
+          .removeAttr('height')
+    else
+      # shrink image to fit with border and margin - fixes FF bug
+      img_border = $img.outerWidth(true) - $img.width()
+      if (img_border) then $img.width(targetWidth - img_border)
 
     # return right away if no slide set in data
     if (!$slide || !$slide.length) then return false

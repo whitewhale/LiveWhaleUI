@@ -189,7 +189,7 @@ $.widget 'lw.timepicker',
     hours = dt.getHours()
     am_pm = if (hours < 12) then ' AM' else ' PM'
     hours = ((hours + 11) % 12) + 1
-    return @_pad(hours, 2) + @options.separator + @_pad(dt.getMinutes(), 2) + am_pm
+    return hours + @options.separator + @_pad(dt.getMinutes(), 2) + am_pm
   get24HourTime: (dt) ->
     return @_pad(dt.getHours(), 2) + @options.separator + @_pad(dt.getMinutes(), 2)
   # str format: hours separator minutes 

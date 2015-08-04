@@ -61,17 +61,12 @@ $.widget 'lw.overlay',
     if (opts.customClass) then @$dialog.addClass(opts.customClass)
     if (opts.id) then @$dialog.attr('id', opts.id)
     
-    # don't let clicks within dialog propagate beyond dialog
-    @$dialog.click (e) ->
-      e.stopPropagation()
-      return true
-
     # close handler for selectors including che 
     if (close_selectors.length)
       @$dialog.on 'click.lw', close_selectors.join(', '), (e) ->
         e.preventDefault()
         that.close()
-        return false
+        return true
 
     # close when click registered outside of dialog if closeOnBodyClick
     if (this.options.closeOnBodyClick)

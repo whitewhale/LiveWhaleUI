@@ -56,12 +56,10 @@ module.exports = (grunt) ->
           'release/frontend.js': [
             'release/jquery.lw-overlay.js'
             'release/jquery.lw-slideshow.js'
-            'release/jquery.lw-hoverbox.js'
           ]
           'release/frontend.min.js': [
             'release/jquery.lw-overlay.min.js'
             'release/jquery.lw-slideshow.min.js'
-            'release/jquery.lw-hoverbox.min.js'
           ]
           'release/backend.js': [
             'release/jquery.lw-overlay.js'

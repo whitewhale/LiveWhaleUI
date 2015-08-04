@@ -77,6 +77,48 @@
         });
       }
     },
+    hoverbox: {
+      init: function() {
+        var $right;
+        $('.open_top').hoverbox({
+          position: 'top',
+          html: '<p>Hello World!</p>'
+        });
+        $('.open_bottom').hoverbox({
+          position: 'bottom',
+          html: '<p>Hello World!</p>'
+        });
+        $('.open_left').hoverbox({
+          position: 'left',
+          html: '<p>Hello World!</p>'
+        });
+        $right = $('.open_right').hoverbox({
+          position: 'right',
+          html: '<p>Hello World!</p>'
+        });
+        return $('#delegation_links').on('click', 'a', function(e) {
+          var $target;
+          e.preventDefault();
+          $target = $(e.target);
+          if ($target.hasClass('lwui-widget')) {
+            return true;
+          }
+          e.stopPropagation();
+          return $target.hoverbox({
+            autoOpen: true,
+            beforeOpen: function() {
+              var $this;
+              $('body').click();
+              $this = $(this);
+              return $this.hoverbox('html', $this.attr('data-text'));
+            },
+            close: function() {
+              return $(this).hoverbox('destroy');
+            }
+          });
+        });
+      }
+    },
     slideshow: {
       init: function() {
         var initSlideshows;

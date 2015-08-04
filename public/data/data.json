@@ -20,6 +20,9 @@
     "popover": {
       "summary": "An overlay that appears next to the element its assiated element."
     },
+    "hoverbox": {
+      "summary": "An overlay that appears next to the element its assiated element."
+    },
     "slideshow": {
       "summary": "Converts a list of items into a scrollable series of slides."
     },

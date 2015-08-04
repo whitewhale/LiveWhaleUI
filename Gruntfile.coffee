@@ -53,12 +53,14 @@ module.exports = (grunt) ->
             'vendor/imagesloaded.js'
             'release/jquery.lw-overlay.js'
             'release/jquery.lw-slideshow.js'
+            'release/jquery.lw-hoverbox.js'
           ]
           'release/frontend.min.js': [
             'vendor/jquery-ui.widget.min.js'
             'vendor/imagesloaded.min.js'
             'release/jquery.lw-overlay.min.js'
             'release/jquery.lw-slideshow.min.js'
+            'release/jquery.lw-hoverbox.min.js'
           ]
           'release/backend.js': [
             'vendor/onerror.js'
@@ -89,6 +91,7 @@ module.exports = (grunt) ->
           'public/css/plugins/lw-overlay.css'
           'public/css/plugins/lw-timepicker.css'
           'public/css/plugins/lw-popover.css'
+          'public/css/plugins/lw-hoverbox.css'
           'public/css/plugins/lw-slideshow.css'
           'public/css/plugins/lw-multiselect.css'
         ]
@@ -198,7 +201,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-clean')
 
   grunt.registerTask('default', ['assemble', 'less'])
-  grunt.registerTask('site', ['assemble', 'less:site', 'coffee:site'])
+  grunt.registerTask('site', ['assemble', 'less:site'])
   
   grunt.registerTask('release', [
     'clean', 'coffee', 'uglify', 'concat:js', 'less:plugins', 'concat:css'

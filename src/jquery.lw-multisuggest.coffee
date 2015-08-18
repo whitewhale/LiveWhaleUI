@@ -33,15 +33,15 @@ $.widget 'lw.multisuggest',
     showlink_text = 'Show all ' + opts.type
     if (opts.type is 'places') then showlink_text = 'or ' + showlink_text
 
-    console.log('wtf')
     $('<a class="lw-showall" href="#"/>')
       .text(showlink_text)
       .insertAfter($el)
-      .click( ->
+      .click (e)->
+        e.preventDefault()
         that.open()
-      )
+        return true
 
-    # hide and remove lw-false-input class if places widget on event_edit page 
+    # hide and remove lw-false-input class if places widget on event_edit page
     if (opts.type is 'places' && livewhale.page is 'events_edit')
       $el.addClass('lw-hidden').removeClass('lw-false-input')
 
@@ -58,19 +58,13 @@ $.widget 'lw.multisuggest',
         return true
       )
       # item click handler - selects item
-      .on('click', '.lw-item', ->
+      .on('click', '.lw-item', (e) ->
+        e.preventDefault()
+        e.stopPropagation()
+
         # select clicked item
         $(this).addClass('lw-selected').siblings().removeClass('lw-selected')
-
-        # make input visible to focus, then hide 
-        $input
-          .val('')
-          .css('visibility', 'visible') 
-          .focus()
-          .css('visibility', 'hidden')
-
-        # cancel bubbling
-        return false
+        return true
       )
       # remove item click handler
       .on('click', '.lw-remove', (e) ->
@@ -102,7 +96,7 @@ $.widget 'lw.multisuggest',
         # we're clearing the input val regardless of what happens
         $input.val('')
 
-        # mark item selected if it exists, otherwise add it as a new item 
+        # mark item selected if it exists, otherwise add it as a new item
         if (existing.length)
           existing.addClass('lw-selected')
           $input.focus().css('visibility', 'hidden')
@@ -118,7 +112,6 @@ $.widget 'lw.multisuggest',
 
     # .blur() doesn't QUITE work here that's why we have to have an annoying 200ms timeout
     $input.blur( ->
-      $el.find('.lw-item.lw-selected').removeClass('lw-selected')
       that.lastquery = ''
       hidesuggestions = setTimeout( ->
         # hide the suggestion popup (we can't hide it earlier, in case the user has clicked it)
@@ -169,52 +162,7 @@ $.widget 'lw.multisuggest',
     )
     # capture special keys on keydown
     .keydown( (e) ->
-      selected_item = $el.find('.lw-item.lw-selected')
-
-      # First, handle the case of a selected item
-      if (selected_item.length)
-        switch (e.which)
-          # enter/return or space
-          when 13 or 32
-            e.preventDefault()
-            item = selected_item.find('.lw-name').text()
-            selected_item.find('.lw-remove').trigger('click') # remove the item
-            $input.val(item).keyup() # and enter the item for editing
-            break
-          # left arrow
-          when 37
-            e.preventDefault()
-            prev = selected_item.removeClass('lw-selected').prev()
-
-            # select previous item and return if it exists
-            if (prev.length)
-              prev.addClass('lw-selected')
-              return
-
-            break
-          # right arrow or tab
-          when 39 or 9
-            e.preventDefault()
-            next = selected_item.removeClass('lw-selected').next()
-
-            # select next item and return if it exists
-            if (next.is('.lw-item'))
-              next.addClass('lw-selected')
-              return
-            break
-          # del/backspace
-          when 8
-            e.preventDefault()
-            selected_item.find('.lw-remove').trigger('click')
-            break
-          else
-            # deselect any selected items
-            that.find('.lw-item.lw-selected').removeClass('lw-selected')
-            break
-
-        # and show the input
-        $input.css('visibility', 'visible')
-        return
+      key = e.which
 
       # remove previous suggestions that were not selected this time
       suggestall = ->
@@ -229,72 +177,53 @@ $.widget 'lw.multisuggest',
             top: position.top + 'px'
           ).show()
 
-      $selected = $suggestions.find('.lw-selected')
+
+      scroll = (direction) ->
+        $lis      = $suggestions.children()
+        $selected = $lis.filter('.lw-selected')
+        match     = $selected.find("span").text().toLowerCase()
+        input_val = $.trim($input.val().toLowerCase())
+
+        # if there's only one result and it's a match, don't let users deselect it
+        if ($selected.siblings().length is 0 && match is input_val) then return
+
+        $selected.removeClass('lw-selected')
+        $next = if (direction is 'down') then $selected.next() else $selected.prev()
+
+        if ($next.length)
+          $selected = $next
+        else
+          $selected = if (direction is 'down') then $lis.eq(0) else $lis.eq($lis.length - 1)
+
+        $selected.addClass('lw-selected')
+        position = ($selected.position().top + $selected.outerHeight()) - ($suggestions.height() - $suggestions.scrollTop())
+        if (position > 0) then $suggestions.scrollTop(position)
 
       # Otherwise, handle the autocomplete
-      switch (e.which)
+      switch (key)
         # up arrow
         when 38
           e.preventDefault()
-
-          # if there are no matches, show all matches
-          if ($suggestions.is(':hidden')) then suggestall()
-
-          match = $selected.find("span").text().toLowerCase()
-          input_val = $.trim($input.val().toLowerCase())
-
-          # if there's only one result and it's a match, don't let users deselect it
-          if ($selected.siblings().length is 0 && input_val is match)
-            break
-
-          $selected.removeClass('lw-selected')
-
-          if ($selected.prev().length)
-            $selected = $selected.prev().addClass('lw-selected')
-            position = $selected.position().top
-
-            if (position < 0)
-              $suggestions.scrollTop($suggestions.scrollTop() + position)
-          else if (!$selected.length)
-            $selected = $suggestions.show().find('li:last-child').addClass('lw-selected')
-            position = ($selected.position().top + $selected.outerHeight()) - ($suggestions.height() - $suggestions.scrollTop())
-            if (position > 0)
-              $suggestions.scrollTop(position)
+          if ($suggestions.is(':hidden')) then suggestall() # show all matches if there are no matches
+          scroll('up')
           break
+        # down arrow
         when 40
-          # down arrow
           e.preventDefault()
-
-          if ($suggestions.is(':hidden')) then suggestall() # if there are no matches, show all matches
-          
-          match = $selected.find("span").text().toLowerCase()
-          input_val = $.trim($input.val().toLowerCase())
-
-          # if there's only one result and it's a match, don't let users deselect it
-          if ($selected.siblings().length is 0 && match is input_val)
-            break
-
-          $selected.removeClass('lw-selected')
-
-          if ($selected.next().length)
-            $selected = $selected.next().addClass('lw-selected')
-            position = ($selected.position().top + $selected.outerHeight()) - ($suggestions.height() - $suggestions.scrollTop())
-            if (position > 0)
-              $suggestions.scrollTop(position)
-          else
-            $suggestions.scrollTop(0)
-            if (!$selected.length)
-              $selected = $suggestions.children(':first-child').addClass('lw-selected')
+          if ($suggestions.is(':hidden')) then suggestall() # show all matches if there are no matches
+          scroll('down')
           break
         # enter/return or comma or comma sometimes return by jQuery or tab
-        when 13 or 44 or 188 or 9
+        when 13, 44, 188, 9
           # always prevent enter
-          if (e.which is 13) then e.preventDefault()
+          if (key is 13) then e.preventDefault()
 
           # disable adding item with comma if we're not editing tags
-          if (opts.type isnt 'tags' && (e.which is 44 || e.which is 188)) then break
+          if (opts.type isnt 'tags' && (key is 44 || key is 188)) then break
 
           existing = []
+
+          $selected = $suggestions.find('.lw-selected')
 
           if ($selected.length)
             e.preventDefault()
@@ -331,17 +260,68 @@ $.widget 'lw.multisuggest',
             $input.css('visibility', 'hidden')
 
           break
-        when 37 or 8
+        when 37, 8
           # left arrow or del/backspace
           # if there's no input, but there are older suggestions
-          if (!$.trim($input.val()).length && $input.siblings('.lw-item').length)
+          if (!$.trim($input.val()) && $input.siblings('.lw-item').length)
             e.preventDefault() # cancel the keypress
             $input
               .val('') # remove any spaces just in case
               .css('visibility', 'hidden') # hide the input
-              .prev().addClass('lw-selected') # and select the last item
+              .prev('.lw-item')
+              .addClass('lw-selected') # and select the last item
             $suggestions.empty().hide() # hide suggestions
           break
+    )
+
+    $(document).keydown( (e) ->
+      $selected = $el.find('.lw-item.lw-selected')
+
+      # do nothing if no item selected
+      if (not $selected.length) then return
+
+      # first, handle the case of a selected item
+      switch (e.which)
+        # enter/return or space
+        when 13, 32
+          e.preventDefault()
+          item = $selected.find('.lw-name').text()
+          $selected.find('.lw-remove').trigger('click') # remove the item
+          $input.val(item).css('visibility', 'visible').focus().keyup() # and enter the item for editing
+          break
+        # left arrow
+        when 37
+          e.preventDefault()
+          prev = $selected.prev('.lw-item')
+
+          # select previous item and return if it exists
+          if (prev.length)
+            $selected.removeClass('lw-selected')
+            prev.addClass('lw-selected')
+          break
+        # right arrow or tab
+        when 39, 9
+          e.preventDefault()
+          next = $selected.removeClass('lw-selected').next('.lw-item')
+
+          # select next item and return if it exists
+          if (next.length)
+            next.addClass('lw-selected')
+          else
+            $input.css('visibility', 'visible').focus()
+          break
+        # del/backspace
+        when 8
+          e.preventDefault()
+          $selected.find('.lw-remove').trigger('click')
+          break
+        else
+          # deselect any selected items
+          that.find('.lw-item.lw-selected').removeClass('lw-selected')
+          break
+
+      # and show the input
+      return true
     )
 
     # when scrolling the suggestions
@@ -368,7 +348,7 @@ $.widget 'lw.multisuggest',
       that.add(item)
     )
   getSelected: ->
-    # build selected array 
+    # build selected array
     selected = []
 
     @element.find('.lw-item:not(.lw-new)').each ->
@@ -392,31 +372,37 @@ $.widget 'lw.multisuggest',
     $input = @input
     $suggestions = @suggestions
 
-    overlay = """ 
+    overlay = """
       <div class="lw-multisuggest-overlay">
-        <h3>All #{ opts.type }</h3>
         <div class="lw-items"></div>
-        <button type="button" class="lw-save">Use selected #{ opts.type }</button>
-        <span class="lw-cancel">or <a href="#">cancel and close</a></span>
       </div>
-      """ 
+      """
+    footer = """
+      <div>
+      <button type="button" class="lw-save btn btn-primary">Use selected #{ opts.type }</button>
+      <span class="lw-cancel">or <a href="#">cancel and close</a></span>
+      </div>
+      """
+    $footer = $(footer)
 
-    @$overlay = $overlay = $(overlay)
-      .overlay(
-        closeSelector: '.lw-cancel a'
-        destroyOnClose: false
-        autoOpen: false
-      )
-      # save items selected in overlay
-      .on('click', '.lw-save', ->
-        that.setSelected(that.$items.multiselect('getSelected'))
+    @$overlay = $overlay = $(overlay).overlay(
+      closeSelector: '.lw-cancel a'
+      title: 'All ' + opts.type
+      footer: $footer
+      destroyOnClose: false
+      autoOpen: false
+    )
 
-        if (!opts.onlyone or !selected.length)
-          that.$input.css('visibility', 'visible').focus().keyup()
+    # save items selected in overlay
+    $footer.on('click', '.lw-save', ->
+      that.setSelected(that.$items.multiselect('getSelected'))
 
-        $overlay.overlay('close')
-        return false
-      )
+      if (!opts.onlyone or !selected.length)
+        that.$input.css('visibility', 'visible').focus().keyup()
+
+      $overlay.overlay('close')
+      return false
+    )
 
     # inti multiselect in overlay
     @$items = $overlay.find('.lw-items').multiselect
@@ -447,7 +433,7 @@ $.widget 'lw.multisuggest',
 
     # add the hidden input and trigger change event
     @$input.before($item)
-    @_trigger('change.multisuggest')
+    @_trigger('change')
     return true
   addNewItem: (title) ->
     return @addItem({ title: title, id: null }, true)

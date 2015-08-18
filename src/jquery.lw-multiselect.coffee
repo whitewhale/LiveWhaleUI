@@ -1,6 +1,6 @@
 $ = livewhale?.jQuery || window.jQuery
 
-$.widget 'lw.multiselect_beta',
+$.widget 'lw.multiselect',
   # default options
   options:
     name:      'name'
@@ -29,6 +29,9 @@ $.widget 'lw.multiselect_beta',
         </li>
         """
       $li = $(li).data('item', item).appendTo($ul)
+
+      # add size
+      if (item.size) then $li.css('font-size', item.size + 'em')
 
       # add locked class if locked
       if (item.is_locked) then $li.addClass('lw-locked')

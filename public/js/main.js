@@ -94,7 +94,7 @@
     },
     multiselect: {
       init: function() {
-        $('#multiselect_menu').multiselect_beta({
+        $('#multiselect_menu').multiselect({
           name: 'example',
           data: [
             {
@@ -123,8 +123,10 @@
               title: 'empty2'
             }
           ]
+        }).bind('keyup change', function() {
+          return console.log('change');
         });
-        $('#multiselect_menu_single').multiselect_beta({
+        $('#multiselect_menu_single').multiselect({
           name: 'example',
           onlyone: true,
           selected: [
@@ -184,7 +186,8 @@
           data: [
             {
               id: 1,
-              title: 'Item 1'
+              title: 'Item 1',
+              size: '1.5'
             }, {
               id: 2,
               title: 'Item 2'
@@ -193,7 +196,8 @@
               title: 'Item 3'
             }, {
               id: 4,
-              title: 'Item 4'
+              title: 'Item 4',
+              size: '1.5'
             }, {
               id: 5,
               title: 'Item 5'

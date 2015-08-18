@@ -67,7 +67,7 @@ module.exports = (grunt) ->
             'release/jquery.lw-hoverbox.js'
             'release/jquery.lw-slideshow.js'
             'release/jquery.lw-multiselect.js'
-            #'release/jquery.lw-multisuggest.js'
+            'release/jquery.lw-multisuggest.js'
           ]
           'release/backend.min.js': [
             'release/jquery.lw-overlay.min.js'
@@ -75,7 +75,7 @@ module.exports = (grunt) ->
             'release/jquery.lw-hoverbox.min.js'
             'release/jquery.lw-slideshow.min.js'
             'release/jquery.lw-multiselect.min.js'
-            #'release/jquery.lw-multisuggest.js'
+            'release/jquery.lw-multisuggest.min.js'
           ]
       css:
         src: [
@@ -84,7 +84,7 @@ module.exports = (grunt) ->
           'public/css/plugins/lw-hoverbox.css'
           'public/css/plugins/lw-slideshow.css'
           'public/css/plugins/lw-multiselect.css'
-          #'public/css/plugins/lw-multisuggest.css'
+          'public/css/plugins/lw-multisuggest.css'
         ]
         dest: 'release/css/default.css'
     uglify:

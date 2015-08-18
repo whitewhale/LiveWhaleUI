@@ -76,7 +76,7 @@ page =
       initSlideshows()
   multiselect:
     init: ->
-      $('#multiselect_menu').multiselect_beta(
+      $('#multiselect_menu').multiselect(
         name: 'example'
         data: [
           { id: 1, title: 'Item 1' }
@@ -90,7 +90,11 @@ page =
           { id: 4, title: 'empty2' }
         ]
       )
-      $('#multiselect_menu_single').multiselect_beta(
+      .bind('keyup change', ->
+        console.log('change')
+      )
+
+      $('#multiselect_menu_single').multiselect(
         name: 'example'
         onlyone: true
         selected: [
@@ -126,10 +130,10 @@ page =
       $('#multisuggest_field').multisuggest(
         create: true
         data: [
-          { id: 1, title: 'Item 1' }
+          { id: 1, title: 'Item 1', size: '1.5' }
           { id: 2, title: 'Item 2' }
           { id: 3, title: 'Item 3' }
-          { id: 4, title: 'Item 4' }
+          { id: 4, title: 'Item 4', size: '1.5' }
           { id: 5, title: 'Item 5' }
           { id: 6, title: 'Item 6' }
         ]

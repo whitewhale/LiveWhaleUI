@@ -111,7 +111,13 @@ $.widget 'lw.multisuggest',
       )
 
     # .blur() doesn't QUITE work here that's why we have to have an annoying 200ms timeout
-    $input.blur( ->
+    $input.on( ->
+      $el.addClass('on')
+      return true
+    )
+    .blur( ->
+      $el.removeClass('on')
+
       that.lastquery = ''
       hidesuggestions = setTimeout( ->
         # hide the suggestion popup (we can't hide it earlier, in case the user has clicked it)

@@ -111,7 +111,7 @@ $.widget 'lw.multisuggest',
       )
 
     # .blur() doesn't QUITE work here that's why we have to have an annoying 200ms timeout
-    $input.on( ->
+    $input.focus( ->
       $el.addClass('on')
       return true
     )

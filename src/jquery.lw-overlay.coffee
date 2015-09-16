@@ -109,7 +109,13 @@ $.widget 'lw.overlay',
   _destroy: ->
     $el = @element
 
-    @$body.removeClass('lw_overlay_open')
+    # remove .lw_overlay_open if this is the last overlay open
+    overlays_open = @getOverlaysOpen()
+    if (overlays_open > 1)
+      @$body.data('lw_overlays_open', overlays_open - 1)
+    else
+      @$body.data('lw_overlays_open', 0)
+      @$body.removeClass('lw_overlay_open')
 
     # detach this.element before removing the wrapper
     $el.detach()
@@ -159,17 +165,31 @@ $.widget 'lw.overlay',
     if (this.options.backdrop)
       @$backdrop.appendTo(@$body)
 
+    overlays_open = @getOverlaysOpen()
+    @$body.data('lw_overlays_open', overlays_open + 1)
+
     @$body.addClass('lw_overlay_open')
+
     this._trigger('open')
 
     return @
+  getOverlaysOpen: ->
+    overlays_open = @$body.data('lw_overlays_open')
+    return if (overlays_open) then parseInt(overlays_open, 10) else 0
   close: ->
     if (@options.destroyOnClose)
       @destroy()
     else
       @$wrapper.hide()
       if (this.options.backdrop) then @$backdrop.detach()
-      @$body.removeClass('lw_overlay_open')
+
+      # remove .lw_overlay_open if this is the last overlay open
+      overlays_open = @getOverlaysOpen()
+      if (overlays_open > 1)
+        @$body.data('lw_overlays_open', overlays_open - 1)
+      else
+        @$body.data('lw_overlays_open', 0)
+        @$body.removeClass('lw_overlay_open')
 
     @_trigger('close')
     return @

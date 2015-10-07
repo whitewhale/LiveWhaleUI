@@ -9,6 +9,7 @@ $.widget 'lw.multisuggest',
     selected:  []
     onlyone:   false
     showlink:  true
+    zIndex:    null
     options:
       keywords: null
   _create: ->
@@ -391,13 +392,16 @@ $.widget 'lw.multisuggest',
       """
     $footer = $(footer)
 
-    @$overlay = $overlay = $(overlay).overlay(
+    overlay_opts =
       closeSelector: '.lw-cancel a'
       title: 'All ' + opts.type
       footer: $footer
       destroyOnClose: false
       autoOpen: false
-    )
+
+    if (opts.zIndex) then overlay_opts.zIndex = opts.zIndex
+
+    @$overlay = $overlay = $(overlay).overlay(overlay_opts)
 
     # save items selected in overlay
     $footer.on('click', '.lw-save', ->

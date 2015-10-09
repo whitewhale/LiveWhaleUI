@@ -15,7 +15,7 @@ $.widget 'lw.slideshow',
     height = 0
     width  = 0
 
-    # don't do anything if 1 or no slides 
+    # don't do anything if 1 or no slides
     if (!total) then return false
 
     @max_width = $el.parent().width()
@@ -25,7 +25,7 @@ $.widget 'lw.slideshow',
     @$next     = $controls.find('.lw_slideshow_next')
     @$current  = $el.children().eq(0)
     @$previous = null
-    
+
     # add class to parent so controls can be hidden
     if (total is 1) then @$wrapper.addClass('lw_slideshow_one_slide')
 
@@ -41,7 +41,7 @@ $.widget 'lw.slideshow',
     # add custom class if any
     if (opts.customClass) then @$wrapper.addClass(opts.customClass)
 
-    # handler for scroll links 
+    # handler for scroll links
     @$controls.on 'click', 'a', (evt) ->
       evt.preventDefault()
       $target = $(evt.target)
@@ -127,7 +127,7 @@ $.widget 'lw.slideshow',
     else
       # shrink image to fit with border and margin - fixes FF bug
       img_border = $img.outerWidth(true) - $img.width()
-      if (img_border) then $img.width(targetWidth - img_border)
+      if (img_border) then $img.width($img.width() - img_border)
 
     # return right away if no slide set in data
     if (!$slide || !$slide.length) then return false
@@ -148,8 +148,8 @@ $.widget 'lw.slideshow',
 
     # fade in the slide
     $slide.fadeTo opts.transitionSpeed, 1, ->
-      if (that.$previous) then that.$previous.css('z-index', 0) #  
-      $slide.siblings('.lw_slideshow_slide').css('opacity', 0) # hide siblings 
+      if (that.$previous) then that.$previous.css('z-index', 0) #
+      $slide.siblings('.lw_slideshow_slide').css('opacity', 0) # hide siblings
 
       # toggle the prev and next control states
       if (!opts.continuousScroll)

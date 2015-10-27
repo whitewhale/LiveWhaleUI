@@ -75,6 +75,7 @@ $.widget 'lw.multiselect',
         $li.addClass('lw-selected').find('input').prop('checked', true)
       else
         $li.removeClass('lw-selected').find('input').prop('checked', false)
+    return @
   getSelected: ->
     selected = []
     @$ul.children('.lw-selected').each (index, item) ->
@@ -83,28 +84,39 @@ $.widget 'lw.multiselect',
   # remove lock class from all lis 
   unlockAll: ->
     @$ul.children().removeClass('lw-locked')
+    return @
   # add lock class to all lis 
   lockAll: ->
-    @$ul.children().addClass('lw=locked')
+    @$ul.children().addClass('lw-locked')
+    return @
   selectItem: ($li) ->
     $li.addClass('lw-selected').find('input').prop('checked', true)
     @_triggerChange()
-    return this
+    return @
   deselectItem: ($li) ->
     $li.removeClass('lw-selected').find('input').prop('checked', false)
     @_triggerChange()
-    return this
+    return @
   _triggerChange: ->
     @_trigger('change', null, { selected: @getSelected() })
   selectAll: ->
     @$ul.find('input').prop('checked', true)
     @$ul.children().addClass('lw-selected')
+    return @
   deselectAll: ->
     @$ul.find('input').prop('checked', false)
     @$ul.children().removeClass('lw-selected')
+    return @
   resetSelection: ->
-    @deselectAll()
-    @_highlightSelected()
+    @$ul.children().each ->
+      $li = $(this)
+      $input = $li.find('input')
+
+      if ($input.prop('checked'))
+        $li.addClass('lw-selected')
+      else
+        $li.removeClass('lw-selected')
+    return @
   _setOption: (key, value) ->
     this._super( key, value )
 

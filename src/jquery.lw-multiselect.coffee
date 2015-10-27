@@ -103,7 +103,7 @@ $.widget 'lw.multiselect',
     @$ul.find('input').prop('checked', false)
     @$ul.children().removeClass('lw-selected')
   resetSelection: ->
-    @selectNone()
+    @deselectAll()
     @_highlightSelected()
   _setOption: (key, value) ->
     this._super( key, value )

@@ -91,14 +91,22 @@ $.widget 'lw.multiselect',
     return @
   selectItem: ($li) ->
     $li.addClass('lw-selected').find('input').prop('checked', true)
-    @_triggerChange()
+    @_triggerChange(
+      action: 'select'
+      item: $li.data('item')
+    )
     return @
   deselectItem: ($li) ->
     $li.removeClass('lw-selected').find('input').prop('checked', false)
-    @_triggerChange()
+    @_triggerChange(
+      action: 'deselect'
+      item: $li.data('item')
+    )
     return @
-  _triggerChange: ->
-    @_trigger('change', null, { selected: @getSelected() })
+  _triggerChange: (event_data) ->
+    data = { selected: @getSelected() }
+    if (event_data) then $.extend(data, event_data)
+    @_trigger('change', null, data)
   selectAll: ->
     @$ul.find('input').prop('checked', true)
     @$ul.children().addClass('lw-selected')

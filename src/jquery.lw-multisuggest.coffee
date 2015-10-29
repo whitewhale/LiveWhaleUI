@@ -405,8 +405,7 @@ $.widget 'lw.multisuggest',
 
     # save items selected in overlay
     $footer.on('click', '.lw-save', ->
-      that.setSelected(that.$items.multiselect('getSelected'))
-
+      #that.setSelected(that.$items.multiselect('getSelected'))
       if (!opts.onlyone or !selected.length)
         that.$input.css('visibility', 'visible').focus().keyup()
 
@@ -419,7 +418,16 @@ $.widget 'lw.multisuggest',
       type:      opts.type
       data:      opts.data
       onlyone:   opts.onlyone
+      change: (e, data) ->
+        if (data.action is 'select')
+          that.addItem(
+            id: data.item.id,
+            title: data.item.title
+          )
+        if (data.action is 'deselect')
+          that.removeItem(data.item.id)
 
+        return true
   # value is an object with keys id and title
   addItem: (item, is_new) ->
     input_postfix = new_item_class = ""
@@ -444,7 +452,17 @@ $.widget 'lw.multisuggest',
     # add the hidden input and trigger change event
     @$input.before($item)
     @_trigger('change')
-    return true
+
+    return @
+  removeItem: (id) ->
+    @element.find('.lw-item').each( ->
+      $this = $(this)
+      if ($this.data('item').id is id)
+        $this.remove()
+        return false
+      return true
+    )
+    return @
   addNewItem: (title) ->
     return @addItem({ title: title, id: null }, true)
   add: (item) ->

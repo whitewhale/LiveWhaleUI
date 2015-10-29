@@ -36,6 +36,9 @@ $.widget 'lw.multiselect',
       # add locked class if locked
       if (item.is_locked) then $li.addClass('lw-locked')
 
+      # add any custom classes
+      if (item.custom_class) then $li.addClass(item.custom_class)
+
     @setSelected()
 
     # handle item click 

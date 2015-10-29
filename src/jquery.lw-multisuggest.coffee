@@ -446,6 +446,9 @@ $.widget 'lw.multisuggest',
       """
     $item = $(markup).data('item', item)
 
+    if (is_new) then $item.addClass('lw-new')
+    if (item.custom_class) then $item.addClass(item.custom_class)
+
     # class and remove name attribute from input if locked
     if (item.is_locked) then $item.addClass('lw-locked').find('input').removeAttr('name')
 

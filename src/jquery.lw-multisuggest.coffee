@@ -337,7 +337,7 @@ $.widget 'lw.multisuggest',
       $input.focus() # and keep the focus in the input
 
     # if we need to preselect
-    if (opts.selected.length)
+    if ($.isArray(opts.selected) and opts.selected.length)
       # with each preselected tag
       $.each opts.selected, ->
         if (this.id)

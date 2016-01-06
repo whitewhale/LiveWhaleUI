@@ -243,12 +243,18 @@ $.widget 'lw.multisuggest',
                 title: $.trim($selected.text())
                 id: id
           else
-            # do nothing if no matches and creation is disabled
-            return true if (!opts.create)
-
             value = $.trim($input.val())
+            xphp_found = /<xphp var=\"([\w]+)\"\/>/.exec(value)
 
-            if (value.length)
+            # do nothing if no matches and creation is disabled
+            return true if (!opts.create and !xphp_found)
+
+            if (xphp_found)
+              that.addItem
+                id: that._htmlEncode(xphp_found[0])
+                title: 'xphp: ' + xphp_found[1]
+                custom_class: 'xphp_variable'
+            else if (value.length)
               lc_value = value.toLowerCase()
               existing = $el.find('.lw-item .lw-name').filter(->
                 # match if the string matches the value
@@ -472,6 +478,13 @@ $.widget 'lw.multisuggest',
     return @addItem(item)
   new: (title) ->
     return @addNewItem(title)
+  _htmlEncode: (str) ->
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
   _search: (query) ->
     $input = @$input
     results = []

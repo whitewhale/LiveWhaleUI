@@ -278,6 +278,7 @@ $.widget 'lw.multisuggest',
           # if there's no input, but there are older suggestions
           if (!$.trim($input.val()) && $input.siblings('.lw-item').length)
             e.preventDefault() # cancel the keypress
+            e.stopPropagation() # stop propagation so it doesn't trigger a keydown on newly selected item
             $input
               .val('') # remove any spaces just in case
               .css('visibility', 'hidden') # hide the input
@@ -287,11 +288,10 @@ $.widget 'lw.multisuggest',
           break
     )
 
-    $(document).keydown( (e) ->
-      $selected = $el.find('.lw-item.lw-selected')
+    $('body').off('keydown.lw_multisuggest').on('keydown.lw_multisuggest', (e) ->
+      $selected = $('.lw-multisuggest-items .lw-item.lw-selected')
 
-      # do nothing if no item selected
-      if (not $selected.length) then return
+      if (!$selected.length) then return
 
       # first, handle the case of a selected item
       switch (e.which)
@@ -315,7 +315,8 @@ $.widget 'lw.multisuggest',
         # right arrow or tab
         when 39, 9
           e.preventDefault()
-          next = $selected.removeClass('lw-selected').next('.lw-item')
+          $selected.removeClass('lw-selected')
+          next = $selected.next('.lw-item')
 
           # select next item and return if it exists
           if (next.length)
@@ -327,6 +328,7 @@ $.widget 'lw.multisuggest',
         when 8
           e.preventDefault()
           $selected.find('.lw-remove').trigger('click')
+          $input.css('visibility', 'visible').focus()
           break
         else
           # deselect any selected items

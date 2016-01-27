@@ -14,7 +14,7 @@ $.widget 'lw.multiselect',
     opts = this.options
     items = ''
 
-    # add the widget classes 
+    # add the widget classes
     $el.addClass("lw-multiselect lw-multiselect-#{ opts.type }")
 
     # append ul
@@ -22,7 +22,7 @@ $.widget 'lw.multiselect',
 
     # add items
     $.each opts.data, (index, item) ->
-      li = """ 
+      li = """
         <li class="lw-item">
           <input type="checkbox" value="#{ item.id }" name="#{ opts.name }[]" />
           <span class="lw-name">#{ item.title }</span>
@@ -41,7 +41,7 @@ $.widget 'lw.multiselect',
 
     @setSelected()
 
-    # handle item click 
+    # handle item click
     $el.on 'click', '.lw-item', (e) ->
       e.preventDefault()
 
@@ -50,7 +50,7 @@ $.widget 'lw.multiselect',
       # return right away if this item is locked
       return false if ($this.is('.lw-locked'))
 
-      # highlight clicked and de-select others if opts.onlyone, otherwise toggle clicked 
+      # highlight clicked and de-select others if opts.onlyone, otherwise toggle clicked
       if (opts.onlyone)
         that.deselectAll()
         that.selectItem($this)
@@ -62,18 +62,18 @@ $.widget 'lw.multiselect',
 
       return true
   setSelected: ->
-    opts = this.options
+    selected = this.options.selected || [];
     sel_lookup = {}
 
     # make lookup table from opts.selected
-    $.each this.options.selected, (i, val) ->
+    $.each selected, (i, val) ->
       sel_lookup[val.id] = true
-    
+
     @$ul.children().each ->
       $li  = $(this)
       item = $li.data('item')
 
-      # highlight if id in selected lookup table 
+      # highlight if id in selected lookup table
       if (sel_lookup[item.id]?)
         $li.addClass('lw-selected').find('input').prop('checked', true)
       else
@@ -84,11 +84,11 @@ $.widget 'lw.multiselect',
     @$ul.children('.lw-selected').each (index, item) ->
       selected.push( $(item).data('item') )
     return selected
-  # remove lock class from all lis 
+  # remove lock class from all lis
   unlockAll: ->
     @$ul.children().removeClass('lw-locked')
     return @
-  # add lock class to all lis 
+  # add lock class to all lis
   lockAll: ->
     @$ul.children().addClass('lw-locked')
     return @

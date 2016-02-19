@@ -17,6 +17,8 @@ $.widget 'lw.multisuggest',
     $el  = @element
     that = this
 
+    @_trigger('beforeInit')
+
     # add title to keywords and normalize
     $.each opts.data, ->
       keywords = if (@keywords) then ' ' + that._normalizeSearchText(@keywords) else ''
@@ -288,8 +290,8 @@ $.widget 'lw.multisuggest',
           break
     )
 
-    $('body').off('keydown.lw_multisuggest').on('keydown.lw_multisuggest', (e) ->
-      $selected = $('.lw-multisuggest-items .lw-item.lw-selected')
+    $(document).on('keydown.lw_multisuggest', (e) ->
+      $selected = $el.find('.lw-item.lw-selected')
 
       if (!$selected.length) then return
 
@@ -356,6 +358,8 @@ $.widget 'lw.multisuggest',
       # don't show input if onlyone is on and we have one
       if (opts.onlyone && opts.selected.length > 0)
         $input.css('visibility', 'hidden').blur()
+    
+    @_trigger('init')
   setSelected: (selected) ->
     that = this
     @element.find('.lw-item:not(.lw-new)').remove()
@@ -387,6 +391,8 @@ $.widget 'lw.multisuggest',
     $input = @input
     $suggestions = @suggestions
 
+    @_trigger('beforeInitOverlay')
+
     overlay = """
       <div class="lw-multisuggest-overlay">
         <div class="lw-items"></div>
@@ -406,6 +412,8 @@ $.widget 'lw.multisuggest',
       footer: $footer
       destroyOnClose: false
       autoOpen: false
+      open: ->
+        that._trigger('overlayOpen')
 
     if (opts.zIndex) then overlay_opts.zIndex = opts.zIndex
 
@@ -436,6 +444,8 @@ $.widget 'lw.multisuggest',
           that.removeItem(data.item.id)
 
         return true
+
+    @_trigger('initOverlay')
   # value is an object with keys id and title
   addItem: (item, is_new) ->
     input_postfix = new_item_class = ""

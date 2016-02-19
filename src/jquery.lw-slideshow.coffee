@@ -113,7 +113,7 @@ $.widget 'lw.slideshow',
       # we need to set the image dimensions explicitly before getting the slide's height
       # because FF doesn't properly calc the height of an image with height: auto
       $img.width(img_width)
-      $img.height(img_width * (img.height / img.width))
+      $img.height(img_width * ($img.height / $img.width))
 
       # update height now that we've adjusted the image width
       targetHeight = $slide.outerHeight(true)

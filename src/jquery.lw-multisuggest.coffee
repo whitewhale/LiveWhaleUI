@@ -223,12 +223,9 @@ $.widget 'lw.multisuggest',
           scroll('down')
           break
         # enter/return or comma or comma sometimes return by jQuery or tab
-        when 13, 44, 188, 9
+        when 13, 9
           # always prevent enter
           if (key is 13) then e.preventDefault()
-
-          # disable adding item with comma if we're not editing tags
-          if (opts.type isnt 'tags' && (key is 44 || key is 188)) then break
 
           existing = []
 

@@ -97,10 +97,13 @@ $.widget 'lw.hoverbox',
       if (xpos < 10)
         xpos = 10
 
-    @$hoverbox.addClass('lw_top').css(
-      top: ypos,
-      left: xpos
-    )
+    @$hoverbox.addClass('lw_top').css('top', ypos)
+
+    # set right position if left pos would make box extend beyond the right side of the screen
+    if (xpos + width > win_width)
+      @$hoverbox.css('right', 10)
+    else
+      @$hoverbox.css('left', xpos)
     @positionArrow()
     return @
   positionBottom: ->
@@ -125,10 +128,14 @@ $.widget 'lw.hoverbox',
       if (xpos < 10)
         xpos = 10
 
-    @$hoverbox.addClass('lw_bottom').css(
-      top: ypos,
-      left: xpos
-    )
+    @$hoverbox.addClass('lw_bottom').css('top', ypos)
+
+    # set right position if left pos would make box extend beyond the right side of the screen
+    if (xpos + width > win_width)
+      @$hoverbox.css('right', 10)
+    else
+      @$hoverbox.css('left', xpos)
+
     @positionArrow()
     return @
   position: ->

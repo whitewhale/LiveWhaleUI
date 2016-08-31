@@ -10,6 +10,7 @@ $.widget 'lw.multisuggest',
     onlyone:   false
     showlink:  true
     zIndex:    null
+    submitLockedItems: false
     options:
       keywords: null
   _create: ->
@@ -32,7 +33,6 @@ $.widget 'lw.multisuggest',
       .append($suggestions)
       .append($input)
 
-    #if (opts.showlink and opts.data.length)
     showlink_text = 'Show all ' + opts.type
     if (opts.type is 'places') then showlink_text = 'or ' + showlink_text
 
@@ -465,7 +465,10 @@ $.widget 'lw.multisuggest',
     if (item.custom_class) then $item.addClass(item.custom_class)
 
     # class and remove name attribute from input if locked
-    if (item.is_locked) then $item.addClass('lw-locked').find('input').removeAttr('name')
+    if (item.is_locked)
+      $item.addClass('lw-locked')
+      if (!@options.submitLockedItems)
+        $item.find('input').removeAttr('name')
 
     # add the hidden input and trigger change event
     @$input.before($item)

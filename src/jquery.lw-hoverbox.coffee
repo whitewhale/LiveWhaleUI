@@ -2,18 +2,19 @@ $ = livewhale?.jQuery || window.jQuery
 
 $.widget 'lw.hoverbox',
   options:
-    position:   'top'   # possible options are left, right, top, bottom
-    width:      'auto'
-    height:     'auto'
-    autoOpen:   false
-    maxWidth:   null
-    maxHeight:  null
-    html:       null
-    text:       null
-    zIndex:     null
-    distance:   2
-    xpos:       null    # force hoverbox to oper at xpos
-    ypos:       null    # force hoverbox to open at ypos
+    position:       'top'   # possible options are left, right, top, bottom
+    width:          'auto'
+    height:         'auto'
+    autoOpen:       false
+    maxWidth:       null
+    maxHeight:      null
+    html:           null
+    text:           null
+    zIndex:         null
+    distance:       2
+    xpos:           null    # force hoverbox to oper at xpos
+    ypos:           null    # force hoverbox to open at ypos
+    pointer_width:  11
   _create: ->
     @$body = $('body')
 
@@ -24,63 +25,132 @@ $.widget 'lw.hoverbox',
       @open()
     else
       @_bindOpenHandler()
-  position: ->
-    el             = @element
-    opts           = @options
-    el_offset      = el.offset()
-    adjustment     = opts.distance # 10 is the number of pixels in pointer png beyond tip
-    pointer_width  = 11
+  positionLeft: ->
+    el     = @element
+    opts   = @options
+    width  = @$hoverbox.outerWidth()
+    height = @$hoverbox.outerHeight()
 
-    pos = opts.position || 'top'
+    if (!opts.ypos && (width + opts.pointer_width + opts.distance > el.offset().left))
+      @positionTop()
+      return @
 
-    # switch to opposite position if not room enought at client specified location
-    # this is not tested
-    if ('top' is pos && (@$hoverbox.outerHeight() + pointer_width + adjustment) > el_offset.top)
-      pos = 'bottom'
-    else if ('bottom' is pos && (@$hoverbox.outerHeight() + pointer_width + adjustment) > el_offset.bottom)
-      pos = 'top'
-    else if ('left' is pos && (@$hoverbox.outerWidth() + pointer_width + adjustment > el_offset.left))
-      pos = 'right'
-    else if ('right' is pos && (@$hoverbox.outerWidth() + pointer_width + adjustment > $(window).width() - el_offset.left))
-      pos = 'left'
+    xpos = el.offset().left - width - opts.pointer_width - opts.distance
+    ypos = if (opts.ypos) then opts.ypos - height / 2 else el.offset().top - height / 2 + el.outerHeight() / 2
 
-    switch (opts.position)
-      when 'top'
-        ypos = el_offset.top - pointer_width - @$hoverbox.outerHeight() - adjustment
-        xpos = if (opts.xpos)
-          opts.xpos - @$hoverbox.outerWidth() / 2
-        else
-          el_offset.left - @$hoverbox.outerWidth() / 2 + el.outerWidth() / 2
-        break
-      when 'bottom'
-        ypos = el_offset.top + el.outerHeight() + pointer_width + adjustment
-        xpos = if (opts.xpos)
-          opts.xpos - @$hoverbox.outerWidth() / 2
-        else
-          el_offset.left - @$hoverbox.outerWidth() / 2 + el.outerWidth() / 2
-        break
-      when 'left'
-        ypos = if (opts.ypos)
-          opts.ypos - @$hoverbox.outerHeight() / 2
-        else
-          el_offset.top - @$hoverbox.outerHeight() / 2 + el.outerHeight() / 2
-        xpos = el_offset.left - @$hoverbox.outerWidth() - pointer_width - adjustment
-        break
-      when 'right'
-        ypos = if (opts.ypos)
-          opts.ypos - @$hoverbox.outerHeight() / 2
-        else
-          el_offset.top - @$hoverbox.outerHeight() / 2 + el.outerHeight() / 2
-
-        xpos = el_offset.left + el.outerWidth() + pointer_width + adjustment
-        break
-      else
-        break
-
-    # position hoverbox
-    @$hoverbox.css
+    @$hoverbox.addClass('lw_left').css(
       top: ypos,
       left: xpos
+    )
+    return @
+  positionRight: ->
+    el     = @element
+    opts   = @options
+    width  = @$hoverbox.outerWidth()
+    height = @$hoverbox.outerHeight()
+
+    if (!opts.ypos && (width + opts.pointer_width + opts.distance > $(window).width() - el.offset().left))
+      @positionTop()
+      return @
+
+    xpos = el.offset().left + el.outerWidth() + opts.pointer_width + opts.distance
+    ypos = if (opts.ypos) then opts.ypos - height / 2 else el.offset().top - height / 2 + el.outerHeight() / 2
+    @$hoverbox.addClass('lw_right').css(
+      top: ypos,
+      left: xpos
+    )
+    return @
+  positionTop: ->
+    el        = @element
+    opts      = @options
+    width     = @$hoverbox.outerWidth()
+    height    = @$hoverbox.outerHeight()
+    ypos      = el.offset().top - opts.pointer_width - height - opts.distance
+    win_width = $(window).width()
+
+    # position on bottom is there's not enough room
+    if (height + opts.pointer_width + opts.distance > el.offset().top)
+      @positionBottom()
+      return @
+
+    # shrink box if if's wider than window width minus 10px gutters
+    if (width >= win_width - 20)
+      width = win_width - 20
+      xpos = 10
+
+      # constrict width and re-calc ypos with new height
+      @$hoverbox.width(width)
+      height = @$hoverbox.outerHeight()
+      ypos = el.offset().top - opts.pointer_width - height - opts.distance
+
+      # the height of the box changed so check again to see if we need to position on bottom
+      if (height + opts.pointer_width + opts.distance > el.offset().top)
+        @positionBottom()
+        return @
+    else
+      xpos = if (opts.xpos)
+        opts.xpos - width / 2
+      else
+        el.offset().left - width / 2 + el.outerWidth() / 2
+
+      # don't set xpos below 10
+      if (xpos < 10)
+        xpos = 10
+
+    @$hoverbox.addClass('lw_top').css(
+      top: ypos,
+      left: xpos
+    )
+    @positionArrow()
+    return @
+  positionBottom: ->
+    el        = @element
+    opts      = @options
+    width     = @$hoverbox.outerWidth()
+    ypos      = el.offset().top + el.outerHeight() + opts.pointer_width + opts.distance
+    win_width = $(window).width()
+
+    # to avoid a loop, we don't change to another position if it doesn't fit below element
+
+    if (width >= win_width)
+      width = win_width - 20
+      xpos = 10
+      @$hoverbox.width(width)
+    else
+      xpos = if (opts.xpos)
+        opts.xpos - width / 2
+      else
+        el.offset().left - width / 2 + el.outerWidth() / 2
+
+      if (xpos < 10)
+        xpos = 10
+
+    @$hoverbox.addClass('lw_bottom').css(
+      top: ypos,
+      left: xpos
+    )
+    @positionArrow()
+    return @
+  position: ->
+    switch (@options.position)
+      when 'bottom'
+        @positionBottom()
+        break
+      when 'left'
+        @positionLeft()
+        break
+      when 'right'
+        @positionRight()
+        break
+      else
+        @positionTop()
+        break
+    return @
+  positionArrow: ->
+    el       = @element
+    box_left = parseInt(@$hoverbox.css('left'), 10)
+    el_xpos  = el.offset().left + el.outerWidth() / 2
+    @$hoverbox.find('.lw_arrow').css('left', el_xpos - box_left - @options.pointer_width / 2)
   append: (content) ->
     @$content.append(content)
   html: (html) ->
@@ -92,7 +162,7 @@ $.widget 'lw.hoverbox',
     @$pointer = $('<div/>').addClass('lw_arrow')
 
     @$hoverbox = $('<div/>',
-      class: 'lw_hoverbox lw_' + opts.position
+      class: 'lw_hoverbox'
       width: opts.width
       height: opts.height
       css: { display: 'none' }

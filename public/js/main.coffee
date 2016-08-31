@@ -35,11 +35,11 @@ page =
 
       $('.open_bottom').hoverbox
         position: 'bottom'
-        html: '<p>Hello World!</p>'
+        html: '<p>Hello Worlds!  Like you know who you are.  Saturn, Venus, Mar, Jupiter, Et al.</p>'
       
       $('.open_left').hoverbox
         position: 'left'
-        html: '<p>Hello World!</p>'
+        html: '<p>Hello Worlds!  Like you know who you are.  Saturn, Venus, Mar, Jupiter, Et al.</p>'
       
       $right = $('.open_right').hoverbox
         position: 'right'

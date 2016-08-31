@@ -3,7 +3,7 @@ $ = livewhale?.jQuery || window.jQuery
 $.widget 'lw.timepicker',
   options:
     step: 30
-    startTime: new Date(0, 0, 0, 8, 0, 0)
+    startTime: new Date(0, 0, 0, 6, 0, 0)
     endTime:   new Date(0, 0, 0, 23, 30, 0)
     separator: ':'
     show24Hours: false

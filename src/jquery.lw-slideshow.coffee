@@ -44,15 +44,15 @@ $.widget 'lw.slideshow',
     # handler for scroll links 
     @$controls.on 'click', 'a', (evt) ->
       evt.preventDefault()
-      $target = $(evt.target)
+      $target = $(evt.currentTarget)
 
       # do nothing if the control is disabled
       if ($target.is('.lw_disabled')) then return false
-
+      
       # if it's the "next" link, otherwise it's a previous link
       if ($target.is('.lw_slideshow_next')) then that.next()
       if ($target.is('.lw_slideshow_prev')) then that.prev()
-
+      
       return true
 
     # if first slide contains an image, wait for it to load before showing slide
@@ -170,11 +170,11 @@ $.widget 'lw.slideshow',
     return true
   getControls: (total) ->
     str = '<div class="lw_slideshow_controls">'
+    str += '<a href="#" class="lw_slideshow_prev">&laquo;&nbsp;<span>Previous</span></a>'
     str += '<div class="lw_slideshow_count">'
     str += '<span class="lw_slideshow_count_current">1</span> of '
     str += '<span class="lw_slideshow_count_total">' + total + '</span>'
     str += '</div>'
-    str += '<a href="#" class="lw_slideshow_prev">&laquo; Previous</a>'
-    str += '<a href="#" class="lw_slideshow_next">Next &raquo;</a>'
+    str += '<a href="#" class="lw_slideshow_next"><span>Next</span>&nbsp;&raquo;</a>'
     str += '</div>'
     return str

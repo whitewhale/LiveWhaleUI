@@ -101,7 +101,10 @@ $.widget 'lw.hoverbox',
 
     # set right position if left pos would make box extend beyond the right side of the screen
     if (xpos + width > win_width)
-      @$hoverbox.css('right', 10)
+      @$hoverbox.css(
+        right: '10px'
+        left: 'auto'
+      )
     else
       @$hoverbox.css('left', xpos)
     @positionArrow()

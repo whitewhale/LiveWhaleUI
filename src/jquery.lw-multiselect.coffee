@@ -74,7 +74,7 @@ $.widget 'lw.multiselect',
       item = $li.data('item')
 
       # highlight if id in selected lookup table
-      if (sel_lookup[item.id]?)
+      if (sel_lookup[item.id])
         $li.addClass('lw-selected').find('input').prop('checked', true)
       else
         $li.removeClass('lw-selected').find('input').prop('checked', false)

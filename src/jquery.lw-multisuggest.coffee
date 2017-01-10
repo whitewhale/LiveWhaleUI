@@ -486,6 +486,19 @@ $.widget 'lw.multisuggest',
     return @
   addNewItem: (title) ->
     return @addItem({ title: title, id: null }, true)
+  addById: (id) ->
+    data = @options.data
+    that = this
+    if ($.isArray(data))
+      $.each(data, (index, obj) ->
+        if (parseInt(obj.id, 10) is parseInt(id, 10))
+          that.addItem(
+            id: id
+            title: obj.title
+          )
+          return true
+      )
+    return false
   add: (item) ->
     return @addItem(item)
   new: (title) ->

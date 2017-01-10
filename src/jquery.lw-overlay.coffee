@@ -160,6 +160,9 @@ $.widget 'lw.overlay',
   open: ->
     that = this
 
+    # do nothing if already dialog is already open
+    if (@$wrapper.is(':visible')) then return @
+    
     @$wrapper.show()
 
     if (this.options.backdrop)

@@ -213,8 +213,12 @@ $.widget 'lw.overlay',
       # prepend header
       @$header = $(html).prependTo(@$contents)
 
-      # remove the old style close button if it exists
-      if (this.options.closeButton) then @$dialog.find('.lw_overlay_close_button').remove()
+      # remove the old style close button if closeButton opt true, otherwise remove button completely
+      if (this.options.closeButton)
+        @$dialog.find('.lw_overlay_close_button').remove()
+      else
+        @$header.find('.lw_overlay_close').remove()
+
     @$header.find('> h3').text(title)
     return @
   _renderFooter: (footer) ->

@@ -96,7 +96,6 @@ $.widget 'lw.slideshow',
     $img         = $slide.find('img')
     height       = $el.height()          # current height
     width        = $el.width()           # current width
-    targetHeight = $slide.outerHeight(true)       # the height of the slide
     targetWidth  = $slide.outerWidth(true)        # the width of the slide
 
     # adjust to parent if it is narrower that the image
@@ -114,9 +113,6 @@ $.widget 'lw.slideshow',
       # because FF doesn't properly calc the height of an image with height: auto
       $img.width(img_width)
       $img.height(img_width * ($img.height / $img.width))
-
-      # update height now that we've adjusted the image width
-      targetHeight = $slide.outerHeight(true)
 
       # restore height and width auto so that it continues to be responsive
       $img.removeAttr('width')
@@ -161,6 +157,8 @@ $.widget 'lw.slideshow',
 
     # animate size change if fluidHeight
     if (@options.fluidHeight)
+      targetHeight = $slide.outerHeight(true)
+
       # shrink the slideshow
       if (height isnt targetHeight or width isnt targetWidth)
         $el.animate(

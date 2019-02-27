@@ -90,9 +90,6 @@ page =
           { id: 4, title: 'empty2' }
         ]
       )
-      .bind('keyup change', ->
-        console.log('change')
-      )
 
       $('#multiselect_menu_single').multiselect(
         name: 'example'

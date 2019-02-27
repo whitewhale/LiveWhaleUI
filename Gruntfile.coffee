@@ -5,14 +5,14 @@ module.exports = (grunt) ->
 
   grunt.initConfig
     pkg: grunt.file.readJSON('package.json')
-    jasmine:
-      src: 'src/**/*.js'
-      options:
-        specs: 'spec/*Spec.js'
-        vendor: [
-          'vendor/jquery.js'
-          'vendor/jquery-ui.widget.min.js'
-        ]
+    #jasmine:
+      #src: 'src/**/*.js'
+      #options:
+        #specs: 'spec/*Spec.js'
+        #vendor: [
+          #'vendor/jquery.js'
+          #'vendor/jquery-ui.widget.min.js'
+        #]
     assemble:
       options:
         flatten: true
@@ -118,9 +118,12 @@ module.exports = (grunt) ->
       site:
         options:
           paths: ['public/css']
+          javascriptEnabled: true
         files:
           'public/css/main.css': 'public/css/main.less'
       plugins:
+        options:
+          javascriptEnabled: true
         files: [
           expand: true
           cwd: 'public/css/plugins'
@@ -138,15 +141,17 @@ module.exports = (grunt) ->
         files: ['public/css/**/*.less']
         tasks: ['less:site']
         options:
+          javascriptEnabled: true
           livereload: true
       less_plugins:
         options:
+          javascriptEnabled: true
           livereload: true
           nospawn: true
         files: ['public/css/plugins/*.less']
         tasks: ['less:plugins']
 
-  grunt.loadNpmTasks('grunt-contrib-jasmine')
+  #grunt.loadNpmTasks('grunt-contrib-jasmine')
   grunt.loadNpmTasks('assemble')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-contrib-less')

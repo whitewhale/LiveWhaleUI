@@ -26,12 +26,14 @@ $.widget 'lw.multisuggest',
       @keywords = that._normalizeSearchText(@title) + keywords
 
     $suggestions = @$suggestions = $('<ul class="lw-suggestions"/>')
-    $input = @$input = $('<input type="text" class="lw-input"/>')
+    $input = @$input = $('<input id="multisuggest-' + opts.name + '" type="text" class="lw-input"/>')
+    $input_label = $('<label for="multisuggest-' + opts.name + '" class="lw_sr_only">Enter ' + opts.type + '</label>')
 
     $el
       .addClass("lw-multisuggest lw-multisuggest-#{ opts.type } lw-false-input")
       .append($suggestions)
       .append($input)
+      .append($input_label)
 
     showlink_text = 'Show all ' + opts.type
     if (opts.type is 'places') then showlink_text = 'or ' + showlink_text
@@ -155,7 +157,7 @@ $.widget 'lw.multisuggest',
           $li = $('<li/>')
           if query is item.keywords then $li.addClass('lw-selected')
           title = (' ' + item.title).replace(query_exp, '<span class="lw-highlight">$1</span>')
-          $suggestions.append($li.html('<input type="hidden" value="' + item.id + '"/>' + title))
+          $suggestions.append($li.html('<label><input type="hidden" value="' + item.id + '"/>' + title + '</label>'))
         )
 
         # position and show suggestion box
@@ -178,7 +180,7 @@ $.widget 'lw.multisuggest',
         $suggestions.empty()
         if (opts.data.length)
           $.each opts.data, (index, item) ->
-            $suggestions.append('<li><input type="hidden" value="' + item.id + '"/>' + item.title + '</li>')
+            $suggestions.append('<li><label><input type="hidden" value="' + item.id + '"/>' + item.title + '</label></li>')
 
           position = $input.position()
           $suggestions.css(
@@ -454,8 +456,10 @@ $.widget 'lw.multisuggest',
 
     markup = """
       <div class="lw-item#{ new_item_class }">
+        <label>
         <input type="hidden" name="#{ @options.name }#{ input_postfix }[]" value="#{ item.id }" />
         <span class="lw-name">#{ item.title }</span>
+        </label>
         <span class="lw-remove">×</span>
       </div>
       """

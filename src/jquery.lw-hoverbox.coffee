@@ -168,7 +168,7 @@ $.widget 'lw.hoverbox',
   _initUI: ->
     opts = @options
 
-    @$content = $('<div/>').addClass('lw_hoverbox_content')
+    @$content = $('<div/>').addClass('lw_hoverbox_content').attr('tabindex', -1)
     @$pointer = $('<div/>').addClass('lw_arrow')
 
     @$hoverbox = $('<div/>',
@@ -211,6 +211,26 @@ $.widget 'lw.hoverbox',
       that.close()
 
       return true
+    
+    # check each time a child loses focus
+    @$content.focusout(->
+      # needed because nothing has focus during 'focusout'
+      setTimeout(->
+        # if current focus is outside hoverbox
+        if ($('.lw_hoverbox_content') .find(':focus').length <= 0)
+          # close the hoverbox
+          that.close()
+      , 0)
+      return true
+    )
+
+    # check keyboard actions
+    @$content.keyup((event) ->
+      # on escape key
+      if (event.keyCode == 27)
+        # close the hoverbox
+        that.close(); 
+    )
 
     # defining handler as an object property allows us to unbind this specific handler
     # we can't use one here instead of bind, because of the case where the click is within hoverbox 
@@ -230,11 +250,18 @@ $.widget 'lw.hoverbox',
     opts = @options
 
     if (!@_ui_initialized) then @_initUI()
-    
+
+    # Save previous focus
+    @focusedBeforeOpen = document.activeElement   
+
     @_trigger('beforeOpen', null, this)
 
     @position()
     @$hoverbox.show()
+
+    # Focus the hoverbox
+    @$content.focus();
+
     @_bindCloseHandler()
     
     @_trigger('open', null, this)
@@ -243,7 +270,14 @@ $.widget 'lw.hoverbox',
 
     # re-bind open handler so it can be opened again if not autoOpen
     if (!@options.autoOpen) then @_bindOpenHandler()
+
+    # Unbind focusout and keyup
+    @$content.unbind()
+
     @$body.unbind('click', @close_handler)
+
+    # Restore previous focus
+    @focusedBeforeOpen.focus()
 
     @_trigger('close', null, this)
   _destroy: (callback) ->

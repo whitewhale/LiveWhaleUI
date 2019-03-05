@@ -31,7 +31,7 @@ $.widget 'lw.overlay',
       index: $el.parent().children().index($el)
 
     @$wrapper      = $('<div/ class="lw_element lw_overlay_wrapper"/>')
-    @$dialog       = $('<div class="lw_overlay"/>')
+    @$dialog       = $('<div class="lw_overlay" role="dialog" tabindex="-1"/>')
     @$contents     = $('<div class="lw_overlay_contents"/>')
     @$content_body = $('<div class="lw_overlay_body"/>').html($el.show()).appendTo(@$contents)
     @$body         = $('body')
@@ -54,7 +54,7 @@ $.widget 'lw.overlay',
 
     # add close button if opted for
     if (opts.closeButton)
-      @$dialog.html('<a class="lw_overlay_close_button" href="#">&times;</a>')
+      @$dialog.html('<a class="lw_overlay_close_button" href="#" aria-label="Close">&times;</a>')
       close_selectors.push('.lw_overlay_close_button')
 
     # add class and id to overlay wrapper
@@ -72,6 +72,11 @@ $.widget 'lw.overlay',
     if (this.options.closeOnBodyClick)
       @$wrapper.click ->
         that.close()
+        return true
+
+      # prevent click without dialog click from closing it
+      @$dialog.click (e) ->
+        e.stopPropagation()
         return true
 
     # put it together
@@ -164,6 +169,9 @@ $.widget 'lw.overlay',
     if (@$wrapper.is(':visible')) then return @
     
     @$wrapper.show()
+    
+    @last_focus = document.activeElement
+    @$dialog.focus();
 
     if (this.options.backdrop)
       @$backdrop.appendTo(@$body)
@@ -180,6 +188,10 @@ $.widget 'lw.overlay',
     overlays_open = @$body.data('lw_overlays_open')
     return if (overlays_open) then parseInt(overlays_open, 10) else 0
   close: ->
+    # return focus to where it was when dialog was opened
+    if (@last_focus)
+      @last_focus.focus()
+
     if (@options.destroyOnClose)
       @destroy()
     else
